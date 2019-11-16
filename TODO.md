@@ -1,0 +1,1 @@
+Utiliser le SVG du logo pour faire un ICO
