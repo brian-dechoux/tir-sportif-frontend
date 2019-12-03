@@ -1,1 +1,3 @@
-Utiliser le SVG du logo pour faire un ICO
+- Utiliser le SVG du logo pour faire un ICO
+- Desactiver le redux-logger hors dev
+- https://usehooks.com/useLocalStorage/ ?

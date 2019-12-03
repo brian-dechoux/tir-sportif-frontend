@@ -3,17 +3,29 @@ import { connect } from 'react-redux';
 import { login } from 'redux/actions/auth.actions';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import Auth  from './auth';
+import { AppState } from '../../redux/reducers/combined.reducer';
 
 class AuthContainer extends React.PureComponent<
-  ReturnType<typeof mapDispatchToProps>,
+  ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>,
   {}
   > {
   render() {
+    const token = this.props.token;
+    if (token !== null) {
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("token");
+    }
+
     return <Auth
       actions={this.props.actions}
     />;
   }
 }
+
+const mapStateToProps = (state: AppState) => ({
+  token: state.auth.token
+});
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
   actions: bindActionCreators(
@@ -25,6 +37,6 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(AuthContainer);
