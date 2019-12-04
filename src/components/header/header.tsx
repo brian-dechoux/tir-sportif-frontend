@@ -36,7 +36,7 @@ const Header = (props: HeaderProps) =>  {
               width="100px"
             />
           </Grid>
-          <Grid item md={7} alignItems="center">
+          <Grid item md={7}>
             <Typography variant="h3" className="title">
               Tir sportif Briey
             </Typography>
