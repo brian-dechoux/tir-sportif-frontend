@@ -10,10 +10,16 @@ import { AppState } from '../../redux/reducers/combined.reducer';
 import illustration from 'assets/login-illustration.jpg'
 import './login.css'
 import Toast from '../toast/toast';
+import ToastClosedAction from '../../redux/actions/toast-closed.action';
 
 type LoginProps = {
+  loginFailedToast: {
+    isShown: boolean,
+    message: string | null
+  }
   actions: {
     login: (username: string, password: string) => ThunkAction<void, AppState, undefined, any>;
+    closeToast: () => ToastClosedAction;
   }
 };
 
@@ -21,13 +27,11 @@ const Login = (props: LoginProps) =>  {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const [isToastVisible, showToast] = useState(false);
-
   let toast;
-  if (isToastVisible) {
+  if (props.loginFailedToast.isShown) {
     toast = <Toast
-      message="yolo test"
-      onCloseCallback={() => showToast(false)}
+      message={(props.loginFailedToast.message != null ? props.loginFailedToast.message : "Une erreur s'est produite")}
+      onCloseCallback={() => props.actions.closeToast()}
     />
   }
 
@@ -80,7 +84,7 @@ const Login = (props: LoginProps) =>  {
 
             <Grid container item justify="center">
               <Grid item md={3}>
-                <Button color="secondary" onClick={() => showToast(true)} >
+                <Button color="secondary">
                   Annuler
                 </Button>
               </Grid>

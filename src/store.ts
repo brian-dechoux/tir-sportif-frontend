@@ -4,9 +4,12 @@ import reduxLogger from 'redux-logger';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import combinedReducer, { AppState } from 'redux/reducers/combined.reducer';
 
+// FIXME why should I provide a whole goddamn state here
 const initialAppState: AppState = {
   auth: {
-    token: localStorage.getItem("token")
+    token: localStorage.getItem("token"),
+    showLoginToast: false,
+    loginToastMessage: null
   }
 };
 

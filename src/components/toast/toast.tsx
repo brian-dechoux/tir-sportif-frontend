@@ -38,9 +38,9 @@ const Toast = (props: ToastProps) =>  {
           horizontal: 'right',
         }}
         open={open}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={handleClose}
-        message={<span id="message-id">${props.message}</span>}
+        message={<span id="message-id">{props.message}</span>}
         action={[
           <IconButton
             key="close"

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { login } from 'redux/actions/auth.actions';
+import { login, closeToast } from 'redux/actions/auth.actions';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import Login  from './login';
 import { AppState } from '../../redux/reducers/combined.reducer';
@@ -18,19 +18,25 @@ class AuthContainer extends React.PureComponent<
     }
 
     return <Login
+      loginFailedToast={this.props.loginFailedToast}
       actions={this.props.actions}
     />;
   }
 }
 
 const mapStateToProps = (state: AppState) => ({
-  token: state.auth.token
+  token: state.auth.token,
+  loginFailedToast: {
+    isShown: state.auth.showLoginToast,
+    message: state.auth.loginToastMessage
+  }
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
   actions: bindActionCreators(
     {
-      login
+      login,
+      closeToast
     },
     dispatch
   ),

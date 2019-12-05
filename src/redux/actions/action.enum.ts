@@ -3,5 +3,7 @@
  */
 export enum ActionTypes {
     LOGIN = 'LOGIN',
-    LOGOUT = 'LOGOUT'
+    LOGOUT = 'LOGOUT',
+    LOGIN_FAILED = 'LOGIN_FAILED',
+    TOAST_CLOSED = 'TOAST_CLOSED'
 }
