@@ -2,8 +2,8 @@ import { AppBar, Box, Button, Grid, Typography } from '@material-ui/core';
 import React from 'react';
 import { ThunkAction } from 'redux-thunk';
 import { AppState } from '../../redux/reducers/combined.reducer';
-import AuthContainer from '../auth/auth.container';
 import Logo from '../svg/Logo';
+import { Link } from 'react-router-dom';
 
 type HeaderProps = {
   isConnected: boolean,
@@ -16,7 +16,12 @@ type HeaderProps = {
 const Header = (props: HeaderProps) =>  {
   let authComponent;
   if (!props.isConnected) {
-    authComponent = (<AuthContainer />);
+    authComponent = (<Button
+      variant="outlined"
+      component={Link} to="/login"
+    >
+      Se connecter
+    </Button>);
   } else {
     authComponent = (<Button
       variant="outlined"
