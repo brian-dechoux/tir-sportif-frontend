@@ -9,6 +9,7 @@ import { ThunkAction } from 'redux-thunk';
 import { AppState } from '../../redux/reducers/combined.reducer';
 import illustration from 'assets/login-illustration.jpg'
 import './login.css'
+import Toast from '../toast/toast';
 
 type LoginProps = {
   actions: {
@@ -20,8 +21,19 @@ const Login = (props: LoginProps) =>  {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const [isToastVisible, showToast] = useState(false);
+
+  let toast;
+  if (isToastVisible) {
+    toast = <Toast
+      message="yolo test"
+      onCloseCallback={() => showToast(false)}
+    />
+  }
+
   return (
     <Box>
+      {toast}
       <Grid container justify="center" spacing={2}>
         <Grid item md={9}>
           <img className="login-illustration"
@@ -68,7 +80,7 @@ const Login = (props: LoginProps) =>  {
 
             <Grid container item justify="center">
               <Grid item md={3}>
-                <Button color="secondary">
+                <Button color="secondary" onClick={() => showToast(true)} >
                   Annuler
                 </Button>
               </Grid>

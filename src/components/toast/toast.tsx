@@ -4,6 +4,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 
+// TODO wth ?
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     close: {
@@ -14,6 +15,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type ToastProps = {
   message: string;
+  onCloseCallback: () => void
 };
 
 const Toast = (props: ToastProps) =>  {
@@ -25,6 +27,7 @@ const Toast = (props: ToastProps) =>  {
       return;
     }
     setOpen(false);
+    props.onCloseCallback();
   };
 
   return (
