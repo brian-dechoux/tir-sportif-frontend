@@ -31,11 +31,11 @@ const Toast = (props: ToastProps) =>  {
     <>
       <Snackbar
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+          vertical: 'top',
+          horizontal: 'right',
         }}
         open={open}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={handleClose}
         message={<span id="message-id">${props.message}</span>}
         action={[
