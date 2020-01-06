@@ -7,7 +7,6 @@ import {
 import React, { useState } from 'react';
 import { ThunkAction } from 'redux-thunk';
 import { AppState } from '../../redux/reducers/combined.reducer';
-import illustration from 'assets/login-illustration.jpg'
 import './login.css'
 import Toast from '../toast/toast';
 import ToastClosedAction from '../../redux/actions/toast-closed.action';
@@ -40,9 +39,6 @@ const Login = (props: LoginProps) =>  {
       {toast}
       <Grid container justify="center" spacing={2}>
         <Grid item md={9}>
-          <img className="login-illustration"
-               src={illustration}
-               alt="Login illustration"/>
         </Grid>
         <Grid container item md={3} className="login-sheet" alignItems="center">
           <form noValidate autoComplete="off">
@@ -83,12 +79,7 @@ const Login = (props: LoginProps) =>  {
             </Grid>
 
             <Grid container item justify="center">
-              <Grid item md={3}>
-                <Button color="secondary">
-                  Annuler
-                </Button>
-              </Grid>
-              <Grid item md={7}>
+              <Grid item md={6}>
                 <Button
                   fullWidth
                   variant="outlined"

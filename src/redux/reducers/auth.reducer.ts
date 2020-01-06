@@ -4,6 +4,7 @@ import { LogoutAction } from 'redux/actions/logout.action';
 import AuthState from 'redux/states/auth.state.type';
 import LoginFailedAction from '../actions/login-failed.action';
 import ToastClosedAction from '../actions/toast-closed.action';
+import ExpireTokenAction from '../actions/expire-token.action';
 
 const initialState: AuthState = {
   token: null,
@@ -11,13 +12,12 @@ const initialState: AuthState = {
   loginToastMessage: null
 };
 
-type AuthActions = LoginAction | LogoutAction | LoginFailedAction | ToastClosedAction;
+type AuthActions = LoginAction | LogoutAction | LoginFailedAction | ExpireTokenAction | ToastClosedAction;
 
 export default function(state: AuthState = initialState, action: AuthActions) {
   switch (action.type) {
 
     case ActionTypes.LOGIN:
-      console.log(`token: ${action.token}`);
       return Object.assign({}, state, {
         ...state,
         token: action.token
@@ -32,6 +32,13 @@ export default function(state: AuthState = initialState, action: AuthActions) {
     case ActionTypes.LOGIN_FAILED:
       return Object.assign({}, state, {
         ...state,
+        showLoginToast: true,
+        loginToastMessage: action.message
+      });
+    case ActionTypes.EXPIRE_TOKEN:
+      return Object.assign({}, state, {
+        ...state,
+        token: null,
         showLoginToast: true,
         loginToastMessage: action.message
       });

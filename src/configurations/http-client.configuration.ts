@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import Configuration from 'configurations/environment.configuration'
-import store from '../store';
+import { store } from '../store';
 
 const cli = axios.create({
   baseURL: Configuration.backendUrl,

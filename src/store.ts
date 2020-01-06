@@ -1,11 +1,14 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
+import { createBrowserHistory } from 'history';
 import thunk from 'redux-thunk';
 import reduxLogger from 'redux-logger';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import combinedReducer, { AppState } from 'redux/reducers/combined.reducer';
+import { routerMiddleware } from 'connected-react-router';
+import createRootReducer from 'redux/reducers/combined.reducer';
+
+export const history = createBrowserHistory();
 
 // FIXME why should I provide a whole goddamn state here
-const initialAppState: AppState = {
+const initialAppState: any = {
   auth: {
     token: localStorage.getItem("token"),
     showLoginToast: false,
@@ -13,7 +16,18 @@ const initialAppState: AppState = {
   }
 };
 
-const middleware = [reduxLogger, thunk];
-const store = createStore(combinedReducer, initialAppState, composeWithDevTools(applyMiddleware(...middleware)));
+const middleware = [
+  reduxLogger,
+  thunk,
+  routerMiddleware(history)
+];
 
-export default store;
+export const store = createStore(
+  createRootReducer(history),
+  initialAppState,
+  compose(
+    applyMiddleware(
+      ...middleware
+    )
+  )
+);

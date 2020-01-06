@@ -3,8 +3,9 @@ import { AppState } from '../reducers/combined.reducer';
 import LogoutAction from './logout.action';
 import cli from '../../configurations/http-client.configuration';
 import { ActionTypes } from './action.enum';
-import ROUTES from '../../configurations/server.configuration';
+import { ROUTES, ERRORS } from '../../configurations/server.configuration';
 import ToastClosedAction from './toast-closed.action';
+import { push } from 'connected-react-router';
 
 export function login(username: string, password: string): ThunkAction<void, AppState, undefined, any> {
   return (
@@ -15,23 +16,30 @@ export function login(username: string, password: string): ThunkAction<void, App
       password: password
     };
 
-    cli.post(ROUTES.AUTHENTICATION.LOGIN, authPayload)
+    cli.post(ROUTES.BACKEND.AUTHENTICATION.LOGIN, authPayload)
       .then(response => {
         if (response.status === 200) {
           dispatch({
             type: ActionTypes.LOGIN,
             token: response.data.jwtToken
           });
+          dispatch(push(ROUTES.FRONTEND.DASHBOARD));
         }
       }).catch(error => {
+        console.log(error);
         if (error.response.status === 401) {
-          console.log("Wrong credentials");
-          dispatch({
-            type: ActionTypes.LOGIN_FAILED,
-            message: "Les informations remplies ne correspondent pas à un utilisateur connu"
-          });
+          if (error.response.data.code === ERRORS.EXPIRED_TOKEN) {
+            dispatch({
+              type: ActionTypes.EXPIRE_TOKEN,
+              message: "Session expirée, veuillez vous re-authentifier"
+            });
+          } else {
+            dispatch({
+              type: ActionTypes.LOGIN_FAILED,
+              message: "Les informations remplies ne correspondent pas à un utilisateur connu"
+            });
+          }
         } else {
-          console.log(`An error has occurred during authentication: ${error}`);
           dispatch({
             type: ActionTypes.LOGIN_FAILED,
             message: "Une erreur s'est produite durant l'authentification"
@@ -49,16 +57,14 @@ export function logout(): ThunkAction<void, AppState, undefined, any> {
     const config = {
       headers: {'Authorization': "bearer " + getState().auth.token}
     };
-    cli.post(ROUTES.AUTHENTICATION.LOGOUT, {}, config).then(response => {
-      if (response.status === 200) {
-        dispatch({
-          type: ActionTypes.LOGOUT
-        });
-      } else {
-        // TODO toast error
-      }
-    }).catch(error => {
-      // TODO toast error oopsie
+    cli.post(ROUTES.BACKEND.AUTHENTICATION.LOGOUT, {}, config).then(response => {
+      dispatch({
+        type: ActionTypes.LOGOUT
+      });
+    }).catch(() => {
+      dispatch({
+        type: ActionTypes.LOGOUT
+      });
     });
   };
 }
