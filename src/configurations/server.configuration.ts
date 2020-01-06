@@ -6,7 +6,8 @@ export const ROUTES = {
     }
   },
   FRONTEND: {
-    DASHBOARD: "/"
+    DASHBOARD: "/",
+    LOGIN: "/login"
   }
 };
 

@@ -1,6 +1,5 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { AppState } from '../reducers/combined.reducer';
-import LogoutAction from './logout.action';
 import cli from '../../configurations/http-client.configuration';
 import { ActionTypes } from './action.enum';
 import { ROUTES, ERRORS } from '../../configurations/server.configuration';
@@ -51,13 +50,13 @@ export function login(username: string, password: string): ThunkAction<void, App
 
 export function logout(): ThunkAction<void, AppState, undefined, any> {
   return (
-    dispatch: ThunkDispatch<AppState, undefined, LogoutAction>,
+    dispatch: ThunkDispatch<AppState, undefined, any>,
     getState: () => AppState
   ) => {
     const config = {
       headers: {'Authorization': "bearer " + getState().auth.token}
     };
-    cli.post(ROUTES.BACKEND.AUTHENTICATION.LOGOUT, {}, config).then(response => {
+    cli.post(ROUTES.BACKEND.AUTHENTICATION.LOGOUT, {}, config).then(() => {
       dispatch({
         type: ActionTypes.LOGOUT
       });

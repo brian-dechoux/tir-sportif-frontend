@@ -4,6 +4,7 @@ import { ThunkAction } from 'redux-thunk';
 import { AppState } from '../../redux/reducers/combined.reducer';
 import Logo from '../svg/Logo';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '../../configurations/server.configuration';
 
 type HeaderProps = {
   isConnected: boolean,
@@ -18,7 +19,7 @@ const Header = (props: HeaderProps) =>  {
   if (!props.isConnected) {
     authComponent = (<Button
       variant="outlined"
-      component={Link} to="/login"
+      component={Link} to={ROUTES.FRONTEND.LOGIN}
     >
       Se connecter
     </Button>);

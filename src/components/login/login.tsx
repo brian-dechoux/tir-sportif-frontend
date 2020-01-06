@@ -10,6 +10,8 @@ import { AppState } from '../../redux/reducers/combined.reducer';
 import './login.css'
 import Toast from '../toast/toast';
 import ToastClosedAction from '../../redux/actions/toast-closed.action';
+import { Link } from 'react-router-dom';
+import { ROUTES } from '../../configurations/server.configuration';
 
 type LoginProps = {
   loginFailedToast: {
@@ -79,9 +81,17 @@ const Login = (props: LoginProps) =>  {
             </Grid>
 
             <Grid container item justify="center">
-              <Grid item md={6}>
+              <Grid item md={5}>
                 <Button
-                  fullWidth
+                  variant="outlined"
+                  color="secondary"
+                  component={Link} to={ROUTES.FRONTEND.DASHBOARD}
+                >
+                  Annuler
+                </Button>
+              </Grid>
+              <Grid item md={5}>
+                <Button
                   variant="outlined"
                   color="primary"
                   onClick={() => props.actions.login(username, password)}
