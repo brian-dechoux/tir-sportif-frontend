@@ -17,19 +17,23 @@ type HeaderProps = {
 const Header = (props: HeaderProps) =>  {
   let authComponent;
   if (!props.isConnected) {
-    authComponent = (<Button
-      variant="outlined"
-      component={Link} to={ROUTES.FRONTEND.LOGIN}
-    >
-      Se connecter
-    </Button>);
+    authComponent = (
+      <Button
+        variant="outlined"
+        component={Link} to={ROUTES.FRONTEND.LOGIN}
+      >
+        Se connecter
+      </Button>
+    );
   } else {
-    authComponent = (<Button
-      variant="outlined"
-      onClick={() => props.actions.logout()}
-    >
-      Se déconnecter
-    </Button>);
+    authComponent = (
+      <Button
+        variant="outlined"
+        onClick={() => props.actions.logout()}
+      >
+        Se déconnecter
+      </Button>
+    );
   }
 
   return (
