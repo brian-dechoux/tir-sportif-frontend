@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from '../../configurations/server.configuration';
 
 type HeaderProps = {
-  isConnected: boolean,
+  isAuthenticated: boolean,
   actions: {
     login: (username: string, password: string) => ThunkAction<void, AppState, undefined, any>;
     logout: () => ThunkAction<void, AppState, undefined, any>;
@@ -16,7 +16,7 @@ type HeaderProps = {
 
 const Header = (props: HeaderProps) =>  {
   let authComponent;
-  if (!props.isConnected) {
+  if (!props.isAuthenticated) {
     authComponent = (
       <Button
         variant="outlined"
@@ -29,6 +29,7 @@ const Header = (props: HeaderProps) =>  {
     authComponent = (
       <Button
         variant="outlined"
+        color="secondary"
         onClick={() => props.actions.logout()}
       >
         Se déconnecter

@@ -22,7 +22,7 @@ export function login(username: string, password: string): ThunkAction<void, App
             type: ActionTypes.LOGIN,
             token: response.data.jwtToken
           });
-          dispatch(push(ROUTES.FRONTEND.DASHBOARD));
+          dispatch(push(ROUTES.FRONTEND.RESULTS));
         }
       }).catch(error => {
         console.log(error);

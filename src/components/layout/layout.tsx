@@ -6,79 +6,83 @@ import { ROUTES } from '../../configurations/server.configuration';
 
 type LayoutProps = {
   connected: boolean,
-  elements: React.ReactNode
+  children: React.ReactNode
 };
 
 // FIXME Correct the drawer shit, it's displayed on top of the appbar
 //  Also, it doesn't care about grid layout
-const Layout = (props: LayoutProps) => {
-  let content;
-  if (props.connected) {
-    content = (
-      <Grid container item md={12}>
-        <Grid item md={2}>
-          <Drawer
+class Layout extends React.Component<LayoutProps> {
 
-            variant="permanent"
-            anchor="left"
-          >
-            <List>
-              <ListItem
-                button
-                component={Link} to={ROUTES.FRONTEND.RESULTS}
-              >
-                <ListItemIcon><Icon className="fa fa-plus-circle" /></ListItemIcon>
-                <ListItemText>Résultats</ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                component={Link} to={ROUTES.FRONTEND.CHALLENGE}
-              >
-                <ListItemIcon><Icon className="fa fa-plus-circle" /></ListItemIcon>
-                <ListItemText>Challenge</ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                component={Link} to={ROUTES.FRONTEND.CLUBS}
-              >
-                <ListItemIcon><Icon className="fa fa-plus-circle" color="primary" /></ListItemIcon>
-                <ListItemText>Clubs</ListItemText>
-              </ListItem>
-              <ListItem
-                button
-                component={Link} to={ROUTES.FRONTEND.MYCLUB}
-              >
-                <ListItemIcon><Icon className="fa fa-plus-circle" color="secondary" /></ListItemIcon>
-                <ListItemText>Mon club</ListItemText>
-              </ListItem>
-            </List>
-          </Drawer>
-        </Grid>
-        <Grid item md={10}>
-          { props.elements }
-        </Grid>
-      </Grid>
-    );
-  } else {
-    content = (
-      <Grid item md={12}>
-        { props.elements }
-      </Grid>
-    )
-  }
+    render() {
+      let content;
+      if (this.props.connected) {
+        content = (
+          <Grid container item md={12}>
+            <Grid item md={2}>
+              <Drawer
 
-  return (
-    <>
-      <Box>
-        <Grid container direction='column'>
-          <Grid item md={12}>
-            <HeaderContainer />
+                variant="permanent"
+                anchor="left"
+              >
+                <List>
+                  <ListItem
+                    button
+                    component={Link} to={ROUTES.FRONTEND.RESULTS}
+                  >
+                    <ListItemIcon><Icon className="fa fa-plus-circle" /></ListItemIcon>
+                    <ListItemText>Résultats</ListItemText>
+                  </ListItem>
+                  <ListItem
+                    button
+                    component={Link} to={ROUTES.FRONTEND.CHALLENGE}
+                  >
+                    <ListItemIcon><Icon className="fa fa-plus-circle" /></ListItemIcon>
+                    <ListItemText>Challenge</ListItemText>
+                  </ListItem>
+                  <ListItem
+                    button
+                    component={Link} to={ROUTES.FRONTEND.CLUBS}
+                  >
+                    <ListItemIcon><Icon className="fa fa-plus-circle" color="primary" /></ListItemIcon>
+                    <ListItemText>Clubs</ListItemText>
+                  </ListItem>
+                  <ListItem
+                    button
+                    component={Link} to={ROUTES.FRONTEND.MYCLUB}
+                  >
+                    <ListItemIcon><Icon className="fa fa-plus-circle" color="secondary" /></ListItemIcon>
+                    <ListItemText>Mon club</ListItemText>
+                  </ListItem>
+                </List>
+              </Drawer>
+            </Grid>
+            <Grid item md={10}>
+              { this.props.children }
+            </Grid>
           </Grid>
-          {content}
-        </Grid>
-      </Box>
-    </>
-  );
-};
+        );
+      } else {
+        content = (
+          <Grid item md={12}>
+            { this.props.children }
+          </Grid>
+        )
+      }
+
+      return (
+        <>
+          <Box>
+            <Grid container direction='column'>
+              <Grid item md={12}>
+                <HeaderContainer />
+              </Grid>
+              {content}
+            </Grid>
+          </Box>
+        </>
+      );
+    }
+
+}
 
 export default Layout;
