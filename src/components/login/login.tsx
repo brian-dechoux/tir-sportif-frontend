@@ -16,7 +16,7 @@ import { ROUTES } from '../../configurations/server.configuration';
 type LoginProps = {
   loginFailedToast: {
     isShown: boolean,
-    message: string | null
+    message: string
   }
   actions: {
     login: (username: string, password: string) => ThunkAction<void, AppState, undefined, any>;
@@ -31,7 +31,7 @@ const Login = (props: LoginProps) =>  {
   let toast;
   if (props.loginFailedToast.isShown) {
     toast = <Toast
-      message={(props.loginFailedToast.message != null ? props.loginFailedToast.message : "Une erreur s'est produite")}
+      message={(props.loginFailedToast.message)}
       onCloseCallback={() => props.actions.closeToast()}
     />
   }

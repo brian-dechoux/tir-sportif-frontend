@@ -17,8 +17,15 @@ class AuthContainer extends React.PureComponent<
       localStorage.removeItem("token");
     }
 
+    const loginFailedToastMessage: string = this.props.loginFailedToast.message != null ?
+      this.props.loginFailedToast.message :
+      "Une erreur s'est produite";
+
     return <Login
-      loginFailedToast={this.props.loginFailedToast}
+      loginFailedToast={{
+        ...this.props.loginFailedToast,
+        message: loginFailedToastMessage
+      }}
       actions={this.props.actions}
     />;
   }
