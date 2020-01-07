@@ -7,7 +7,11 @@ export const ROUTES = {
   },
   FRONTEND: {
     DASHBOARD: "/",
-    LOGIN: "/login"
+    LOGIN: "/login",
+    RESULTS: "/results",
+    CHALLENGE: "/challenge",
+    CLUBS: "/clubs",
+    MYCLUB: "/myclub"
   }
 };
 

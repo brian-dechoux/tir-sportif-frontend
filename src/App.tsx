@@ -3,37 +3,41 @@ import { Provider } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import { store, history } from './store';
-import HeaderContainer from './components/header/header.container';
 import 'typeface-roboto';
 import AuthContainer from './components/login/login.container';
 import ResultsContainer from './components/results/results.container';
 import { ConnectedRouter } from 'connected-react-router';
+import { ROUTES } from './configurations/server.configuration';
 
-function App() {
+const App: React.FC = () => {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <Switch>
 
-          <Route path="/login">
+          <Route path={ROUTES.FRONTEND.LOGIN}>
             <AuthContainer />
           </Route>
 
-          <HeaderContainer />
-
-          <Route path="/results">
+          <Route path={ROUTES.FRONTEND.RESULTS}>
             <ResultsContainer />
           </Route>
 
-          <Route path="/admin">
+          <Route path={ROUTES.FRONTEND.CHALLENGE}>
           </Route>
 
-          <Redirect exact from="/" to="results" />
+          <Route path={ROUTES.FRONTEND.CLUBS}>
+          </Route>
+
+          <Route path={ROUTES.FRONTEND.MYCLUB}>
+          </Route>
+
+          <Redirect exact from="/" to={ROUTES.FRONTEND.RESULTS} />
 
         </Switch>
       </ConnectedRouter>
     </Provider>
   );
-}
+};
 
 export default App;
