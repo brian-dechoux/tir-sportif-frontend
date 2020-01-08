@@ -12,7 +12,7 @@ const Results = () =>  {
       </Menu>
     </AuthenticatedContainer>*/
     <>
-
+      <Typography>Results</Typography>
     </>
   );
 };
