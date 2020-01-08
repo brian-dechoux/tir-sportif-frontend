@@ -1,5 +1,6 @@
 import React from 'react';
-import { Drawer, Icon, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../configurations/server.configuration';
 
@@ -12,6 +13,9 @@ const Menu = () => {
       anchor="left"
     >
       <List>
+        <ListItem button>
+          <ListItemIcon><CloseIcon/></ListItemIcon>
+        </ListItem>
         <ListItem
           button
           component={Link} to={ROUTES.FRONTEND.RESULTS}
@@ -23,7 +27,6 @@ const Menu = () => {
           button
           component={Link} to={ROUTES.FRONTEND.CHALLENGE}
         >
-          <ListItemIcon><Icon className="fa fa-plus-circle" /></ListItemIcon>
           <ListItemText>Challenge</ListItemText>
         </ListItem>
 
@@ -31,7 +34,6 @@ const Menu = () => {
           button
           component={Link} to={ROUTES.FRONTEND.CLUBS}
         >
-          <ListItemIcon><Icon className="fa fa-plus-circle" color="primary" /></ListItemIcon>
           <ListItemText>Clubs</ListItemText>
         </ListItem>
 
@@ -39,7 +41,6 @@ const Menu = () => {
           button
           component={Link} to={ROUTES.FRONTEND.MYCLUB}
         >
-          <ListItemIcon><Icon className="fa fa-plus-circle" color="secondary" /></ListItemIcon>
           <ListItemText>Mon club</ListItemText>
         </ListItem>
       </List>
