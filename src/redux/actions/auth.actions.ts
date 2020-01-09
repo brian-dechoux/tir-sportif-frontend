@@ -1,28 +1,24 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { AppState } from '../reducers/combined.reducer';
-import cli from '../../configurations/http-client.configuration';
 import { ActionTypes } from './action.enum';
 import { ROUTES, ERRORS } from '../../configurations/server.configuration';
 import ToastClosedAction from './toast-closed.action';
 import { push } from 'connected-react-router';
+import AuthService from '../../services/auth.service';
 
 export function login(username: string, password: string): ThunkAction<void, AppState, undefined, any> {
   return (
     dispatch: ThunkDispatch<AppState, undefined, any>
   ) => {
-    const authPayload = {
-      username: username,
-      password: password
-    };
 
-    cli.post(ROUTES.BACKEND.AUTHENTICATION.LOGIN, authPayload)
+    AuthService.login(username, password)
       .then(response => {
         if (response.status === 200) {
           dispatch({
             type: ActionTypes.LOGIN,
             token: response.data.jwtToken
           });
-          dispatch(push(ROUTES.FRONTEND.RESULTS));
+          dispatch(push(ROUTES.RESULTS));
         }
       }).catch(error => {
         console.log(error);
@@ -53,10 +49,8 @@ export function logout(): ThunkAction<void, AppState, undefined, any> {
     dispatch: ThunkDispatch<AppState, undefined, any>,
     getState: () => AppState
   ) => {
-    const config = {
-      headers: {'Authorization': "bearer " + getState().auth.token}
-    };
-    cli.post(ROUTES.BACKEND.AUTHENTICATION.LOGOUT, {}, config).then(() => {
+    AuthService.logout()
+      .then(() => {
       dispatch({
         type: ActionTypes.LOGOUT
       });

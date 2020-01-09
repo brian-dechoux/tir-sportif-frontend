@@ -21,7 +21,7 @@ const Header = (props: HeaderProps) =>  {
     authComponent = (
       <Button
         variant="outlined"
-        component={Link} to={ROUTES.FRONTEND.LOGIN}
+        component={Link} to={ROUTES.LOGIN}
       >
         Se connecter
       </Button>

@@ -21,17 +21,17 @@ const App: React.FC = () => {
       <ConnectedRouter history={history}>
         <Switch>
 
-          <Route path={ROUTES.FRONTEND.LOGIN}>
+          <Route path={ROUTES.LOGIN}>
             <AuthContainer />
           </Route>
 
-          <Route path={ROUTES.FRONTEND.RESULTS}>
+          <Route path={ROUTES.RESULTS}>
             <HeaderContainer/>
             <ResultsContainer/>
           </Route>
 
 
-          <Route path={ROUTES.FRONTEND.CHALLENGE}>
+          <Route path={ROUTES.CHALLENGE}>
             <Box>
               <Grid container direction="row" spacing={2}>
                 <Grid item md={12}>
@@ -47,21 +47,21 @@ const App: React.FC = () => {
           </Route>
 
 
-          <Route path={ROUTES.FRONTEND.CLUBS}>
+          <Route path={ROUTES.CLUBS}>
             <HeaderContainer/>
             <AuthenticatedRedirectContainer>
               clubs
             </AuthenticatedRedirectContainer>
           </Route>
 
-          <Route path={ROUTES.FRONTEND.MYCLUB}>
+          <Route path={ROUTES.MYCLUB}>
             <HeaderContainer/>
             <AuthenticatedRedirectContainer>
               myclub
             </AuthenticatedRedirectContainer>
           </Route>
 
-          <Redirect exact from="/" to={ROUTES.FRONTEND.RESULTS} />
+          <Redirect exact from="/" to={ROUTES.RESULTS} />
 
         </Switch>
       </ConnectedRouter>

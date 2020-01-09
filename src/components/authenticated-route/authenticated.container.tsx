@@ -16,7 +16,7 @@ class AuthenticatedRedirectContainer extends React.Component<ReturnType<typeof m
     return (
       isAuthenticated ?
         children
-        : <Redirect to={ROUTES.FRONTEND.LOGIN}/>
+        : <Redirect to={ROUTES.LOGIN}/>
     );
   }
 

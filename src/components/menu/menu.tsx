@@ -18,28 +18,28 @@ const Menu = () => {
         </ListItem>
         <ListItem
           button
-          component={Link} to={ROUTES.FRONTEND.RESULTS}
+          component={Link} to={ROUTES.RESULTS}
         >
           <ListItemText>Résultats</ListItemText>
         </ListItem>
 
         <ListItem
           button
-          component={Link} to={ROUTES.FRONTEND.CHALLENGE}
+          component={Link} to={ROUTES.CHALLENGE}
         >
           <ListItemText>Challenge</ListItemText>
         </ListItem>
 
         <ListItem
           button
-          component={Link} to={ROUTES.FRONTEND.CLUBS}
+          component={Link} to={ROUTES.CLUBS}
         >
           <ListItemText>Clubs</ListItemText>
         </ListItem>
 
         <ListItem
           button
-          component={Link} to={ROUTES.FRONTEND.MYCLUB}
+          component={Link} to={ROUTES.MYCLUB}
         >
           <ListItemText>Mon club</ListItemText>
         </ListItem>

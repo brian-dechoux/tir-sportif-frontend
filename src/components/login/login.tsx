@@ -85,7 +85,7 @@ const Login = (props: LoginProps) =>  {
                 <Button
                   variant="outlined"
                   color="secondary"
-                  component={Link} to={ROUTES.FRONTEND.DASHBOARD}
+                  component={Link} to={ROUTES.DASHBOARD}
                 >
                   Annuler
                 </Button>
