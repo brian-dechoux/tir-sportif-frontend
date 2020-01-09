@@ -1,10 +1,11 @@
-import { AppBar, Box, Button, Grid, Typography } from '@material-ui/core';
+import { AppBar, Box, Button, Grid, IconButton, Toolbar, Typography } from '@material-ui/core';
 import React from 'react';
 import { ThunkAction } from 'redux-thunk';
 import { AppState } from '../../redux/reducers/combined.reducer';
 import Logo from '../svg/Logo';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../configurations/server.configuration';
+import MenuIcon from '@material-ui/icons/Menu';
 
 type HeaderProps = {
   isAuthenticated: boolean,
@@ -38,25 +39,20 @@ const Header = (props: HeaderProps) =>  {
   }
 
   return (
-    <AppBar className="header" position="sticky">
-      <Box className="container" component="div" p="20px">
-        <Grid container spacing={2} alignItems="center">
-          <Grid item md={3}>
-            <Logo
-              height="100px"
-              width="100px"
-            />
-          </Grid>
-          <Grid item md={7}>
-            <Typography variant="h3" className="title">
-              Tir sportif Briey
-            </Typography>
-          </Grid>
-          <Grid item md={2}>
-            {authComponent}
-          </Grid>
-        </Grid>
-      </Box>
+    <AppBar className="header" position="static">
+      <Toolbar>
+        <IconButton edge="start" color="inherit">
+          <MenuIcon />
+        </IconButton>
+        <Logo
+          height="50px"
+          width="50px"
+        />
+        <Typography variant="h6">
+          TIR SPORTIF BRIEY
+        </Typography>
+        {authComponent}
+      </Toolbar>
     </AppBar>
   );
 };

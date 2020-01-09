@@ -2,34 +2,31 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { AppState } from '../../redux/reducers/combined.reducer';
 import { Redirect } from 'react-router';
+import { ROUTES } from '../../configurations/server.configuration';
 
-type AuthenticatedContainerProps = {
-  mustRedirect: boolean,
+type AuthenticatedRedirectContainerProps = {
   children: React.ReactNode
 };
 
-class AuthenticatedContainer extends React.Component<ReturnType<typeof mapStateToProps>> {
+class AuthenticatedRedirectContainer extends React.Component<ReturnType<typeof mapStateToProps>> {
 
   render() {
-    const { isAuthenticated, mustRedirect, children } = this.props;
+    const { isAuthenticated, children } = this.props;
 
     return (
       isAuthenticated ?
         children
-        : (
-          mustRedirect ? <Redirect to={"/login"}/> : null
-        )
+        : <Redirect to={ROUTES.FRONTEND.LOGIN}/>
     );
   }
 
 }
 
-const mapStateToProps = (state: AppState, ownProps: AuthenticatedContainerProps) => ({
+const mapStateToProps = (state: AppState, ownProps: AuthenticatedRedirectContainerProps) => ({
   isAuthenticated: state.auth.token != null,
-  mustRedirect: ownProps.mustRedirect,
   children: ownProps.children
 });
 
 export default connect(
   mapStateToProps
-)(AuthenticatedContainer);
+)(AuthenticatedRedirectContainer);
