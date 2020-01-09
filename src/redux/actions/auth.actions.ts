@@ -21,7 +21,6 @@ export function login(username: string, password: string): ThunkAction<void, App
           dispatch(push(ROUTES.RESULTS));
         }
       }).catch(error => {
-        console.log(error);
         if (error.response.status === 401) {
           if (error.response.data.code === ERRORS.EXPIRED_TOKEN) {
             dispatch({
