@@ -1,3 +1,2 @@
-MobX plutot que Redux ?
-Besoin d'un big state manager ?
-
+https://github.com/airbnb/react-dates
+https://github.com/brillout/awesome-react-components
