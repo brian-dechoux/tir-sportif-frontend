@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Box,
   Button,
@@ -10,37 +10,30 @@ import {
 import TableContainer from '@material-ui/core/TableContainer';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
+import { GetChallengeListElementResponse } from 'services/models/challenge.model';
+import { ThunkAction } from 'redux-thunk';
+import { AppState } from 'redux/reducers/combined.reducer';
 
-const Challenge = () =>  {
-  function createData(name: string, calories: number, fat: number, carbs: number, protein: number) {
-    return { name, calories, fat, carbs, protein };
-  }
+type ChallengeListProps = {
+  actions: {
+    getChallenges: (page: number) => ThunkAction<void, AppState, undefined, any>
+  },
+  challenges: GetChallengeListElementResponse[],
+  nbElementsOnPage: number,
+  currentPageNumber: number,
+  nbPages: number,
+  nbTotalElements: number
+}
 
-  const rows = [
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-    createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('Eclair', 262, 16.0, 24, 6.0),
-    createData('Cupcake', 305, 3.7, 67, 4.3),
-    createData('Gingerbread', 356, 16.0, 49, 3.9),
-  ];
+const ChallengeList = (props: ChallengeListProps) =>  {
+  const getChallenges  = props.actions.getChallenges;
+  const currentPageNumber  = props.currentPageNumber;
+  const nbChallenges  = props.challenges.length;
 
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  useEffect(() => { getChallenges(currentPageNumber)}, [getChallenges, currentPageNumber, nbChallenges]);
 
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    getChallenges(newPage);
   };
 
   return (
@@ -77,36 +70,30 @@ const Challenge = () =>  {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell>Dessert (100g serving)</TableCell>
-                        <TableCell align="right">Calories</TableCell>
-                        <TableCell align="right">Fat&nbsp;(g)</TableCell>
-                        <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-                        <TableCell align="right">Protein&nbsp;(g)</TableCell>
+                        <TableCell align="right">NOM</TableCell>
+                        <TableCell align="right">DATE</TableCell>
+                        <TableCell align="right">NB&nbsp;TIREURS</TableCell>
+                        <TableCell align="right">LIEU</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows.map(row => (
-                        <TableRow key={row.name}>
-                          <TableCell component="th" scope="row">
-                            {row.name}
-                          </TableCell>
-                          <TableCell align="right">{row.calories}</TableCell>
-                          <TableCell align="right">{row.fat}</TableCell>
-                          <TableCell align="right">{row.carbs}</TableCell>
-                          <TableCell align="right">{row.protein}</TableCell>
+                      {props.challenges.map(challenge => (
+                        <TableRow key={challenge.name}>
+                          <TableCell align="right">{challenge.name}</TableCell>
+                          <TableCell align="right">{challenge.startDate}</TableCell>
+                          <TableCell align="right">{challenge.city}</TableCell>
+                          <TableCell align="right">{challenge.nbShooters}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
                     <TableFooter>
                       <TableRow>
                         <TablePagination
-                          rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                           colSpan={3}
-                          count={rows.length}
-                          rowsPerPage={10}
-                          page={1}
+                          count={props.nbTotalElements}
+                          rowsPerPage={props.nbElementsOnPage}
+                          page={props.currentPageNumber}
                           onChangePage={handleChangePage}
-                          onChangeRowsPerPage={handleChangeRowsPerPage}
                         />
                       </TableRow>
                     </TableFooter>
@@ -125,4 +112,4 @@ const Challenge = () =>  {
   );
 };
 
-export default Challenge;
+export default ChallengeList;

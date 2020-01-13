@@ -45,8 +45,7 @@ export function login(username: string, password: string): ThunkAction<void, App
 
 export function logout(): ThunkAction<void, AppState, undefined, any> {
   return (
-    dispatch: ThunkDispatch<AppState, undefined, any>,
-    getState: () => AppState
+    dispatch: ThunkDispatch<AppState, undefined, any>
   ) => {
     AuthService.logout()
       .then(() => {

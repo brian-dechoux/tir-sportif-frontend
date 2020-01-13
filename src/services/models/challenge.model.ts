@@ -1,22 +1,13 @@
-import { GetAddressResponse } from './address.model';
-import { GetCategoryResponse } from './category.model';
-import { GetClubResponse } from './club.model';
-import { GetDisciplineResponse } from './discipline.model';
+export interface GetChallengeListElementResponse {
 
-export interface GetChallengeResponse {
+  id: number;
 
-  address?: GetAddressResponse;
+  name: string;
 
-  categories?: Array<GetCategoryResponse>;
+  startDate: Date;
 
-  club?: GetClubResponse;
+  city: string;
 
-  disciplines?: Array<GetDisciplineResponse>;
-
-  id?: number;
-
-  name?: string;
-
-  startDate?: Date;
+  nbShooters: number;
 
 }

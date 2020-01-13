@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { login, closeToast } from 'redux/actions/auth.actions';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import Login  from './login';
-import { AppState } from '../../redux/reducers/combined.reducer';
+import { AppState } from 'redux/reducers/combined.reducer';
 
 class AuthContainer extends React.PureComponent<
   ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>,

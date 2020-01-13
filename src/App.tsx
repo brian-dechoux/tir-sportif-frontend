@@ -9,9 +9,8 @@ import ResultsContainer from './components/results/results.container';
 import { ConnectedRouter } from 'connected-react-router';
 import { ROUTES } from './configurations/server.configuration';
 import HeaderContainer from './components/header/header.container';
-import MenuContainer from './components/menu/menu.container';
 import AuthenticatedRedirectContainer from './components/authenticated-route/authenticated.container';
-import ChallengeContainer from './components/challenge/challenge.container';
+import ChallengeListContainer from './components/challenge/challenge-list/challenge-list.container';
 import { Box, Grid } from '@material-ui/core';
 
 // Problem with negative path matching: https://github.com/pillarjs/path-to-regexp/issues/99
@@ -39,7 +38,7 @@ const App: React.FC = () => {
                 </Grid>
                 <Grid item md={12}>
                   <AuthenticatedRedirectContainer>
-                    <ChallengeContainer/>
+                    <ChallengeListContainer/>
                   </AuthenticatedRedirectContainer>
                 </Grid>
               </Grid>

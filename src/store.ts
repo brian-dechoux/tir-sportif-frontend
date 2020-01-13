@@ -13,6 +13,9 @@ const initialAppState: any = {
     token: localStorage.getItem("token"),
     showLoginToast: false,
     loginToastMessage: null
+  },
+  challenge: {
+    pagedChallenges: null
   }
 };
 

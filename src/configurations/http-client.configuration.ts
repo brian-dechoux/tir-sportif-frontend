@@ -7,6 +7,8 @@ const cli = axios.create({
   timeout: 3000
 });
 
+// TODO add intrerceptor for 401, redirect to login
+
 cli.interceptors.request.use( (config: AxiosRequestConfig) => {
   const token = store.getState().auth.token;
   if (token !== null) {

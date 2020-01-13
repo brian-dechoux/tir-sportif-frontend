@@ -6,12 +6,12 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { ThunkAction } from 'redux-thunk';
-import { AppState } from '../../redux/reducers/combined.reducer';
+import { AppState } from 'redux/reducers/combined.reducer';
 import './login.css'
-import Toast from '../toast/toast';
-import ToastClosedAction from '../../redux/actions/toast-closed.action';
+import Toast from 'components/toast/toast';
+import ToastClosedAction from 'redux/actions/toast-closed.action';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '../../configurations/server.configuration';
+import { ROUTES } from 'configurations/server.configuration';
 
 type LoginProps = {
   loginFailedToast: {
