@@ -4,19 +4,18 @@ import cli from '../configurations/http-client.configuration';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 
 class ChallengeService {
-
-  getChallenges(page: number): Promise<AxiosResponse<Page<GetChallengeListElementResponse>>> {
+  getChallenges(
+    rowsPerPage: number,
+    page: number
+  ): Promise<AxiosResponse<Page<GetChallengeListElementResponse>>> {
     const params: AxiosRequestConfig = {
       params: {
-        page: page
-      }
+        page: page,
+        rowsPerPage: rowsPerPage,
+      },
     };
-    return cli.get(
-      "/challenges",
-      params
-    );
+    return cli.get('/challenges', params);
   }
-
 }
 
 export default new ChallengeService();

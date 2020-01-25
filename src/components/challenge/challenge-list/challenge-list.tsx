@@ -23,7 +23,7 @@ import { AppState } from 'redux/reducers/combined.reducer';
 
 type ChallengeListProps = {
   actions: {
-    changePage: (page: number) => ThunkAction<void, AppState, undefined, any>;
+    changePage: (rowsPerPage: number, page: number) => ThunkAction<void, AppState, undefined, any>;
   };
   challenges: GetChallengeListElementResponse[];
   nbElementsOnPage: number;
@@ -36,7 +36,12 @@ type ChallengeListProps = {
 //  - cells align=center
 const ChallengeList = (props: ChallengeListProps) => {
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    props.actions.changePage(newPage);
+    props.actions.changePage(props.nbElementsOnPage, newPage);
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newRowsPerPageValue: number = parseInt(event.target.value, 10);
+    props.actions.changePage(newRowsPerPageValue, 0);
   };
 
   return (
@@ -95,6 +100,7 @@ const ChallengeList = (props: ChallengeListProps) => {
                           rowsPerPage={props.nbElementsOnPage}
                           page={props.currentPageNumber}
                           onChangePage={handleChangePage}
+                          onChangeRowsPerPage={handleChangeRowsPerPage}
                         />
                       </TableRow>
                     </TableFooter>

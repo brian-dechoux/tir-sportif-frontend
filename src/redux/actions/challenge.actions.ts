@@ -3,9 +3,12 @@ import { AppState } from 'redux/reducers/combined.reducer';
 import { ActionTypes } from './action.enum';
 import ChallengeService from 'services/challenge.service';
 
-export function changePage(page: number): ThunkAction<void, AppState, undefined, any> {
+export function changePage(
+  rowsPerPage: number,
+  page: number
+): ThunkAction<void, AppState, undefined, any> {
   return (dispatch: ThunkDispatch<AppState, undefined, any>) => {
-    ChallengeService.getChallenges(page)
+    ChallengeService.getChallenges(rowsPerPage, page)
       .then(response => {
         if (response.status === 200) {
           dispatch({
