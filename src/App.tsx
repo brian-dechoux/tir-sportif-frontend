@@ -19,49 +19,41 @@ const App: React.FC = () => {
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <Switch>
-
           <Route path={ROUTES.LOGIN}>
             <AuthContainer />
           </Route>
 
           <Route path={ROUTES.RESULTS}>
-            <HeaderContainer/>
-            <ResultsContainer/>
+            <HeaderContainer />
+            <ResultsContainer />
           </Route>
-
 
           <Route path={ROUTES.CHALLENGE}>
             <Box>
               <Grid container direction="row" spacing={2}>
                 <Grid item md={12}>
-                  <HeaderContainer/>
+                  <HeaderContainer />
                 </Grid>
                 <Grid item md={12}>
                   <AuthenticatedRedirectContainer>
-                    <ChallengeListContainer/>
+                    <ChallengeListContainer />
                   </AuthenticatedRedirectContainer>
                 </Grid>
               </Grid>
             </Box>
           </Route>
 
-
           <Route path={ROUTES.CLUBS}>
-            <HeaderContainer/>
-            <AuthenticatedRedirectContainer>
-              clubs
-            </AuthenticatedRedirectContainer>
+            <HeaderContainer />
+            <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
           </Route>
 
           <Route path={ROUTES.MYCLUB}>
-            <HeaderContainer/>
-            <AuthenticatedRedirectContainer>
-              myclub
-            </AuthenticatedRedirectContainer>
+            <HeaderContainer />
+            <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
           </Route>
 
           <Redirect exact from="/" to={ROUTES.RESULTS} />
-
         </Switch>
       </ConnectedRouter>
     </Provider>

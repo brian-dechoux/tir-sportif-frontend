@@ -3,7 +3,7 @@ import ChallengeState from '../states/challenge.state.type';
 import GotChallengesAction from '../actions/got-challenges.action';
 
 const initialState: ChallengeState = {
-  pagedChallenge: null
+  pagedChallenges: null
 };
 
 type ChallengeActions = GotChallengesAction;

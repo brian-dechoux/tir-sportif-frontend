@@ -1,11 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
   Box,
   Button,
   Grid,
   InputAdornment,
   OutlinedInput,
-  Paper, Table, TableBody, TableCell, TableFooter, TableHead, TablePagination, TableRow,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
 } from '@material-ui/core';
 import TableContainer from '@material-ui/core/TableContainer';
 import AddIcon from '@material-ui/icons/Add';
@@ -16,32 +23,28 @@ import { AppState } from 'redux/reducers/combined.reducer';
 
 type ChallengeListProps = {
   actions: {
-    getChallenges: (page: number) => ThunkAction<void, AppState, undefined, any>
-  },
-  challenges: GetChallengeListElementResponse[],
-  nbElementsOnPage: number,
-  currentPageNumber: number,
-  nbPages: number,
-  nbTotalElements: number
-}
+    changePage: (page: number) => ThunkAction<void, AppState, undefined, any>;
+  };
+  challenges: GetChallengeListElementResponse[];
+  nbElementsOnPage: number;
+  currentPageNumber: number;
+  nbPages: number;
+  nbTotalElements: number;
+};
 
-const ChallengeList = (props: ChallengeListProps) =>  {
-  const getChallenges  = props.actions.getChallenges;
-  const currentPageNumber  = props.currentPageNumber;
-  const nbChallenges  = props.challenges.length;
-
-  useEffect(() => { getChallenges(currentPageNumber)}, [getChallenges, currentPageNumber, nbChallenges]);
-
+// TODO Add CSS for table:
+//  - cells align=center
+const ChallengeList = (props: ChallengeListProps) => {
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    getChallenges(newPage);
+    props.actions.changePage(newPage);
   };
 
   return (
     <>
       <Box>
         <Grid container justify="center">
-          <Grid item md={2}/>
-          <Grid  item md={8}>
+          <Grid item md={2} />
+          <Grid item md={8}>
             <Grid container justify="center" direction="column" spacing={3}>
               <Grid container item>
                 <Grid item md={3}>
@@ -55,12 +58,10 @@ const ChallengeList = (props: ChallengeListProps) =>  {
                     }
                   />
                 </Grid>
-                <Grid item md={6}/>
+                <Grid item md={6} />
                 <Grid item md={3}>
-                  <Button
-                    variant="outlined"
-                  >
-                    <AddIcon/>
+                  <Button variant="outlined">
+                    <AddIcon />
                     CREER UN CHALLENGE
                   </Button>
                 </Grid>
@@ -70,19 +71,19 @@ const ChallengeList = (props: ChallengeListProps) =>  {
                   <Table>
                     <TableHead>
                       <TableRow>
-                        <TableCell align="right">NOM</TableCell>
-                        <TableCell align="right">DATE</TableCell>
-                        <TableCell align="right">NB&nbsp;TIREURS</TableCell>
-                        <TableCell align="right">LIEU</TableCell>
+                        <TableCell align="center">NOM</TableCell>
+                        <TableCell align="center">DATE</TableCell>
+                        <TableCell align="center">NB&nbsp;TIREURS</TableCell>
+                        <TableCell align="center">LIEU</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
                       {props.challenges.map(challenge => (
-                        <TableRow key={challenge.name}>
-                          <TableCell align="right">{challenge.name}</TableCell>
-                          <TableCell align="right">{challenge.startDate}</TableCell>
-                          <TableCell align="right">{challenge.city}</TableCell>
-                          <TableCell align="right">{challenge.nbShooters}</TableCell>
+                        <TableRow key={challenge.id}>
+                          <TableCell align="center">{challenge.name}</TableCell>
+                          <TableCell align="center">{challenge.startDate}</TableCell>
+                          <TableCell align="center">{challenge.nbShooters}</TableCell>
+                          <TableCell align="center">{challenge.city}</TableCell>
                         </TableRow>
                       ))}
                     </TableBody>
@@ -100,12 +101,10 @@ const ChallengeList = (props: ChallengeListProps) =>  {
                   </Table>
                 </TableContainer>
               </Grid>
-              <Grid item>
-
-              </Grid>
+              <Grid item />
             </Grid>
           </Grid>
-          <Grid item md={2}/>
+          <Grid item md={2} />
         </Grid>
       </Box>
     </>

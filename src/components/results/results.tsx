@@ -1,10 +1,7 @@
 import React from 'react';
-import AuthenticatedContainer from '../authenticated-route/authenticated.container';
 import { Typography } from '@material-ui/core';
-import Menu from '../menu/menu';
-import HeaderContainer from '../header/header.container';
 
-const Results = () =>  {
+const Results = () => {
   return (
     /*<AuthenticatedContainer mustRedirect={false}>
       <Menu>

@@ -6,16 +6,17 @@ import { Reducer } from 'react';
 import AuthState from '../states/auth.state.type';
 import ChallengeState from '../states/challenge.state.type';
 
-const createRootReducer = (history: any) => combineReducers({
-  router: connectRouter(history),
-  auth,
-  challenge
-});
+const createRootReducer = (history: any) =>
+  combineReducers({
+    router: connectRouter(history),
+    auth,
+    challenge,
+  });
 
 export type AppState = {
-  router?: Reducer<RouterState<any>, any>,
-  auth: AuthState,
-  challenge: ChallengeState
-}
+  router?: Reducer<RouterState<any>, any>;
+  auth: AuthState;
+  challenge: ChallengeState;
+};
 
 export default createRootReducer;
