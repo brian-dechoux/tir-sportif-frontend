@@ -4,6 +4,7 @@ import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import ChallengeList from './challenge-list';
 import { changePage } from 'redux/actions/challenge.actions';
 import { AppState } from 'redux/reducers/combined.reducer';
+import { push } from 'connected-react-router';
 
 class ChallengeListContainer extends React.PureComponent<
   ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>,
@@ -40,6 +41,7 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
   actions: bindActionCreators(
     {
       changePage: changePage,
+      push: push,
     },
     dispatch
   ),

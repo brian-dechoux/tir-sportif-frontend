@@ -3,8 +3,8 @@ import auth from 'redux/reducers/auth.reducer';
 import challenge from 'redux/reducers/challenge.reducer';
 import { connectRouter, RouterState } from 'connected-react-router';
 import { Reducer } from 'react';
-import AuthState from '../states/auth.state.type';
-import ChallengeState from '../states/challenge.state.type';
+import AuthState from 'redux/states/auth.state.type';
+import ChallengeState from 'redux/states/challenge.state.type';
 
 const createRootReducer = (history: any) =>
   combineReducers({
@@ -14,7 +14,7 @@ const createRootReducer = (history: any) =>
   });
 
 export type AppState = {
-  router?: Reducer<RouterState<any>, any>;
+  router: Reducer<RouterState<any>, any>;
   auth: AuthState;
   challenge: ChallengeState;
 };

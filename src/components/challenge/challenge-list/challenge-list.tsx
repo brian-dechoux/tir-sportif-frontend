@@ -20,10 +20,16 @@ import SearchIcon from '@material-ui/icons/Search';
 import { GetChallengeListElementResponse } from 'services/models/challenge.model';
 import { ThunkAction } from 'redux-thunk';
 import { AppState } from 'redux/reducers/combined.reducer';
+import { ROUTES } from 'configurations/server.configuration';
+import { CallHistoryMethodAction } from 'connected-react-router';
 
 type ChallengeListProps = {
   actions: {
     changePage: (rowsPerPage: number, page: number) => ThunkAction<void, AppState, undefined, any>;
+    push: (
+      path: string,
+      state?: any | undefined
+    ) => CallHistoryMethodAction<[string, (any | undefined)?]>;
   };
   challenges: GetChallengeListElementResponse[];
   nbElementsOnPage: number;
@@ -42,6 +48,10 @@ const ChallengeList = (props: ChallengeListProps) => {
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newRowsPerPageValue: number = parseInt(event.target.value, 10);
     props.actions.changePage(newRowsPerPageValue, 0);
+  };
+
+  const handleClickOnCreateChallengeButton = () => {
+    props.actions.push(ROUTES.CHALLENGE.CREATION);
   };
 
   return (
@@ -65,7 +75,7 @@ const ChallengeList = (props: ChallengeListProps) => {
                 </Grid>
                 <Grid item md={6} />
                 <Grid item md={3}>
-                  <Button variant="outlined">
+                  <Button variant="outlined" onClick={handleClickOnCreateChallengeButton}>
                     <AddIcon />
                     CREER UN CHALLENGE
                   </Button>

@@ -10,27 +10,19 @@ export const history = createBrowserHistory();
 // FIXME why should I provide a whole goddamn state here
 const initialAppState: any = {
   auth: {
-    token: localStorage.getItem("token"),
+    token: localStorage.getItem('token'),
     showLoginToast: false,
-    loginToastMessage: null
+    loginToastMessage: null,
   },
   challenge: {
-    pagedChallenges: null
-  }
+    pagedChallenges: null,
+  },
 };
 
-const middleware = [
-  reduxLogger,
-  thunk,
-  routerMiddleware(history)
-];
+const middleware = [reduxLogger, thunk, routerMiddleware(history)];
 
 export const store = createStore(
   createRootReducer(history),
   initialAppState,
-  compose(
-    applyMiddleware(
-      ...middleware
-    )
-  )
+  compose(applyMiddleware(...middleware))
 );

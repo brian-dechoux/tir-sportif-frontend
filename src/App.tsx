@@ -2,7 +2,7 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
-import { store, history } from './store';
+import { history, store } from './store';
 import 'typeface-roboto';
 import AuthContainer from './components/login/login.container';
 import ResultsContainer from './components/results/results.container';
@@ -12,6 +12,7 @@ import HeaderContainer from './components/header/header.container';
 import AuthenticatedRedirectContainer from './components/authenticated-route/authenticated.container';
 import ChallengeListContainer from './components/challenge/challenge-list/challenge-list.container';
 import { Box, Grid } from '@material-ui/core';
+import ChallengeCreationContainer from './components/challenge/challenge-creation/challenge-creation.container';
 
 // Problem with negative path matching: https://github.com/pillarjs/path-to-regexp/issues/99
 const App: React.FC = () => {
@@ -28,7 +29,7 @@ const App: React.FC = () => {
             <ResultsContainer />
           </Route>
 
-          <Route path={ROUTES.CHALLENGE}>
+          <Route path={ROUTES.CHALLENGE.LIST}>
             <Box>
               <Grid container direction="row" spacing={2}>
                 <Grid item md={12}>
@@ -41,6 +42,11 @@ const App: React.FC = () => {
                 </Grid>
               </Grid>
             </Box>
+          </Route>
+
+          <Route path={ROUTES.CHALLENGE.CREATION}>
+            <HeaderContainer />
+            <ChallengeCreationContainer />
           </Route>
 
           <Route path={ROUTES.CLUBS}>

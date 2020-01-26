@@ -8,39 +8,26 @@ import { ROUTES } from '../../configurations/server.configuration';
 //  Also, it doesn't care about grid layout
 const Menu = () => {
   return (
-    <Drawer
-      variant="permanent"
-      anchor="left"
-    >
+    <Drawer variant="permanent" anchor="left">
       <List>
         <ListItem button>
-          <ListItemIcon><CloseIcon/></ListItemIcon>
+          <ListItemIcon>
+            <CloseIcon />
+          </ListItemIcon>
         </ListItem>
-        <ListItem
-          button
-          component={Link} to={ROUTES.RESULTS}
-        >
+        <ListItem button component={Link} to={ROUTES.RESULTS}>
           <ListItemText>Résultats</ListItemText>
         </ListItem>
 
-        <ListItem
-          button
-          component={Link} to={ROUTES.CHALLENGE}
-        >
+        <ListItem button component={Link} to={ROUTES.CHALLENGE.LIST}>
           <ListItemText>Challenge</ListItemText>
         </ListItem>
 
-        <ListItem
-          button
-          component={Link} to={ROUTES.CLUBS}
-        >
+        <ListItem button component={Link} to={ROUTES.CLUBS}>
           <ListItemText>Clubs</ListItemText>
         </ListItem>
 
-        <ListItem
-          button
-          component={Link} to={ROUTES.MYCLUB}
-        >
+        <ListItem button component={Link} to={ROUTES.MYCLUB}>
           <ListItemText>Mon club</ListItemText>
         </ListItem>
       </List>
