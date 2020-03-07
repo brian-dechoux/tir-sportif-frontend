@@ -13,6 +13,7 @@ class ChallengeListContainer extends React.PureComponent<
   render() {
     if (this.props.currentPageNumber === -1) {
       this.props.actions.changePage(this.props.nbElementsOnPage, 0);
+      return null;
     }
     return (
       <ChallengeList

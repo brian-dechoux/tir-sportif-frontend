@@ -1,5 +1,4 @@
 export interface GetCategoryResponse {
-
   ageMax?: number;
 
   ageMin?: number;
@@ -11,10 +10,9 @@ export interface GetCategoryResponse {
   id?: number;
 
   label?: string;
-
 }
 
 export enum GenderEnum {
   M = 'M',
-  F = 'F'
+  F = 'F',
 }
