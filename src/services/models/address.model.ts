@@ -11,13 +11,13 @@ export interface GetAddressResponse {
 }
 
 export interface CreateAddressRequest {
-  city?: string;
+  city: string;
 
-  countryId?: number;
+  countryId: number;
 
   number?: string;
 
-  street?: string;
+  street: string;
 
   zip?: string;
 }
