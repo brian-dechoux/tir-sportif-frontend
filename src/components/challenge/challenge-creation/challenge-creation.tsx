@@ -25,9 +25,10 @@ type ChallengeCreationProps = {
 
 const ChallengeCreation = (props: ChallengeCreationProps) => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [inputName, setName] = useState<string>('');
 
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date);
+  const handleNameChange = (event: any) => {
+    setName(event.target.value);
   };
 
   const handleChallengeCreation = () => {
@@ -39,7 +40,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
       countryId: 1,
     };
     props.actions.createChallenge(
-      'testing2',
+      inputName,
       testAddress,
       new Date('2020-09-09T21:11:54'),
       1,
@@ -53,37 +54,30 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
     <>
       <Box>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <Grid container>
+          <Grid container justify={'center'}>
             <Grid item md={2} />
             <Grid container item md={8} direction="column" spacing={3}>
-              <TextField id="standard-basic" label="Nom du challenge" />
+              <TextField id="standard-basic" label="Nom du challenge" onChange={handleNameChange} />
               <Grid container>
                 <Grid item md={6}>
-                  <Grid container>
-                    <Grid item md={1}>
-                      Du:
-                    </Grid>
-                    <Grid item md={11}>
-                      <KeyboardDatePicker
-                        disableToolbar
-                        variant="inline"
-                        format="dd/MM/yyyy"
-                        margin="normal"
-                        id="date-picker-inline"
-                        label="Date de début"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                      />
-                      <KeyboardTimePicker
-                        margin="normal"
-                        ampm={false}
-                        id="time-picker"
-                        label="Heure de début"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                      />
-                    </Grid>
-                  </Grid>
+                  <KeyboardDatePicker
+                    disableToolbar
+                    variant="inline"
+                    format="dd/MM/yyyy"
+                    margin="normal"
+                    id="date-picker-inline"
+                    label="Date de début"
+                    value={selectedDate}
+                    onChange={setSelectedDate}
+                  />
+                  <KeyboardTimePicker
+                    margin="normal"
+                    ampm={false}
+                    id="time-picker"
+                    label="Heure de début"
+                    value={selectedDate}
+                    onChange={setSelectedDate}
+                  />
                 </Grid>
               </Grid>
               <Button variant="contained" onClick={handleChallengeCreation}>
