@@ -1,11 +1,13 @@
-import { AppBar, Button, IconButton, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Button, Toolbar } from '@material-ui/core';
 import React from 'react';
 import { ThunkAction } from 'redux-thunk';
 import { AppState } from '../../redux/reducers/combined.reducer';
-import Logo from '../svg/Logo';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../configurations/server.configuration';
-import MenuIcon from '@material-ui/icons/Menu';
+import PersonIcon from '@material-ui/icons/Person';
+import './header.css';
+import LogoIcon from '../svg/logo-icon';
+import LogoText from '../svg/logo-text';
 
 type HeaderProps = {
   isAuthenticated: boolean;
@@ -16,30 +18,48 @@ type HeaderProps = {
 };
 
 const Header = (props: HeaderProps) => {
-  let authComponent;
-  if (!props.isAuthenticated) {
+  let authComponent, menuComponent;
+  if (props.isAuthenticated) {
     authComponent = (
-      <Button variant="outlined" component={Link} to={ROUTES.LOGIN}>
-        Se connecter
+      <Button onClick={() => props.actions.logout()}>
+        Se déconnecter
       </Button>
+    );
+
+    menuComponent = (
+      <>
+        <Button component={Link} to={ROUTES.CHALLENGE.LIST}>
+          CHALLENGES
+        </Button>
+        <Button component={Link} to={ROUTES.RESULTS}>
+          RESULTATS
+        </Button>
+        <Button component={Link} to={ROUTES.CLUBS}>
+          CLUBS
+        </Button>
+        <Button component={Link} to={ROUTES.MYCLUB}>
+          MON CLUB
+        </Button>
+      </>
     );
   } else {
     authComponent = (
-      <Button variant="outlined" color="secondary" onClick={() => props.actions.logout()}>
-        Se déconnecter
+      <Button component={Link} to={ROUTES.LOGIN}>
+        <PersonIcon />
+        Se connecter
       </Button>
     );
   }
 
   return (
-    <AppBar className="header" position="static">
+    <AppBar position="static">
       <Toolbar>
-        <IconButton edge="start" color="inherit">
-          <MenuIcon />
-        </IconButton>
-        <Logo height="50px" width="50px" />
-        <Typography variant="h6">TIR SPORTIF BRIEY</Typography>
-        {authComponent}
+        <div>
+          <LogoIcon height="3rem" width="3rem" />
+          <LogoText height="3rem" width="9rem" />
+        </div>
+        <div className="flex-grow">{menuComponent}</div>
+        <div>{authComponent}</div>
       </Toolbar>
     </AppBar>
   );
