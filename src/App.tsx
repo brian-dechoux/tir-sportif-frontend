@@ -19,11 +19,11 @@ const App: React.FC = () => {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <div className="container">
-          <div className="header">
+        <Grid container direction="column" spacing={2}>
+          <Grid item>
             <HeaderContainer />
-          </div>
-          <div className="main">
+          </Grid>
+          <Grid item>
             <Route path={ROUTES.LOGIN}>
               <AuthContainer />
             </Route>
@@ -51,8 +51,8 @@ const App: React.FC = () => {
             </Route>
 
             <Redirect exact from="/" to={ROUTES.RESULTS} />
-          </div>
-        </div>
+          </Grid>
+        </Grid>
       </ConnectedRouter>
     </Provider>
   );
