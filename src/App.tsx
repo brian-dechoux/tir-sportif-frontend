@@ -19,48 +19,40 @@ const App: React.FC = () => {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <Switch>
-          <Route path={ROUTES.LOGIN}>
-            <AuthContainer />
-          </Route>
-
-          <Route path={ROUTES.RESULTS}>
+        <div className="container">
+          <div className="header">
             <HeaderContainer />
-            <ResultsContainer />
-          </Route>
+          </div>
+          <div className="main">
+            <Route path={ROUTES.LOGIN}>
+              <AuthContainer />
+            </Route>
 
-          <Route path={ROUTES.CHALLENGE.LIST}>
-            <Box>
-              <Grid container direction="row" spacing={2}>
-                <Grid item md={12}>
-                  <HeaderContainer />
-                </Grid>
-                <Grid item md={12}>
-                  <AuthenticatedRedirectContainer>
-                    <ChallengeListContainer />
-                  </AuthenticatedRedirectContainer>
-                </Grid>
-              </Grid>
-            </Box>
-          </Route>
+            <Route path={ROUTES.RESULTS}>
+              <ResultsContainer />
+            </Route>
 
-          <Route path={ROUTES.CHALLENGE.CREATION}>
-            <HeaderContainer />
-            <ChallengeCreationContainer />
-          </Route>
+            <Route path={ROUTES.CHALLENGE.LIST}>
+              <AuthenticatedRedirectContainer>
+                <ChallengeListContainer />
+              </AuthenticatedRedirectContainer>
+            </Route>
 
-          <Route path={ROUTES.CLUBS}>
-            <HeaderContainer />
-            <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
-          </Route>
+            <Route path={ROUTES.CHALLENGE.CREATION}>
+              <ChallengeCreationContainer />
+            </Route>
 
-          <Route path={ROUTES.MYCLUB}>
-            <HeaderContainer />
-            <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
-          </Route>
+            <Route path={ROUTES.CLUBS}>
+              <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
+            </Route>
 
-          <Redirect exact from="/" to={ROUTES.RESULTS} />
-        </Switch>
+            <Route path={ROUTES.MYCLUB}>
+              <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
+            </Route>
+
+            <Redirect exact from="/" to={ROUTES.RESULTS} />
+          </div>
+        </div>
       </ConnectedRouter>
     </Provider>
   );
