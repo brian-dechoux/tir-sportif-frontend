@@ -1,8 +1,7 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { AppState } from '../reducers/combined.reducer';
 import { ActionTypes } from './action.enum';
-import { ROUTES, ERRORS } from '../../configurations/server.configuration';
-import ToastClosedAction from './toast-closed.action';
+import { ERRORS, ROUTES } from '../../configurations/server.configuration';
 import { push } from 'connected-react-router';
 import AuthService from '../../services/auth.service';
 
@@ -30,13 +29,13 @@ export function login(
             });
           } else {
             dispatch({
-              type: ActionTypes.LOGIN_FAILED,
+              type: ActionTypes.OPEN_TOAST,
               message: 'Les informations remplies ne correspondent pas à un utilisateur connu',
             });
           }
         } else {
           dispatch({
-            type: ActionTypes.LOGIN_FAILED,
+            type: ActionTypes.OPEN_TOAST,
             message: "Une erreur s'est produite durant l'authentification",
           });
         }
@@ -57,12 +56,5 @@ export function logout(): ThunkAction<void, AppState, undefined, any> {
           type: ActionTypes.LOGOUT,
         });
       });
-  };
-}
-
-// FIXME should this be in some generic-action component ?
-export function closeToast(): ToastClosedAction {
-  return {
-    type: ActionTypes.TOAST_CLOSED,
   };
 }

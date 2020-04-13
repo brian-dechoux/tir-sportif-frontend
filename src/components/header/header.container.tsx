@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { closeToast, login, logout } from 'redux/actions/auth.actions';
+import { login, logout } from 'redux/actions/auth.actions';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import Header from './header';
 import { AppState } from '../../redux/reducers/combined.reducer';
@@ -19,17 +19,8 @@ class HeaderContainer extends React.PureComponent<
       localStorage.removeItem('token');
     }
 
-    const loginFailedToastMessage: string =
-      this.props.loginFailedToast.message != null
-        ? this.props.loginFailedToast.message
-        : "Une erreur s'est produite";
-
     return <Header
       isAuthenticated={token != null}
-      loginFailedToast={{
-        ...this.props.loginFailedToast,
-        message: loginFailedToastMessage,
-      }}
       actions={this.props.actions}
     />;
   }
@@ -37,10 +28,6 @@ class HeaderContainer extends React.PureComponent<
 
 const mapStateToProps = (state: AppState) => ({
   token: state.auth.token,
-  loginFailedToast: {
-    isShown: state.auth.showLoginToast,
-    message: state.auth.loginToastMessage,
-  },
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
@@ -48,7 +35,6 @@ const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
     {
       login,
       logout,
-      closeToast,
     },
     dispatch
   ),

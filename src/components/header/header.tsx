@@ -18,19 +18,12 @@ import PersonIcon from '@material-ui/icons/Person';
 import './header.css';
 import LogoIcon from '../svg/logo-icon';
 import LogoText from '../svg/logo-text';
-import Toast from '../toast/toast';
-import ToastClosedAction from '../../redux/actions/toast-closed.action';
 
 type HeaderProps = {
   isAuthenticated: boolean;
-  loginFailedToast: {
-    isShown: boolean;
-    message: string;
-  };
   actions: {
     login: (username: string, password: string) => ThunkAction<void, AppState, undefined, any>;
     logout: () => ThunkAction<void, AppState, undefined, any>;
-    closeToast: () => ToastClosedAction;
   };
 };
 
@@ -40,16 +33,6 @@ const Header = (props: HeaderProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [open, setOpen] = useState(false);
-
-  let toast;
-  if (props.loginFailedToast.isShown) {
-    toast = (
-      <Toast
-        message={props.loginFailedToast.message}
-        onCloseCallback={() => props.actions.closeToast()}
-      />
-    );
-  }
 
   const handleDialogOpen = () => {
     setOpen(true);
@@ -107,7 +90,6 @@ const Header = (props: HeaderProps) => {
         </Toolbar>
       </AppBar>
 
-      {toast}
       <Dialog open={open} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
         <DialogTitle>SE CONNECTER</DialogTitle>
         <DialogContent>

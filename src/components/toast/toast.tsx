@@ -10,15 +10,16 @@ const useStyles = makeStyles((theme: Theme) =>
     close: {
       padding: theme.spacing(0.5),
     },
-  }),
+  })
 );
 
 type ToastProps = {
+  isShown: boolean;
   message: string;
-  onCloseCallback: () => void
+  onCloseCallback: () => void;
 };
 
-const Toast = (props: ToastProps) =>  {
+const Toast = (props: ToastProps) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(true);
 
@@ -30,30 +31,34 @@ const Toast = (props: ToastProps) =>  {
     props.onCloseCallback();
   };
 
-  return (
-    <>
-      <Snackbar
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        open={open}
-        autoHideDuration={5000}
-        onClose={handleClose}
-        message={<span id="message-id">{props.message}</span>}
-        action={[
-          <IconButton
-            key="close"
-            color="inherit"
-            className={classes.close}
-            onClick={handleClose}
-          >
-            <CloseIcon />
-          </IconButton>,
-        ]}
-      />
-    </>
-  );
+  if (props.isShown) {
+    return (
+      <>
+        <Snackbar
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+          }}
+          open={open}
+          autoHideDuration={3000}
+          onClose={handleClose}
+          message={<span id="message-id">{props.message}</span>}
+          action={[
+            <IconButton
+              key="close"
+              color="inherit"
+              className={classes.close}
+              onClick={handleClose}
+            >
+              <CloseIcon/>
+            </IconButton>,
+          ]}
+        />
+      </>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default Toast;
