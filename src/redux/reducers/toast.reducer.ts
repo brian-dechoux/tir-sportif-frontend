@@ -6,6 +6,7 @@ import OpenToastAction from '../actions/open-toast.action';
 const initialState: ToastState = {
   isShown: false,
   message: '',
+  variant: 'success',
 };
 
 type ToastActions = OpenToastAction | CloseToastAction;
@@ -17,13 +18,13 @@ export default function(state: ToastState = initialState, action: ToastActions) 
         ...state,
         isShown: true,
         message: action.message,
+        variant: action.variant,
       });
 
     case ActionTypes.CLOSE_TOAST:
       return Object.assign({}, state, {
         ...state,
         isShown: false,
-        message: '',
       });
 
     default:

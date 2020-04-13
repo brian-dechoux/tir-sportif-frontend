@@ -14,6 +14,7 @@ class ToastContainer extends React.PureComponent<
       <Toast
         isShown={this.props.isShown}
         message={this.props.message}
+        variant={this.props.variant}
         onCloseCallback={() => this.props.actions.closeToast()}
       />
     );
@@ -23,6 +24,7 @@ class ToastContainer extends React.PureComponent<
 const mapStateToProps = (state: AppState) => ({
   isShown: state.toast.isShown,
   message: state.toast.message,
+  variant: state.toast.variant,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({

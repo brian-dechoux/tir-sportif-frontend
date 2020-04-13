@@ -9,10 +9,13 @@ export const history = createBrowserHistory();
 
 // FIXME why should I provide a whole goddamn state here
 const initialAppState: any = {
+  toast: {
+    isShown: false,
+    message: '',
+    variant: 'success',
+  },
   auth: {
     token: localStorage.getItem('token'),
-    showLoginToast: false,
-    loginToastMessage: null,
   },
   challenge: {
     pagedChallenges: null,

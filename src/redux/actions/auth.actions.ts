@@ -31,12 +31,14 @@ export function login(
             dispatch({
               type: ActionTypes.OPEN_TOAST,
               message: 'Les informations remplies ne correspondent pas à un utilisateur connu',
+              variant: 'error',
             });
           }
         } else {
           dispatch({
             type: ActionTypes.OPEN_TOAST,
             message: "Une erreur s'est produite durant l'authentification",
+            variant: 'error',
           });
         }
       });
