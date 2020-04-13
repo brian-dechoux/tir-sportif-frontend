@@ -40,10 +40,6 @@ const App: React.FC = () => {
               <HeaderContainer />
             </Grid>
             <Grid item>
-              <Route path={ROUTES.LOGIN}>
-                <AuthContainer />
-              </Route>
-
               <Route path={ROUTES.RESULTS}>
                 <ResultsContainer />
               </Route>
