@@ -15,9 +15,9 @@ import { AppState } from '../../redux/reducers/combined.reducer';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../configurations/server.configuration';
 import PersonIcon from '@material-ui/icons/Person';
-import './header.css';
 import LogoIcon from '../svg/logo-icon';
 import LogoText from '../svg/logo-text';
+import { makeStyles } from '@material-ui/core/styles';
 
 type HeaderProps = {
   isAuthenticated: boolean;
@@ -28,8 +28,14 @@ type HeaderProps = {
 };
 
 const Header = (props: HeaderProps) => {
-  let authButtons, menuButtons;
+  const useStyles = makeStyles(() => ({
+    withFlexGrow: {
+      flex: 1,
+    },
+  }));
+  const classes = useStyles();
 
+  let authButtons, menuButtons;
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [open, setOpen] = useState(false);
@@ -85,7 +91,7 @@ const Header = (props: HeaderProps) => {
             <LogoIcon height="3rem" width="3rem" />
             <LogoText height="3rem" width="9rem" />
           </div>
-          <div className="flex-grow">{menuButtons}</div>
+          <div className={classes.withFlexGrow}>{menuButtons}</div>
           <div>{authButtons}</div>
         </Toolbar>
       </AppBar>

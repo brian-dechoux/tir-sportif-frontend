@@ -1,10 +1,7 @@
 import React from 'react';
 import {
-  Box,
   Button,
   Grid,
-  InputAdornment,
-  OutlinedInput,
   Paper,
   Table,
   TableBody,
@@ -16,12 +13,15 @@ import {
 } from '@material-ui/core';
 import TableContainer from '@material-ui/core/TableContainer';
 import AddIcon from '@material-ui/icons/Add';
-import SearchIcon from '@material-ui/icons/Search';
 import { GetChallengeListElementResponse } from 'services/models/challenge.model';
 import { ThunkAction } from 'redux-thunk';
 import { AppState } from 'redux/reducers/combined.reducer';
 import { ROUTES } from 'configurations/server.configuration';
 import { CallHistoryMethodAction } from 'connected-react-router';
+import { makeStyles } from '@material-ui/core/styles';
+import { LabelDisplayedRowsArgs } from '@material-ui/core/TablePagination/TablePagination';
+import moment from 'moment';
+import 'moment/locale/fr';
 
 type ChallengeListProps = {
   actions: {
@@ -41,6 +41,25 @@ type ChallengeListProps = {
 // TODO Add CSS for table:
 //  - cells align=center
 const ChallengeList = (props: ChallengeListProps) => {
+  const useStyles = makeStyles(() => ({
+    withFlexGrow: {
+      flex: 1,
+    },
+    columnChallengeName: {
+      width: '30%',
+    },
+    columnChallengeDate: {
+      width: '20%',
+    },
+    columnChallengeShooterNb: {
+      width: '20%',
+    },
+    columnChallengeLocation: {
+      width: '30%',
+    },
+  }));
+  const classes = useStyles();
+
   const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     props.actions.changePage(props.nbElementsOnPage, newPage);
   };
@@ -54,75 +73,65 @@ const ChallengeList = (props: ChallengeListProps) => {
     props.actions.push(ROUTES.CHALLENGE.CREATION);
   };
 
+  const labelRowsPerPage = "Nombre d'éléments par page";
+  const labelDisplayedRowsArgs = (paginationInfo: LabelDisplayedRowsArgs) =>
+    `Element ${paginationInfo.from} à ${paginationInfo.to}, sur un total de: ${paginationInfo.count}`;
+
   return (
     <>
-      <Box>
-        <Grid container justify="center">
-          <Grid item md={2} />
-          <Grid item md={8}>
-            <Grid container justify="center" direction="column" spacing={3}>
-              <Grid container item>
-                <Grid item md={3}>
-                  <OutlinedInput
-                    id="outlined-adornment-weight"
-                    labelWidth={0}
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <SearchIcon />
-                      </InputAdornment>
-                    }
-                  />
-                </Grid>
-                <Grid item md={6} />
-                <Grid item md={3}>
-                  <Button variant="outlined" onClick={handleClickOnCreateChallengeButton}>
-                    <AddIcon />
-                    CREER UN CHALLENGE
-                  </Button>
-                </Grid>
-              </Grid>
-              <Grid item>
-                <TableContainer component={Paper}>
-                  <Table>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell align="center">NOM</TableCell>
-                        <TableCell align="center">DATE</TableCell>
-                        <TableCell align="center">NB&nbsp;TIREURS</TableCell>
-                        <TableCell align="center">LIEU</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {props.challenges.map(challenge => (
-                        <TableRow key={challenge.id}>
-                          <TableCell align="center">{challenge.name}</TableCell>
-                          <TableCell align="center">{challenge.startDate}</TableCell>
-                          <TableCell align="center">{challenge.nbShooters}</TableCell>
-                          <TableCell align="center">{challenge.city}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                    <TableFooter>
-                      <TableRow>
-                        <TablePagination
-                          colSpan={3}
-                          count={props.nbTotalElements}
-                          rowsPerPage={props.nbElementsOnPage}
-                          page={props.currentPageNumber}
-                          onChangePage={handleChangePage}
-                          onChangeRowsPerPage={handleChangeRowsPerPage}
-                        />
-                      </TableRow>
-                    </TableFooter>
-                  </Table>
-                </TableContainer>
-              </Grid>
-              <Grid item />
-            </Grid>
-          </Grid>
-          <Grid item md={2} />
+      <Grid container justify="center" direction="column" spacing={3}>
+        <Grid container item>
+          <Button variant="contained" color="secondary" onClick={handleClickOnCreateChallengeButton}>
+            <AddIcon />
+            CREER UN CHALLENGE
+          </Button>
         </Grid>
-      </Box>
+        <Grid item>
+          <TableContainer component={Paper}>
+            <Table stickyHeader>
+              <colgroup>
+                <col className={classes.columnChallengeName} />
+                <col className={classes.columnChallengeDate} />
+                <col className={classes.columnChallengeShooterNb} />
+                <col className={classes.columnChallengeLocation} />
+              </colgroup>
+              <TableHead>
+                <TableRow>
+                  <TableCell align="center">NOM</TableCell>
+                  <TableCell align="center">DATE ET HEURE</TableCell>
+                  <TableCell align="center">NOMBRE DE TIREURS</TableCell>
+                  <TableCell align="center">LIEU</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {props.challenges.map(challenge => (
+                  <TableRow key={challenge.id}>
+                    <TableCell align="center">{challenge.name}</TableCell>
+                    <TableCell align="center">{moment(challenge.startDate).format('Do MMMM YYYY, hh:mm:ss')}</TableCell>
+                    <TableCell align="center">{challenge.nbShooters}</TableCell>
+                    <TableCell align="center">{challenge.city}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TablePagination
+                    colSpan={3}
+                    count={props.nbTotalElements}
+                    rowsPerPage={props.nbElementsOnPage}
+                    page={props.currentPageNumber}
+                    labelRowsPerPage={labelRowsPerPage}
+                    labelDisplayedRows={labelDisplayedRowsArgs}
+                    onChangePage={handleChangePage}
+                    onChangeRowsPerPage={handleChangeRowsPerPage}
+                  />
+                </TableRow>
+              </TableFooter>
+            </Table>
+          </TableContainer>
+        </Grid>
+        <Grid item />
+      </Grid>
     </>
   );
 };

@@ -10,18 +10,18 @@ import { ROUTES } from './configurations/server.configuration';
 import HeaderContainer from './components/header/header.container';
 import AuthenticatedRedirectContainer from './components/authenticated-route/authenticated.container';
 import ChallengeListContainer from './components/challenge/challenge-list/challenge-list.container';
-import { Box, Container, Grid, MuiThemeProvider } from '@material-ui/core';
+import { Container, Grid, MuiThemeProvider } from '@material-ui/core';
 import ChallengeCreationContainer from './components/challenge/challenge-creation/challenge-creation.container';
 import { makeStyles } from '@material-ui/core/styles';
 import ToastContainer from './components/toast/toast.container';
-import customTheme from './configurations/theme';
+import customTheme from './configurations/theme.configuration';
 
 // Problem with negative path matching: https://github.com/pillarjs/path-to-regexp/issues/99
 const App: React.FC = () => {
   const useStyles = makeStyles(() => ({
     main: {
-      background: customTheme.palette.secondary.main,
-      height: "100vh",
+      background: customTheme.palette.primary.dark,
+      height: '100%',
     },
     container: {
       background: customTheme.palette.primary.main,

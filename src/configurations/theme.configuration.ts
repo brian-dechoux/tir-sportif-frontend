@@ -4,12 +4,12 @@ const customTheme = createMuiTheme({
   palette: {
     primary: {
       main: '#ffffff',
+      dark: '#f5f5f5',
+      contrastText: '#000000',
     },
     secondary: {
-      main: '#f2f2f2',
-    },
-    info: {
-      main: '#000000',
+      main: '#EA6F30',
+      contrastText: '#ffffff',
     },
   },
 });
