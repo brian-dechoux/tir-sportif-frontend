@@ -1,17 +1,29 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
-const customTheme = createMuiTheme({
+export const customColors = {
+  white: '#ffffff',
+  lightGrey: '#f5f5f5',
+  black: '#000000',
+  orange: '#EA6F30',
+};
+
+const muiCustomTheme = createMuiTheme({
   palette: {
     primary: {
-      main: '#ffffff',
-      dark: '#f5f5f5',
-      contrastText: '#000000',
+      main: customColors.black,
+      contrastText: customColors.white,
     },
     secondary: {
-      main: '#EA6F30',
-      contrastText: '#ffffff',
+      main: customColors.orange,
+      contrastText: customColors.white,
     },
   },
 });
 
-export default customTheme;
+export const customTheme = {
+  mui: muiCustomTheme,
+  spacing: 2,
+  header: customColors.white,
+  containerBackground: customColors.white,
+  mainBackground: customColors.lightGrey,
+};

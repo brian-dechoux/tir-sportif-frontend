@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Box,
   Button,
   Grid,
   Paper,
@@ -42,9 +43,6 @@ type ChallengeListProps = {
 //  - cells align=center
 const ChallengeList = (props: ChallengeListProps) => {
   const useStyles = makeStyles(() => ({
-    withFlexGrow: {
-      flex: 1,
-    },
     columnChallengeName: {
       width: '30%',
     },
@@ -79,9 +77,13 @@ const ChallengeList = (props: ChallengeListProps) => {
 
   return (
     <>
-      <Grid container justify="center" direction="column" spacing={3}>
-        <Grid container item>
-          <Button variant="contained" color="secondary" onClick={handleClickOnCreateChallengeButton}>
+      <Grid container direction="column" justify="center" spacing={2}>
+        <Grid item>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleClickOnCreateChallengeButton}
+          >
             <AddIcon />
             CREER UN CHALLENGE
           </Button>
@@ -130,7 +132,6 @@ const ChallengeList = (props: ChallengeListProps) => {
             </Table>
           </TableContainer>
         </Grid>
-        <Grid item />
       </Grid>
     </>
   );

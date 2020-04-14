@@ -18,6 +18,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import LogoIcon from '../svg/logo-icon';
 import LogoText from '../svg/logo-text';
 import { makeStyles } from '@material-ui/core/styles';
+import { customColors } from '../../configurations/theme.configuration';
 
 type HeaderProps = {
   isAuthenticated: boolean;
@@ -85,16 +86,14 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      <AppBar position="static">
-        <Toolbar>
-          <div>
-            <LogoIcon height="3rem" width="3rem" />
-            <LogoText height="3rem" width="9rem" />
-          </div>
-          <div className={classes.withFlexGrow}>{menuButtons}</div>
-          <div>{authButtons}</div>
-        </Toolbar>
-      </AppBar>
+      <Toolbar>
+        <div>
+          <LogoIcon height="3rem" width="3rem" />
+          <LogoText height="3rem" width="9rem" />
+        </div>
+        <div className={classes.withFlexGrow}>{menuButtons}</div>
+        <div>{authButtons}</div>
+      </Toolbar>
 
       <Dialog open={open} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
         <DialogTitle>SE CONNECTER</DialogTitle>
