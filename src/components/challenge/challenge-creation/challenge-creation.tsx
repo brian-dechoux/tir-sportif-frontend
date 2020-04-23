@@ -50,16 +50,20 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   return (
     <MuiPickersUtilsProvider utils={DateFnsUtils}>
       <form onSubmit={handleChallengeCreation} noValidate>
-        <Grid container justify="center">
-          <Grid item md={3} />
-          <Grid item md={6}>
-            <Grid item container direction="column">
-              <Typography variant="h6">CRÉER UN CHALLENGE</Typography>
-            </Grid>
-            <Grid item md={6}>
-              <TextField fullWidth required label="Nom du challenge" onChange={handleNameChange} />
-            </Grid>
-            <Grid item container md={12} spacing={1}>
+        <Box display="flex" justifyContent="center">
+          <Box display="flex" width={0.6}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Typography variant="h6">CRÉER UN CHALLENGE</Typography>
+              </Grid>
+              <Grid item md={12}>
+                <TextField
+                  fullWidth
+                  required
+                  label="Nom du challenge"
+                  onChange={handleNameChange}
+                />
+              </Grid>
               <Grid item md={6}>
                 <FormControl fullWidth required>
                   <KeyboardDatePicker
@@ -87,22 +91,21 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                   />
                 </FormControl>
               </Grid>
-            </Grid>
-            <Grid item container spacing={1} justify="flex-end" alignItems="center">
-              <Grid item>
-                <Button variant="outlined" component={Link} to={ROUTES.CHALLENGE.LIST}>
-                  ANNULER
-                </Button>
+              <Grid item container spacing={2} justify="flex-end" alignItems="center">
+                <Grid item>
+                  <Button variant="outlined" component={Link} to={ROUTES.CHALLENGE.LIST}>
+                    ANNULER
+                  </Button>
+                </Grid>
+                <Grid>
+                  <Button variant="contained" color="secondary" type="submit">
+                    VALIDER
+                  </Button>
+                </Grid>
               </Grid>
-              <Grid>
-                <Button variant="contained" color="secondary" type="submit">
-                  VALIDER
-                </Button>
-              </Grid>
             </Grid>
-          </Grid>
-          <Grid item md={3} />
-        </Grid>
+          </Box>
+        </Box>
       </form>
     </MuiPickersUtilsProvider>
   );
