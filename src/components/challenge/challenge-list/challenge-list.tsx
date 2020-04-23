@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Box,
   Button,
   Grid,
   Paper,
@@ -21,8 +20,7 @@ import { ROUTES } from 'configurations/server.configuration';
 import { CallHistoryMethodAction } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
 import { LabelDisplayedRowsArgs } from '@material-ui/core/TablePagination/TablePagination';
-import moment from 'moment';
-import 'moment/locale/fr';
+import formatWithLocale from '../../../utils/date.utils';
 
 type ChallengeListProps = {
   actions: {
@@ -109,7 +107,9 @@ const ChallengeList = (props: ChallengeListProps) => {
                 {props.challenges.map(challenge => (
                   <TableRow key={challenge.id}>
                     <TableCell align="center">{challenge.name}</TableCell>
-                    <TableCell align="center">{moment(challenge.startDate).format('Do MMMM YYYY [à] hh[h]mm')}</TableCell>
+                    <TableCell align="center">
+                      {formatWithLocale(challenge.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
+                    </TableCell>
                     <TableCell align="center">{challenge.nbShooters}</TableCell>
                     <TableCell align="center">{challenge.city}</TableCell>
                   </TableRow>

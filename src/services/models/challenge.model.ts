@@ -8,7 +8,7 @@ export interface GetChallengeListElementResponse {
 
   name: string;
 
-  startDate: Date;
+  startDate: string;
 
   city: string;
 
@@ -22,7 +22,7 @@ export interface CreateChallengeResponse {
 
   address: CreateAddressRequest;
 
-  startDate: Date;
+  startDate: string;
 
   club: GetClubResponse;
 

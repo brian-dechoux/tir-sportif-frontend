@@ -1,5 +1,4 @@
 import {
-  AppBar,
   Button,
   Dialog,
   DialogActions,
@@ -18,7 +17,6 @@ import PersonIcon from '@material-ui/icons/Person';
 import LogoIcon from '../svg/logo-icon';
 import LogoText from '../svg/logo-text';
 import { makeStyles } from '@material-ui/core/styles';
-import { customColors } from '../../configurations/theme.configuration';
 
 type HeaderProps = {
   isAuthenticated: boolean;

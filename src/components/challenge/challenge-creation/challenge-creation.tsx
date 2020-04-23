@@ -27,15 +27,11 @@ type ChallengeCreationProps = {
 };
 
 const ChallengeCreation = (props: ChallengeCreationProps) => {
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date('2019-12-21T12:00:00'));
-  const [inputName, setName] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
+  const [inputName, setName] = useState('');
 
   const handleNameChange = (event: any) => {
     setName(event.target.value);
-  };
-
-  const handleDateChange = (date: Date | null) => {
-    setSelectedDate(date == null ? new Date('2019-12-21T12:00:00') : date);
   };
 
   const handleChallengeCreation = () => {
@@ -44,7 +40,14 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
       city: 'Val de Briey',
       countryId: 74,
     };
-    props.actions.createChallenge(inputName, address, selectedDate, 1, [1], [1]);
+    props.actions.createChallenge(
+      inputName,
+      address,
+      selectedDate ? selectedDate : new Date(),
+      1,
+      [1],
+      [1]
+    );
   };
 
   return (
@@ -67,26 +70,29 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
               <Grid item md={6}>
                 <FormControl fullWidth required>
                   <KeyboardDatePicker
-                    disableToolbar
-                    variant="inline"
+                    clearable
+                    disablePast
+                    placeholder="10/10/2010"
                     format="dd/MM/yyyy"
                     margin="normal"
                     id="date-picker"
                     label="Date de début"
                     value={selectedDate}
-                    onChange={handleDateChange}
+                    onChange={setSelectedDate}
                   />
                 </FormControl>
               </Grid>
               <Grid item md={6}>
                 <FormControl fullWidth required>
                   <KeyboardTimePicker
+                    clearable
+                    placeholder="10:10"
                     margin="normal"
                     ampm={false}
                     id="time-picker"
                     label="Heure de début"
                     value={selectedDate}
-                    onChange={handleDateChange}
+                    onChange={setSelectedDate}
                     keyboardIcon={<ScheduleIcon />}
                   />
                 </FormControl>
