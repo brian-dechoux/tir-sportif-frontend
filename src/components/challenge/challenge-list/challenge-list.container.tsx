@@ -15,9 +15,13 @@ class ChallengeListContainer extends React.PureComponent<
       this.props.actions.changePage(this.props.nbElementsOnPage, 0);
       return null;
     }
+    // FIXME BDX should be sorted directly in backend from database
+    const dateSortedChallenges = [...this.props.challenges].sort(
+      (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+    );
     return (
       <ChallengeList
-        challenges={this.props.challenges}
+        challenges={dateSortedChallenges}
         nbElementsOnPage={this.props.nbElementsOnPage}
         currentPageNumber={this.props.currentPageNumber}
         nbPages={this.props.nbPages}

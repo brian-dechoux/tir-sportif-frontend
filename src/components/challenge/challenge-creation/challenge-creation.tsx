@@ -12,6 +12,8 @@ import { AppState } from 'redux/reducers/combined.reducer';
 import { CreateAddressRequest } from 'services/models/address.model';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../../configurations/server.configuration';
+import { fr } from 'date-fns/locale';
+import { datePickerLabels } from '../../../configurations/theme.configuration';
 
 type ChallengeCreationProps = {
   actions: {
@@ -51,7 +53,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   };
 
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
       <form onSubmit={handleChallengeCreation} noValidate>
         <Box display="flex" justifyContent="center">
           <Box display="flex" width={0.6}>
@@ -79,6 +81,11 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                     label="Date de début"
                     value={selectedDate}
                     onChange={setSelectedDate}
+                    clearLabel={datePickerLabels.clearLabel}
+                    cancelLabel={datePickerLabels.cancelLabel}
+                    okLabel={datePickerLabels.okLabel}
+                    todayLabel={datePickerLabels.todayLabel}
+                    invalidDateMessage={datePickerLabels.invalidDateMessage}
                   />
                 </FormControl>
               </Grid>
@@ -94,6 +101,11 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                     value={selectedDate}
                     onChange={setSelectedDate}
                     keyboardIcon={<ScheduleIcon />}
+                    clearLabel={datePickerLabels.clearLabel}
+                    cancelLabel={datePickerLabels.cancelLabel}
+                    okLabel={datePickerLabels.okLabel}
+                    todayLabel={datePickerLabels.todayLabel}
+                    invalidDateMessage={datePickerLabels.invalidDateMessage}
                   />
                 </FormControl>
               </Grid>

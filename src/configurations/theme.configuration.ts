@@ -27,3 +27,11 @@ export const customTheme = {
   containerBackground: customColors.white,
   mainBackground: customColors.lightGrey,
 };
+
+export const datePickerLabels = {
+  clearLabel: 'VIDER',
+  cancelLabel: 'ANNULER',
+  okLabel: 'VALIDER',
+  todayLabel: "AUJOURD'HUI",
+  invalidDateMessage: 'Mauvais format de date',
+};
