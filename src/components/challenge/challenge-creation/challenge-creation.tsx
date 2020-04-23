@@ -28,12 +28,21 @@ type ChallengeCreationProps = {
   };
 };
 
+type ValidationErrors = {
+  challengeNameTextFieldError: boolean;
+};
+
 const ChallengeCreation = (props: ChallengeCreationProps) => {
+  const [challengeNameValid, setChallengeNameValid] = useState(true);
   const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
   const [inputName, setName] = useState('');
 
+  const formValid = ![challengeNameValid].some(validation => !validation);
+
   const handleNameChange = (event: any) => {
-    setName(event.target.value);
+    const newValue = event.target.value;
+    setChallengeNameValid(!!newValue);
+    setName(newValue);
   };
 
   const handleChallengeCreation = () => {
@@ -63,6 +72,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
               </Grid>
               <Grid item md={12}>
                 <TextField
+                  error={!challengeNameValid}
                   fullWidth
                   required
                   label="Nom du challenge"
@@ -116,7 +126,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                   </Button>
                 </Grid>
                 <Grid>
-                  <Button variant="contained" color="secondary" type="submit">
+                  <Button disabled={!formValid} variant="contained" color="secondary" type="submit">
                     VALIDER
                   </Button>
                 </Grid>
