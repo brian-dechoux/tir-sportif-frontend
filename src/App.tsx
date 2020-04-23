@@ -39,7 +39,7 @@ const App: React.FC = () => {
             </Grid>
             <Grid item className={classes.main}>
               <Container className={classes.container}>
-                <Box display="flex" pt={2} pb={2}>
+                <Box pt={2} pb={2} width={1}>
                   <Route path={ROUTES.RESULTS}>
                     <ResultsContainer />
                   </Route>
