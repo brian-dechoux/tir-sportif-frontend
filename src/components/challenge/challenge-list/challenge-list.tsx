@@ -109,7 +109,7 @@ const ChallengeList = (props: ChallengeListProps) => {
                 {props.challenges.map(challenge => (
                   <TableRow key={challenge.id}>
                     <TableCell align="center">{challenge.name}</TableCell>
-                    <TableCell align="center">{moment(challenge.startDate).format('Do MMMM YYYY, hh:mm:ss')}</TableCell>
+                    <TableCell align="center">{moment(challenge.startDate).format('Do MMMM YYYY [à] hh[h]mm')}</TableCell>
                     <TableCell align="center">{challenge.nbShooters}</TableCell>
                     <TableCell align="center">{challenge.city}</TableCell>
                   </TableRow>
