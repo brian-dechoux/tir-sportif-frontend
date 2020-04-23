@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   Grid,
@@ -18,60 +18,58 @@ import { ThunkAction } from 'redux-thunk';
 import { AppState } from 'redux/reducers/combined.reducer';
 import { ROUTES } from 'configurations/server.configuration';
 import { CallHistoryMethodAction } from 'connected-react-router';
-import { makeStyles } from '@material-ui/core/styles';
 import { LabelDisplayedRowsArgs } from '@material-ui/core/TablePagination/TablePagination';
 import formatWithLocale from '../../../utils/date.utils';
+import { EMPTY_PAGE, Page } from '../../../services/models/page.model';
+import ChallengeService from '../../../services/challenge.service';
 
 type ChallengeListProps = {
   actions: {
-    changePage: (rowsPerPage: number, page: number) => ThunkAction<void, AppState, undefined, any>;
+    error: (message: string) => ThunkAction<void, AppState, undefined, any>;
     push: (
       path: string,
       state?: any | undefined
     ) => CallHistoryMethodAction<[string, (any | undefined)?]>;
   };
-  challenges: GetChallengeListElementResponse[];
-  nbElementsOnPage: number;
-  currentPageNumber: number;
-  nbPages: number;
-  nbTotalElements: number;
+};
+
+const labels = {
+  rowsPerPage: "Nombre d'éléments par page",
+  displayedRowsArgs: (paginationInfo: LabelDisplayedRowsArgs) =>
+    `Element ${paginationInfo.from} à ${paginationInfo.to}, sur un total de: ${paginationInfo.count}`,
 };
 
 // TODO Add CSS for table:
 //  - cells align=center
 const ChallengeList = (props: ChallengeListProps) => {
-  const useStyles = makeStyles(() => ({
-    columnChallengeName: {
-      width: '30%',
-    },
-    columnChallengeDate: {
-      width: '20%',
-    },
-    columnChallengeShooterNb: {
-      width: '20%',
-    },
-    columnChallengeLocation: {
-      width: '30%',
-    },
-  }));
-  const classes = useStyles();
+  const [pagedChallenges, setPagedChallenges] = useState<Page<GetChallengeListElementResponse>>(
+    EMPTY_PAGE()
+  );
 
-  const handleChangePage = (event: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-    props.actions.changePage(props.nbElementsOnPage, newPage);
+  const handleChangePage = (pageSize: number, pageNumber: number) => {
+    ChallengeService.getChallenges(pageSize, pageNumber)
+      .then(response => {
+        if (response.status === 200) {
+          setPagedChallenges(response.data);
+        }
+      })
+      .catch(() => {
+        props.actions.error('Impossible de récupérer la liste des challenges');
+      });
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newRowsPerPageValue: number = parseInt(event.target.value, 10);
-    props.actions.changePage(newRowsPerPageValue, 0);
-  };
+  if (pagedChallenges.pageable?.pageNumber === -1) {
+    handleChangePage(pagedChallenges.pageable.pageSize, 0);
+  }
 
   const handleClickOnCreateChallengeButton = () => {
     props.actions.push(ROUTES.CHALLENGE.CREATION);
   };
 
-  const labelRowsPerPage = "Nombre d'éléments par page";
-  const labelDisplayedRowsArgs = (paginationInfo: LabelDisplayedRowsArgs) =>
-    `Element ${paginationInfo.from} à ${paginationInfo.to}, sur un total de: ${paginationInfo.count}`;
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newRowsPerPageValue: number = parseInt(event.target.value, 10);
+    handleChangePage(newRowsPerPageValue, 0);
+  };
 
   return (
     <>
@@ -90,10 +88,10 @@ const ChallengeList = (props: ChallengeListProps) => {
           <TableContainer component={Paper}>
             <Table stickyHeader>
               <colgroup>
-                <col className={classes.columnChallengeName} />
-                <col className={classes.columnChallengeDate} />
-                <col className={classes.columnChallengeShooterNb} />
-                <col className={classes.columnChallengeLocation} />
+                <col width={0.3} />
+                <col width={0.2} />
+                <col width={0.2} />
+                <col width={0.3} />
               </colgroup>
               <TableHead>
                 <TableRow>
@@ -104,7 +102,7 @@ const ChallengeList = (props: ChallengeListProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {props.challenges.map(challenge => (
+                {pagedChallenges.content.map(challenge => (
                   <TableRow key={challenge.id}>
                     <TableCell align="center">{challenge.name}</TableCell>
                     <TableCell align="center">
@@ -119,12 +117,14 @@ const ChallengeList = (props: ChallengeListProps) => {
                 <TableRow>
                   <TablePagination
                     colSpan={3}
-                    count={props.nbTotalElements}
-                    rowsPerPage={props.nbElementsOnPage}
-                    page={props.currentPageNumber}
-                    labelRowsPerPage={labelRowsPerPage}
-                    labelDisplayedRows={labelDisplayedRowsArgs}
-                    onChangePage={handleChangePage}
+                    count={pagedChallenges.totalElements}
+                    rowsPerPage={pagedChallenges.pageable.pageSize}
+                    page={pagedChallenges.pageable.pageNumber === -1 ? 0 : pagedChallenges.pageable.pageNumber}
+                    labelRowsPerPage={labels.rowsPerPage}
+                    labelDisplayedRows={labels.displayedRowsArgs}
+                    onChangePage={(event, pageNumber: number) =>
+                      handleChangePage(pagedChallenges.pageable.pageSize, pageNumber)
+                    }
                     onChangeRowsPerPage={handleChangeRowsPerPage}
                   />
                 </TableRow>

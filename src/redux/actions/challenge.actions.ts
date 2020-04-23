@@ -6,29 +6,6 @@ import { push } from 'connected-react-router';
 import { ROUTES } from '../../configurations/server.configuration';
 import { CreateAddressRequest } from 'services/models/address.model';
 
-export function changePage(
-  rowsPerPage: number,
-  page: number
-): ThunkAction<void, AppState, undefined, any> {
-  return (dispatch: ThunkDispatch<AppState, undefined, any>) => {
-    ChallengeService.getChallenges(rowsPerPage, page)
-      .then(response => {
-        if (response.status === 200) {
-          dispatch({
-            type: ActionTypes.GOT_CHALLENGES,
-            pagedChallenges: response.data,
-          });
-        }
-      })
-      .catch(() => {
-        dispatch({
-          type: ActionTypes.ERROR_OCCURED,
-          message: "Une erreur s'est produite",
-        });
-      });
-  };
-}
-
 export function createChallenge(
   name: string,
   address: CreateAddressRequest,

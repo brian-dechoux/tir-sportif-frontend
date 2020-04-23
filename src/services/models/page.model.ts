@@ -1,6 +1,5 @@
 export interface Page<T> {
-
-  content?: Array<T>;
+  content: Array<T>;
 
   empty?: boolean;
 
@@ -12,25 +11,35 @@ export interface Page<T> {
 
   numberOfElements?: number;
 
-  pageable?: Pageable;
+  pageable: Pageable;
 
   size?: number;
 
   sort?: Sort;
 
-  totalElements?: number;
+  totalElements: number;
 
-  totalPages?: number;
+  totalPages: number;
+}
 
+export function EMPTY_PAGE(): Page<any> {
+  return {
+    content: [],
+    pageable: {
+      pageSize: 10,
+      pageNumber: -1,
+    },
+    totalPages: 1,
+    totalElements: 0,
+  };
 }
 
 export interface Pageable {
-
   offset?: number;
 
-  pageNumber?: number;
+  pageNumber: number;
 
-  pageSize?: number;
+  pageSize: number;
 
   paged?: boolean;
 
@@ -40,7 +49,6 @@ export interface Pageable {
 }
 
 export interface Sort {
-
   empty?: boolean;
 
   sorted?: boolean;

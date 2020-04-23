@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { Box, Button, FormControl, Grid, TextField, Typography } from '@material-ui/core';
-import { DateTimePicker, KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { ThunkAction } from 'redux-thunk';
 import { AppState } from 'redux/reducers/combined.reducer';
 import { CreateAddressRequest } from 'services/models/address.model';

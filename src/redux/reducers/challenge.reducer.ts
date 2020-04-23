@@ -1,21 +1,13 @@
-import { ActionTypes } from 'redux/actions/action.enum';
 import ChallengeState from 'redux/states/challenge.state.type';
-import GotChallengesAction from 'redux/actions/got-challenges.action';
 
 const initialState: ChallengeState = {
   pagedChallenges: null,
 };
 
-type ChallengeActions = GotChallengesAction;
+type ChallengeActions = any;
 
 export default function(state: ChallengeState = initialState, action: ChallengeActions) {
   switch (action.type) {
-    case ActionTypes.GOT_CHALLENGES:
-      return Object.assign({}, state, {
-        ...state,
-        pagedChallenges: action.pagedChallenges,
-      });
-
     default:
       return state;
   }
