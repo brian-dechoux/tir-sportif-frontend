@@ -1,4 +1,4 @@
-import { ToastVariant } from '../../components/toast/toast';
+import { ToastVariant } from 'components/toast/toast';
 
 export interface ToastState {
   isShown: boolean;

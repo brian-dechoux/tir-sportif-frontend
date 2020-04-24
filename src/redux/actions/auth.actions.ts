@@ -4,6 +4,21 @@ import { ActionTypes } from './action.enum';
 import { ERRORS, ROUTES } from '../../configurations/server.configuration';
 import { push } from 'connected-react-router';
 import AuthService from '../../services/auth.service';
+import { BaseAction } from './base.action';
+
+export interface LoginAction extends BaseAction {
+  type: ActionTypes.LOGIN;
+  token: string;
+}
+
+export interface LogoutAction extends BaseAction {
+  type: ActionTypes.LOGOUT;
+}
+
+export interface ExpireTokenAction extends BaseAction {
+  type: ActionTypes.EXPIRE_TOKEN;
+  message: string;
+}
 
 export function login(
   username: string,

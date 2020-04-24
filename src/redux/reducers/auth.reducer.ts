@@ -1,8 +1,6 @@
 import { ActionTypes } from 'redux/actions/action.enum';
-import { LoginAction } from 'redux/actions/login.action';
-import { LogoutAction } from 'redux/actions/logout.action';
 import AuthState from 'redux/states/auth.state.type';
-import ExpireTokenAction from '../actions/expire-token.action';
+import { ExpireTokenAction, LoginAction, LogoutAction } from 'redux/actions/auth.actions';
 
 const initialState: AuthState = {
   token: null,

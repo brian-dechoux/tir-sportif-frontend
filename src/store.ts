@@ -17,9 +17,6 @@ const initialAppState: any = {
   auth: {
     token: localStorage.getItem('token'),
   },
-  challenge: {
-    pagedChallenges: null,
-  },
 };
 
 const middleware = [reduxLogger, thunk, routerMiddleware(history)];

@@ -1,7 +1,6 @@
 import { ActionTypes } from 'redux/actions/action.enum';
-import CloseToastAction from '../actions/close-toast.action';
-import ToastState from '../states/toast.state.type';
-import OpenToastAction from '../actions/open-toast.action';
+import ToastState from 'redux/states/toast.state.type';
+import { CloseToastAction, OpenToastAction } from 'redux/actions/toast.actions';
 
 const initialState: ToastState = {
   isShown: false,

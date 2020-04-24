@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import ChallengeCreation from './challenge-creation';
-import { createChallenge } from 'redux/actions/challenge.actions';
-import { AppState } from 'redux/reducers/combined.reducer';
+import { error } from 'redux/actions/error.actions';
+import { push } from 'connected-react-router';
 
 class ChallengeCreationContainer extends React.PureComponent<
-  ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>,
+  ReturnType<typeof mapDispatchToProps>,
   {}
 > {
   render() {
@@ -14,19 +14,14 @@ class ChallengeCreationContainer extends React.PureComponent<
   }
 }
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    router: state.router,
-  };
-};
-
 const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
   actions: bindActionCreators(
     {
-      createChallenge: createChallenge,
+      error: error,
+      push: push,
     },
     dispatch
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChallengeCreationContainer);
+export default connect(null, mapDispatchToProps)(ChallengeCreationContainer);

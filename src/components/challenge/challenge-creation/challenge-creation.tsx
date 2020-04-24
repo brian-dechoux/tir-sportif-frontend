@@ -6,20 +6,19 @@ import { ThunkAction } from 'redux-thunk';
 import { AppState } from 'redux/reducers/combined.reducer';
 import { CreateAddressRequest } from 'services/models/address.model';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '../../../configurations/server.configuration';
+import { ROUTES } from 'configurations/server.configuration';
 import { fr } from 'date-fns/locale';
-import { datePickerLabels } from '../../../configurations/theme.configuration';
+import { datePickerLabels } from 'configurations/theme.configuration';
+import { CallHistoryMethodAction } from 'connected-react-router';
+import ChallengeService from '../../../services/challenge.service';
 
 type ChallengeCreationProps = {
   actions: {
-    createChallenge: (
-      name: string,
-      address: CreateAddressRequest,
-      startDate: Date,
-      organiserClubId: number,
-      categoryIds: number[],
-      disciplineIds: number[]
-    ) => ThunkAction<void, AppState, undefined, any>;
+    error: (message: string) => ThunkAction<void, AppState, undefined, any>;
+    push: (
+      path: string,
+      state?: any | undefined
+    ) => CallHistoryMethodAction<[string, (any | undefined)?]>;
   };
 };
 
@@ -44,14 +43,25 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
     };
 
     // FIXME BDX throw if null date
-    props.actions.createChallenge(
+    ChallengeService.createChallenge(
       inputName,
       address,
       selectedDateTime ? selectedDateTime : new Date(),
       1,
       [1],
       [1]
-    );
+    )
+      .then(response => {
+        // TODO check error handling here with a 500
+        if (response.status === 201) {
+          props.actions.push(ROUTES.CHALLENGE.LIST);
+        } else {
+          props.actions.error('Impossible de créer le challenge');
+        }
+      })
+      .catch(() => {
+        props.actions.error('Impossible de créer le challenge');
+      });
   };
 
   return (
