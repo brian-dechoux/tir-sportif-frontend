@@ -1,9 +1,9 @@
 import { GetAddressResponse } from './address.model';
 
 export interface GetClubResponse {
-  address?: GetAddressResponse;
+  address: GetAddressResponse;
 
-  id?: number;
+  id: number;
 
-  name?: string;
+  name: string;
 }

@@ -3,38 +3,36 @@ import DateFnsUtils from '@date-io/date-fns';
 import {
   Box,
   Button,
+  Checkbox,
   FormControl,
   Grid,
   InputLabel,
+  ListItemText,
   MenuItem,
   Select,
   TextField,
   Typography,
 } from '@material-ui/core';
 import { DateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
-import { ThunkAction } from 'redux-thunk';
-import { AppState } from 'redux/reducers/combined.reducer';
 import { CreateAddressRequest } from 'services/models/address.model';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import { fr } from 'date-fns/locale';
 import { datePickerLabels } from 'configurations/theme.configuration';
-import { CallHistoryMethodAction } from 'connected-react-router';
 import ChallengeService from 'services/challenge.service';
 import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
 import DisciplineService from 'services/discipline.service';
 import { GetClubResponse } from 'services/models/club.model';
-import { GetDisciplineResponse } from '../../../services/models/discipline.model';
-import { GetCategoryResponse } from '../../../services/models/category.model';
+import { GetDisciplineResponse } from 'services/models/discipline.model';
+import { GetCategoryResponse } from 'services/models/category.model';
+import { ToastVariant } from 'components/toast/toast';
 
 type ChallengeCreationProps = {
   actions: {
-    error: (message: string) => ThunkAction<void, AppState, undefined, any>;
-    push: (
-      path: string,
-      state?: any | undefined
-    ) => CallHistoryMethodAction<[string, (any | undefined)?]>;
+    error: (message: string) => any;
+    openToast: (message: string, variant: ToastVariant) => any;
+    push: (path: string, state?: any | undefined) => any;
   };
 };
 
@@ -43,16 +41,26 @@ const DEFAULT_CLUB = {
   name: 'ST Club Briey',
 };
 
+const DEFAULT_ADDRESS: CreateAddressRequest = {
+  street: 'Rue de Dolhain',
+  city: 'Val de Briey',
+  countryId: 74,
+};
+
 // TODO BDX Extract in theme
 const selectMultipleRender = (selected: any) => (selected as string[]).join(', ');
 
 const ChallengeCreation = (props: ChallengeCreationProps) => {
+  const [formSent, setFormSent] = useState(false);
+
   const [clubs, setClubs] = useState<GetClubResponse[]>([]);
   const [categories, setCategories] = useState<GetCategoryResponse[]>([]);
   const [disciplines, setDisciplines] = useState<GetDisciplineResponse[]>([]);
-  const [selectedClub, setSelectedClub] = useState(DEFAULT_CLUB.id);
-  const [selectedCategories, setSelectedCategories] = useState<number[]>([]);
-  const [selectedDisciplines, setSelectedDisciplines] = useState<number[]>([]);
+
+  const [inputName, setName] = useState('');
+  const [selectedClub, setSelectedClub] = useState(DEFAULT_CLUB.name);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedDisciplines, setSelectedDisciplines] = useState<string[]>([]);
 
   useEffect(() => {
     let unmounted = false;
@@ -80,15 +88,55 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
     return () => {
       unmounted = true;
     };
-  }, [clubs, categories, disciplines, props.actions]);
+  }, [clubs, categories, disciplines]);
+
+  // FIXME BDX
+  //  - Dates sent are wrong (check date-fns)
+  useEffect(() => {
+    if (formSent) {
+      const clubPayload = clubs.find(club => club.name === selectedClub);
+      const categoriesPayload = categories
+        .filter(category =>
+          selectedCategories.some(selectedCategory => selectedCategory === category.label)
+        )
+        .map(category => category.id);
+      const disciplinesPayload = disciplines
+        .filter(discipline =>
+          selectedDisciplines.some(selectedDiscipline => selectedDiscipline === discipline.label)
+        )
+        .map(discipline => discipline.id);
+      ChallengeService.createChallenge(
+        inputName,
+        DEFAULT_ADDRESS,
+        selectedDateTime ? selectedDateTime : new Date(),
+        clubPayload ? clubPayload.id : DEFAULT_CLUB.id,
+        categoriesPayload,
+        disciplinesPayload
+      )
+        .then(response => {
+          if (response.status === 201) {
+            props.actions.openToast('Challenge créé avec succès', 'success');
+            props.actions.push(ROUTES.CHALLENGE.LIST);
+          } else {
+            props.actions.error('Impossible de créer le challenge');
+          }
+        })
+        .catch(() => props.actions.error('Impossible de créer le challenge'));
+    }
+  }, [formSent]);
 
   const [challengeNameValid, setChallengeNameValid] = useState(true);
+  const [categoriesValid, setCategoriesValid] = useState(true);
+  const [disciplinesValid, setDisciplinesValid] = useState(true);
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
-  const [inputName, setName] = useState('');
 
-  const formValid = ![challengeNameValid, !!selectedDateTime, !!selectedClub].some(
-    validation => !validation
-  );
+  const formValid = ![
+    challengeNameValid,
+    !!selectedDateTime,
+    !!selectedClub,
+    selectedCategories.length > 0,
+    selectedDisciplines.length > 0,
+  ].some(validation => !validation);
 
   const handleNameChange = (event: any) => {
     const newValue = event.target.value;
@@ -103,48 +151,22 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
 
   const handleCategoriesChange = (event: any) => {
     const newValue = event.target.value;
-    setSelectedCategories([...selectedCategories, newValue]);
+    setCategoriesValid(newValue.length > 0);
+    setSelectedCategories(newValue);
   };
 
   const handleDisciplinesChange = (event: any) => {
     const newValue = event.target.value;
-    setSelectedDisciplines([...selectedDisciplines, newValue]);
+    setDisciplinesValid(newValue.length > 0);
+    setSelectedDisciplines(newValue);
   };
 
-  const handleChallengeCreation = () => {
-    const address: CreateAddressRequest = {
-      street: 'Rue de Dolhain',
-      city: 'Val de Briey',
-      countryId: 74,
-    };
-
-    // FIXME BDX throw if null date
-    ChallengeService.createChallenge(
-      inputName,
-      address,
-      selectedDateTime ? selectedDateTime : new Date(),
-      1,
-      [1],
-      [1]
-    )
-      .then(response => {
-        if (response.status === 201) {
-          props.actions.push(ROUTES.CHALLENGE.LIST);
-        } else {
-          props.actions.error('Impossible de créer le challenge');
-        }
-      })
-      .catch(() => {
-        props.actions.error('Impossible de créer le challenge');
-      });
-  };
-
-  if (clubs.length === 0) {
+  if (clubs.length === 0 || categories.length === 0 || disciplines.length === 0) {
     return null;
   } else {
     return (
       <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
-        <form onSubmit={handleChallengeCreation} noValidate>
+        <form noValidate>
           <Box display="flex" justifyContent="center">
             <Box display="flex" width={0.6}>
               <Grid container spacing={3} alignItems="center">
@@ -165,7 +187,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                     <InputLabel>Club organisateur</InputLabel>
                     <Select value={selectedClub} onChange={handleClubChange}>
                       {clubs.map(club => (
-                        <MenuItem key={club.id} value={club.id}>
+                        <MenuItem key={club.id} value={club.name}>
                           {club.name}
                         </MenuItem>
                       ))}
@@ -194,7 +216,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControl required fullWidth>
+                  <FormControl required fullWidth error={!categoriesValid}>
                     <InputLabel>Catégories</InputLabel>
                     <Select
                       multiple
@@ -203,15 +225,20 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       renderValue={selectMultipleRender}
                     >
                       {categories.map(category => (
-                        <MenuItem key={category.id} value={category.id}>
-                          {category.label}
+                        <MenuItem key={category.id} value={category.label}>
+                          <Checkbox
+                            checked={selectedCategories.some(
+                              selectedCategory => selectedCategory === category.label
+                            )}
+                          />
+                          <ListItemText primary={category.label} />
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
                 </Grid>
                 <Grid item xs={6}>
-                  <FormControl required fullWidth>
+                  <FormControl required fullWidth error={!disciplinesValid}>
                     <InputLabel>Disciplines</InputLabel>
                     <Select
                       multiple
@@ -220,8 +247,13 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       renderValue={selectMultipleRender}
                     >
                       {disciplines.map(discipline => (
-                        <MenuItem key={discipline.id} value={discipline.id}>
-                          {discipline.label}
+                        <MenuItem key={discipline.id} value={discipline.label}>
+                          <Checkbox
+                            checked={selectedDisciplines.some(
+                              selectedDiscipline => selectedDiscipline === discipline.label
+                            )}
+                          />
+                          <ListItemText primary={discipline.label} />
                         </MenuItem>
                       ))}
                     </Select>
@@ -238,7 +270,8 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       disabled={!formValid}
                       variant="contained"
                       color="secondary"
-                      type="submit"
+                      type="button"
+                      onClick={() => setFormSent(true)}
                     >
                       VALIDER
                     </Button>
