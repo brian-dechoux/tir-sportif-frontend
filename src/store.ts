@@ -21,8 +21,11 @@ const initialAppState: any = {
 
 const middleware = [reduxLogger, thunk, routerMiddleware(history)];
 
+// @ts-ignore
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 export const store = createStore(
   createRootReducer(history),
   initialAppState,
-  compose(applyMiddleware(...middleware))
+  composeEnhancers(applyMiddleware(...middleware))
 );
