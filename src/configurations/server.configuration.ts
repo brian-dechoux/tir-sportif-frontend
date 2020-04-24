@@ -1,6 +1,5 @@
 export const ROUTES = {
   DASHBOARD: '/',
-  LOGIN: '/login',
   RESULTS: '/results',
   CHALLENGE: {
     LIST: '/challenges',

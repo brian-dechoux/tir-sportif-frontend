@@ -12,6 +12,14 @@ export interface CloseToastAction extends BaseAction {
   type: ActionTypes.CLOSE_TOAST;
 }
 
+export function openToast(message: string, variant: ToastVariant): OpenToastAction {
+  return {
+    type: ActionTypes.OPEN_TOAST,
+    message: message,
+    variant: variant,
+  };
+}
+
 export function closeToast(): CloseToastAction {
   return {
     type: ActionTypes.CLOSE_TOAST,

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { login, logout } from 'redux/actions/auth.actions';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import Header from './header';
-import { AppState } from '../../redux/reducers/combined.reducer';
+import { AppState } from 'redux/reducers/combined.reducer';
 
 class HeaderContainer extends React.PureComponent<
   ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>,
@@ -11,18 +11,13 @@ class HeaderContainer extends React.PureComponent<
 > {
   render() {
     const token = this.props.token;
-
-    // TODO move localStorage to action, it doesn't make sense here as it's a side effect
     if (token != null) {
       localStorage.setItem('token', token);
     } else {
       localStorage.removeItem('token');
     }
 
-    return <Header
-      isAuthenticated={token != null}
-      actions={this.props.actions}
-    />;
+    return <Header isAuthenticated={token != null} actions={this.props.actions} />;
   }
 }
 

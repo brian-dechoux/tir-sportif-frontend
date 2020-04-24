@@ -1,10 +1,11 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { AppState } from '../reducers/combined.reducer';
+import { AppState } from 'redux/reducers/combined.reducer';
 import { ActionTypes } from './action.enum';
-import { ERRORS, ROUTES } from '../../configurations/server.configuration';
+import { ERRORS, ROUTES } from 'configurations/server.configuration';
 import { push } from 'connected-react-router';
-import AuthService from '../../services/auth.service';
+import AuthService from 'services/auth.service';
 import { BaseAction } from './base.action';
+import { openToast } from './toast.actions';
 
 export interface LoginAction extends BaseAction {
   type: ActionTypes.LOGIN;
@@ -43,18 +44,20 @@ export function login(
               message: 'Session expirée, veuillez vous re-authentifier',
             });
           } else {
-            dispatch({
-              type: ActionTypes.OPEN_TOAST,
-              message: 'Les informations remplies ne correspondent pas à un utilisateur connu',
-              variant: 'error',
-            });
+            dispatch(
+              openToast(
+                'Les informations remplies ne correspondent pas à un utilisateur connu',
+                'error'
+              )
+            );
           }
         } else {
-          dispatch({
-            type: ActionTypes.OPEN_TOAST,
-            message: "Une erreur s'est produite durant l'authentification",
-            variant: 'error',
-          });
+          dispatch(
+            openToast(
+              "Une erreur s'est produite durant l'authentification",
+              'error'
+            )
+          );
         }
       });
   };

@@ -10,12 +10,12 @@ import {
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { ThunkAction } from 'redux-thunk';
-import { AppState } from '../../redux/reducers/combined.reducer';
+import { AppState } from 'redux/reducers/combined.reducer';
 import { Link } from 'react-router-dom';
-import { ROUTES } from '../../configurations/server.configuration';
+import { ROUTES } from 'configurations/server.configuration';
 import PersonIcon from '@material-ui/icons/Person';
-import LogoIcon from '../svg/logo-icon';
-import LogoText from '../svg/logo-text';
+import LogoIcon from 'components/svg/logo-icon';
+import LogoText from 'components/svg/logo-text';
 import { makeStyles } from '@material-ui/core/styles';
 
 type HeaderProps = {
@@ -51,11 +51,7 @@ const Header = (props: HeaderProps) => {
   };
 
   if (props.isAuthenticated) {
-    authButtons = (
-      <Button onClick={() => props.actions.logout()}>
-        Se déconnecter
-      </Button>
-    );
+    authButtons = <Button onClick={() => props.actions.logout()}>Se déconnecter</Button>;
 
     menuButtons = (
       <>
