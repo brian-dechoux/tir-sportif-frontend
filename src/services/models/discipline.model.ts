@@ -1,11 +1,9 @@
 export interface GetDisciplineResponse {
+  code: string;
 
-  code?: string;
+  id: number;
 
-  id?: number;
+  label: string;
 
-  label?: string;
-
-  useDecimalResults?: boolean;
-
+  useDecimalResults: boolean;
 }

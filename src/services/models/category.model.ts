@@ -1,15 +1,15 @@
 export interface GetCategoryResponse {
-  ageMax?: number;
+  ageMax: number;
 
-  ageMin?: number;
+  ageMin: number;
 
-  code?: string;
+  code: string;
 
-  gender?: GenderEnum;
+  gender: GenderEnum;
 
-  id?: number;
+  id: number;
 
-  label?: string;
+  label: string;
 }
 
 export enum GenderEnum {
