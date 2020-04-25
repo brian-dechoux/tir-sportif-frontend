@@ -27,6 +27,7 @@ export const customTheme = {
   header: customColors.white,
   containerBackground: customColors.white,
   mainBackground: customColors.lightGrey,
+  selectMultipleRender: (selected: any) => (selected as string[]).join(', '),
 };
 
 // TODO Split format in pickers, server, etc

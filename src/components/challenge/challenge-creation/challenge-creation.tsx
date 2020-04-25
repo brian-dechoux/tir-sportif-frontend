@@ -18,7 +18,7 @@ import { CreateAddressRequest } from 'services/models/address.model';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import { fr } from 'date-fns/locale';
-import { dateTheme } from 'configurations/theme.configuration';
+import { customTheme, dateTheme } from 'configurations/theme.configuration';
 import ChallengeService from 'services/challenge.service';
 import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
@@ -46,9 +46,6 @@ const DEFAULT_ADDRESS: CreateAddressRequest = {
   city: 'Val de Briey',
   countryId: 74,
 };
-
-// TODO BDX Extract in theme
-const selectMultipleRender = (selected: any) => (selected as string[]).join(', ');
 
 const ChallengeCreation = (props: ChallengeCreationProps) => {
   const [formSent, setFormSent] = useState(false);
@@ -224,7 +221,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       multiple
                       value={selectedCategories}
                       onChange={handleCategoriesChange}
-                      renderValue={selectMultipleRender}
+                      renderValue={customTheme.selectMultipleRender}
                     >
                       {categories.map(category => (
                         <MenuItem key={category.id} value={category.label}>
@@ -246,7 +243,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       multiple
                       value={selectedDisciplines}
                       onChange={handleDisciplinesChange}
-                      renderValue={selectMultipleRender}
+                      renderValue={customTheme.selectMultipleRender}
                     >
                       {disciplines.map(discipline => (
                         <MenuItem key={discipline.id} value={discipline.label}>
