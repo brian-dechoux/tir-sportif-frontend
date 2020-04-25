@@ -46,6 +46,7 @@ const ChallengeList = (props: ChallengeListProps) => {
     EMPTY_PAGE()
   );
 
+  // TODO use effect here ?
   const handleChangePage = (pageSize: number, pageNumber: number) => {
     ChallengeService.getChallenges(pageSize, pageNumber)
       .then(response => {
