@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { login, logout } from 'redux/actions/auth.actions';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
 import Header from './header';
-import { AppState } from 'redux/reducers/combined.reducer';
+import { AppState } from 'redux/states/app.state.type';
 
 class HeaderContainer extends React.PureComponent<
   ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>,

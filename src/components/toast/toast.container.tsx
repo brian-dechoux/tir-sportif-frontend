@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { closeToast } from 'redux/actions/toast.actions';
 import { AnyAction, bindActionCreators, Dispatch } from 'redux';
-import { AppState } from '../../redux/reducers/combined.reducer';
+import { AppState } from 'redux/states/app.state.type';
 import Toast from './toast';
 
 class ToastContainer extends React.PureComponent<

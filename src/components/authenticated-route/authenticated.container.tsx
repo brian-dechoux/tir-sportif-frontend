@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { AppState } from 'redux/reducers/combined.reducer';
+import { AppState } from 'redux/states/app.state.type';
 import { Redirect } from 'react-router';
 import { ROUTES } from 'configurations/server.configuration';
 

@@ -15,6 +15,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ToastContainer from './components/toast/toast.container';
 import { customTheme } from './configurations/theme.configuration';
 import ChallengeListContainer from './components/challenge/challenge-list/challenge-list.container';
+import { getCountries } from './redux/actions/general.actions';
 
 // Problem with negative path matching: https://github.com/pillarjs/path-to-regexp/issues/99
 const App: React.FC = () => {
@@ -27,7 +28,7 @@ const App: React.FC = () => {
     },
   }));
   const classes = useStyles();
-
+  //store.dispatch(getCountries());
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>

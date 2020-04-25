@@ -9,8 +9,6 @@ import {
   Toolbar,
 } from '@material-ui/core';
 import React, { useState } from 'react';
-import { ThunkAction } from 'redux-thunk';
-import { AppState } from 'redux/reducers/combined.reducer';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import PersonIcon from '@material-ui/icons/Person';
@@ -21,8 +19,8 @@ import { makeStyles } from '@material-ui/core/styles';
 type HeaderProps = {
   isAuthenticated: boolean;
   actions: {
-    login: (username: string, password: string) => ThunkAction<void, AppState, undefined, any>;
-    logout: () => ThunkAction<void, AppState, undefined, any>;
+    login: (username: string, password: string) => any;
+    logout: () => any;
   };
 };
 

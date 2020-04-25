@@ -3,7 +3,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import {
   Box,
   Button,
-  Checkbox,
+  Checkbox, Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -58,6 +58,12 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   const [selectedClub, setSelectedClub] = useState(DEFAULT_CLUB.name);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedDisciplines, setSelectedDisciplines] = useState<string[]>([]);
+  const [inputAddressNumber, setAddressNumber] = useState<string>('');
+  const [inputAddressStreet, setAddressStreet] = useState<string>('');
+  const [inputAddressZip, setAddressZip] = useState<string>('');
+  const [inputAddressCity, setAddressCity] = useState<string>('');
+  //FIXME
+  const [inputAddressCountry, setAddressCountry] = useState<string>('');
 
   useEffect(() => {
     let unmounted = false;
@@ -128,6 +134,9 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   const [categoriesValid, setCategoriesValid] = useState(true);
   const [disciplinesValid, setDisciplinesValid] = useState(true);
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
+  const [addressStreetValid, setAddressStreetValid] = useState(true);
+  const [addressCityValid, setAddressCityValid] = useState(true);
+  const [addressCountryValid, setAddressCountryValid] = useState(true);
 
   const formValid = ![
     challengeNameValid,
@@ -135,12 +144,33 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
     !!selectedClub,
     selectedCategories.length > 0,
     selectedDisciplines.length > 0,
+    addressStreetValid,
+    addressCityValid,
+    addressCountryValid,
   ].some(validation => !validation);
 
   const handleNameChange = (event: any) => {
     const newValue = event.target.value;
     setChallengeNameValid(!!newValue);
     setName(newValue);
+  };
+
+  const handleStreetChange = (event: any) => {
+    const newValue = event.target.value;
+    setAddressStreetValid(!!newValue);
+    setAddressStreet(newValue);
+  };
+
+  const handleCityChange = (event: any) => {
+    const newValue = event.target.value;
+    setAddressCityValid(!!newValue);
+    setAddressCity(newValue);
+  };
+
+  const handleCountryChange = (event: any) => {
+    const newValue = event.target.value;
+    // FIXME setAddressCountryValid(!!newValue);
+    setAddressCountry(newValue);
   };
 
   const handleClubChange = (event: any) => {
@@ -171,6 +201,9 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
               <Grid container spacing={3} alignItems="center">
                 <Grid item xs={12}>
                   <Typography variant="h6">CRÉER UN CHALLENGE</Typography>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">Informations générales</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <TextField
@@ -213,6 +246,27 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       invalidDateMessage={dateTheme.pickerLabels.invalidDateMessage}
                     />
                   </FormControl>
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">Lieu</Typography>
+                </Grid>
+                <Grid item md={3}>
+                  <TextField fullWidth label="Numéro" onChange={(event: any) => setAddressNumber(event.target.value)} />
+                </Grid>
+                <Grid item md={9}>
+                  <TextField required fullWidth label="Rue" onChange={handleStreetChange} />
+                </Grid>
+                <Grid item md={3}>
+                  <TextField fullWidth label="Code postal" onChange={(event: any) => setAddressZip(event.target.value)} />
+                </Grid>
+                <Grid item md={6}>
+                  <TextField required fullWidth label="Ville" onChange={handleCityChange} />
+                </Grid>
+                <Grid item md={3}>
+                  <TextField required fullWidth label="Pays" onChange={handleCountryChange} />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant="subtitle2">Informations sportives</Typography>
                 </Grid>
                 <Grid item xs={6}>
                   <FormControl required fullWidth error={!categoriesValid}>

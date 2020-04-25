@@ -1,14 +1,18 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import { applyMiddleware, compose, createStore } from 'redux';
 import { createBrowserHistory } from 'history';
-import thunk from 'redux-thunk';
+import thunk, { ThunkMiddleware } from 'redux-thunk';
 import reduxLogger from 'redux-logger';
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from 'redux/reducers/combined.reducer';
+import { BaseAction } from './redux/actions/base.action';
+import AppState from './redux/states/app.state.type';
 
 export const history = createBrowserHistory();
 
-// FIXME why should I provide a whole goddamn state here
-const initialAppState: any = {
+const initialAppState: AppState = {
+  general: {
+    countries: [],
+  },
   toast: {
     isShown: false,
     message: '',
@@ -19,7 +23,11 @@ const initialAppState: any = {
   },
 };
 
-const middleware = [reduxLogger, thunk, routerMiddleware(history)];
+const middleware = [
+  reduxLogger,
+  thunk as ThunkMiddleware<AppState, BaseAction>,
+  routerMiddleware(history),
+];
 
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

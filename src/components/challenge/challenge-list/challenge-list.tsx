@@ -14,8 +14,6 @@ import {
 import TableContainer from '@material-ui/core/TableContainer';
 import AddIcon from '@material-ui/icons/Add';
 import { GetChallengeListElementResponse } from 'services/models/challenge.model';
-import { ThunkAction } from 'redux-thunk';
-import { AppState } from 'redux/reducers/combined.reducer';
 import { ROUTES } from 'configurations/server.configuration';
 import { CallHistoryMethodAction } from 'connected-react-router';
 import { LabelDisplayedRowsArgs } from '@material-ui/core/TablePagination/TablePagination';
@@ -25,11 +23,11 @@ import ChallengeService from 'services/challenge.service';
 
 type ChallengeListProps = {
   actions: {
-    error: (message: string) => ThunkAction<void, AppState, undefined, any>;
+    error: (message: string) => any;
     push: (
       path: string,
       state?: any | undefined
-    ) => CallHistoryMethodAction<[string, (any | undefined)?]>;
+    ) => any;
   };
 };
 

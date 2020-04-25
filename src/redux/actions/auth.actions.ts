@@ -1,11 +1,11 @@
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { AppState } from 'redux/reducers/combined.reducer';
 import { ActionTypes } from './action.enum';
 import { ERRORS, ROUTES } from 'configurations/server.configuration';
 import { push } from 'connected-react-router';
 import AuthService from 'services/auth.service';
 import { BaseAction } from './base.action';
 import { error } from './error.actions';
+import AppState from 'redux/states/app.state.type';
 
 export interface LoginAction extends BaseAction {
   type: ActionTypes.LOGIN;
@@ -38,12 +38,14 @@ export function login(
       .catch(errorResponse => {
         if (errorResponse.response.status === 401) {
           if (errorResponse.response.data.code === ERRORS.EXPIRED_TOKEN) {
-            expireToken();
+            dispatch(expireToken());
           } else {
-            error('Les informations remplies ne correspondent pas à un utilisateur connu');
+            dispatch(
+              error('Les informations remplies ne correspondent pas à un utilisateur connu')
+            );
           }
         } else {
-          error("Une erreur s'est produite durant l'authentification");
+          dispatch(error("Une erreur s'est produite durant l'authentification"));
         }
       });
   };
