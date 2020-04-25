@@ -5,7 +5,7 @@ import { ERRORS, ROUTES } from 'configurations/server.configuration';
 import { push } from 'connected-react-router';
 import AuthService from 'services/auth.service';
 import { BaseAction } from './base.action';
-import { openToast } from './toast.actions';
+import { error } from './error.actions';
 
 export interface LoginAction extends BaseAction {
   type: ActionTypes.LOGIN;
@@ -18,7 +18,6 @@ export interface LogoutAction extends BaseAction {
 
 export interface ExpireTokenAction extends BaseAction {
   type: ActionTypes.EXPIRE_TOKEN;
-  message: string;
 }
 
 export function login(
@@ -36,28 +35,15 @@ export function login(
           dispatch(push(ROUTES.RESULTS));
         }
       })
-      .catch(error => {
-        if (error.response.status === 401) {
-          if (error.response.data.code === ERRORS.EXPIRED_TOKEN) {
-            dispatch({
-              type: ActionTypes.EXPIRE_TOKEN,
-              message: 'Session expirée, veuillez vous re-authentifier',
-            });
+      .catch(errorResponse => {
+        if (errorResponse.response.status === 401) {
+          if (errorResponse.response.data.code === ERRORS.EXPIRED_TOKEN) {
+            expireToken();
           } else {
-            dispatch(
-              openToast(
-                'Les informations remplies ne correspondent pas à un utilisateur connu',
-                'error'
-              )
-            );
+            error('Les informations remplies ne correspondent pas à un utilisateur connu');
           }
         } else {
-          dispatch(
-            openToast(
-              "Une erreur s'est produite durant l'authentification",
-              'error'
-            )
-          );
+          error("Une erreur s'est produite durant l'authentification");
         }
       });
   };
@@ -76,5 +62,13 @@ export function logout(): ThunkAction<void, AppState, undefined, any> {
           type: ActionTypes.LOGOUT,
         });
       });
+  };
+}
+
+export function expireToken(): ExpireTokenAction {
+  error('Session expirée, veuillez vous connecter à nouveau');
+  push(ROUTES.RESULTS);
+  return {
+    type: ActionTypes.EXPIRE_TOKEN,
   };
 }
