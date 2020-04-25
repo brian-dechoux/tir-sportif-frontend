@@ -1,4 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
+import { fr } from 'date-fns/locale';
 
 export const customColors = {
   white: '#ffffff',
@@ -28,10 +29,19 @@ export const customTheme = {
   mainBackground: customColors.lightGrey,
 };
 
-export const datePickerLabels = {
-  clearLabel: 'VIDER',
-  cancelLabel: 'ANNULER',
-  okLabel: 'VALIDER',
-  todayLabel: "AUJOURD'HUI",
-  invalidDateMessage: 'Mauvais format de date',
+// TODO Split format in pickers, server, etc
+export const dateTheme = {
+  format: {
+    pickers: 'dd/MM/yyyy HH:mm',
+    server: "dd/MM/yyyy'T'HH:mm",
+  },
+  timeZone: 'Europe/Paris',
+  locale: fr,
+  pickerLabels: {
+    clearLabel: 'VIDER',
+    cancelLabel: 'ANNULER',
+    okLabel: 'VALIDER',
+    todayLabel: "AUJOURD'HUI",
+    invalidDateMessage: 'Mauvais format de date',
+  }
 };

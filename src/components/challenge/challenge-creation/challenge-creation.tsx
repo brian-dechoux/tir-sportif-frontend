@@ -18,7 +18,7 @@ import { CreateAddressRequest } from 'services/models/address.model';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import { fr } from 'date-fns/locale';
-import { datePickerLabels } from 'configurations/theme.configuration';
+import { dateTheme } from 'configurations/theme.configuration';
 import ChallengeService from 'services/challenge.service';
 import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
@@ -90,11 +90,10 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
     };
   }, [clubs, categories, disciplines]);
 
-  // FIXME BDX
-  //  - Dates sent are wrong (check date-fns)
   useEffect(() => {
     if (formSent) {
       const clubPayload = clubs.find(club => club.name === selectedClub);
+      const datePayload = selectedDateTime ? selectedDateTime : new Date();
       const categoriesPayload = categories
         .filter(category =>
           selectedCategories.some(selectedCategory => selectedCategory === category.label)
@@ -108,7 +107,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
       ChallengeService.createChallenge(
         inputName,
         DEFAULT_ADDRESS,
-        selectedDateTime ? selectedDateTime : new Date(),
+        datePayload,
         clubPayload ? clubPayload.id : DEFAULT_CLUB.id,
         categoriesPayload,
         disciplinesPayload
@@ -121,7 +120,10 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
             props.actions.error('Impossible de créer le challenge');
           }
         })
-        .catch(() => props.actions.error('Impossible de créer le challenge'));
+        .catch(() => {
+          props.actions.error('Impossible de créer le challenge')
+          setFormSent(false);
+        });
     }
   }, [formSent]);
 
@@ -200,18 +202,18 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       required
                       disablePast
                       placeholder="10/10/2010 10:10"
-                      format="dd/MM/yyyy hh:mm"
+                      format={dateTheme.format.pickers}
                       margin="normal"
                       ampm={false}
                       id="datetime-picker"
                       label="Date et heure du challenge"
                       value={selectedDateTime}
                       onChange={setSelectedDateTime}
-                      clearLabel={datePickerLabels.clearLabel}
-                      cancelLabel={datePickerLabels.cancelLabel}
-                      okLabel={datePickerLabels.okLabel}
-                      todayLabel={datePickerLabels.todayLabel}
-                      invalidDateMessage={datePickerLabels.invalidDateMessage}
+                      clearLabel={dateTheme.pickerLabels.clearLabel}
+                      cancelLabel={dateTheme.pickerLabels.cancelLabel}
+                      okLabel={dateTheme.pickerLabels.okLabel}
+                      todayLabel={dateTheme.pickerLabels.todayLabel}
+                      invalidDateMessage={dateTheme.pickerLabels.invalidDateMessage}
                     />
                   </FormControl>
                 </Grid>

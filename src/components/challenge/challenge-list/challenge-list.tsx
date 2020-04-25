@@ -19,9 +19,9 @@ import { AppState } from 'redux/reducers/combined.reducer';
 import { ROUTES } from 'configurations/server.configuration';
 import { CallHistoryMethodAction } from 'connected-react-router';
 import { LabelDisplayedRowsArgs } from '@material-ui/core/TablePagination/TablePagination';
-import formatWithLocale from '../../../utils/date.utils';
-import { EMPTY_PAGE, Page } from '../../../services/models/page.model';
-import ChallengeService from '../../../services/challenge.service';
+import { formatString } from 'utils/date.utils';
+import { EMPTY_PAGE, Page } from 'services/models/page.model';
+import ChallengeService from 'services/challenge.service';
 
 type ChallengeListProps = {
   actions: {
@@ -106,7 +106,7 @@ const ChallengeList = (props: ChallengeListProps) => {
                   <TableRow key={challenge.id}>
                     <TableCell align="center">{challenge.name}</TableCell>
                     <TableCell align="center">
-                      {formatWithLocale(challenge.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
+                      {formatString(challenge.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
                     </TableCell>
                     <TableCell align="center">{challenge.nbShooters}</TableCell>
                     <TableCell align="center">{challenge.city}</TableCell>

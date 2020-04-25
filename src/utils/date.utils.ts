@@ -1,6 +1,10 @@
-import { format } from 'date-fns';
-import { fr } from 'date-fns/locale';
+import { format } from 'date-fns-tz';
+import { dateTheme } from 'configurations/theme.configuration';
 
-export default function formatWithLocale(date: string, dateFormat: string): string {
-  return format(new Date(date), dateFormat, { locale: fr });
+export function formatString(date: string, dateFormat: string): string {
+  return formatDate(new Date(date), dateFormat);
+}
+
+export function formatDate(date: Date, dateFormat: string): string {
+  return format(date, dateFormat, { locale: dateTheme.locale, timeZone: dateTheme.timeZone });
 }
