@@ -1,14 +1,12 @@
 import { ActionTypes } from 'redux/actions/action.enum';
 import ToastState from 'redux/states/toast.state.type';
-import { CloseToastAction, OpenToastAction } from 'redux/actions/toast.actions';
+import { ToastActions } from '../actions/toast.actions';
 
 const initialState: ToastState = {
   isShown: false,
   message: '',
   variant: 'success',
 };
-
-type ToastActions = OpenToastAction | CloseToastAction;
 
 export default function(state: ToastState = initialState, action: ToastActions) {
   switch (action.type) {

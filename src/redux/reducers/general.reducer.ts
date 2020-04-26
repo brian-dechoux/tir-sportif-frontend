@@ -1,12 +1,10 @@
 import { ActionTypes } from 'redux/actions/action.enum';
 import GeneralState from 'redux/states/general.state.type';
-import { GetCountriesAction } from 'redux/actions/general.actions';
+import { GeneralActions } from '../actions/general.actions';
 
 const initialState: GeneralState = {
   countries: [],
 };
-
-type GeneralActions = GetCountriesAction;
 
 export default function(state: GeneralState = initialState, action: GeneralActions) {
   switch (action.type) {

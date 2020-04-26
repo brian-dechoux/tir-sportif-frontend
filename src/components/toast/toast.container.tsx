@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { closeToast } from 'redux/actions/toast.actions';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import { AppState } from 'redux/states/app.state.type';
 import Toast from './toast';
+import { Actions } from '../../store';
 
 class ToastContainer extends React.PureComponent<
   ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>,
@@ -27,7 +28,7 @@ const mapStateToProps = (state: AppState) => ({
   variant: state.toast.variant,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
   actions: bindActionCreators(
     {
       closeToast,

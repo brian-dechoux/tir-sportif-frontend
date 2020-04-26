@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import ChallengeList from './challenge-list';
 import { push } from 'connected-react-router';
 import { error } from 'redux/actions/error.actions';
+import { Actions } from '../../../store';
 
 class ChallengeListContainer extends React.PureComponent<
   ReturnType<typeof mapDispatchToProps>,
@@ -14,7 +15,7 @@ class ChallengeListContainer extends React.PureComponent<
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
   actions: bindActionCreators(
     {
       error: error,

@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import ChallengeCreation from './challenge-creation';
 import { error } from 'redux/actions/error.actions';
 import { push } from 'connected-react-router';
 import { openToast } from 'redux/actions/toast.actions';
+import { Actions } from '../../../store';
 
 class ChallengeCreationContainer extends React.PureComponent<
   ReturnType<typeof mapDispatchToProps>,
@@ -15,7 +16,7 @@ class ChallengeCreationContainer extends React.PureComponent<
   }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
   actions: bindActionCreators(
     {
       error: error,

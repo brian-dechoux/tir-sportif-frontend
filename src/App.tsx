@@ -28,7 +28,9 @@ const App: React.FC = () => {
     },
   }));
   const classes = useStyles();
-  //store.dispatch(getCountries());
+  // FIXME Types ?? https://github.com/reduxjs/redux-thunk/issues/103
+  //  store.dispatch(getCountries());
+  store.dispatch(getCountries());
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>

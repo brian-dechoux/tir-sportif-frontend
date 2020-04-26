@@ -1,9 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { login, logout } from 'redux/actions/auth.actions';
-import { AnyAction, bindActionCreators, Dispatch } from 'redux';
+import { bindActionCreators, Dispatch } from 'redux';
 import Header from './header';
 import { AppState } from 'redux/states/app.state.type';
+import { Actions } from '../../store';
 
 class HeaderContainer extends React.PureComponent<
   ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>,
@@ -25,7 +26,7 @@ const mapStateToProps = (state: AppState) => ({
   token: state.auth.token,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch<AnyAction>) => ({
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
   actions: bindActionCreators(
     {
       login,

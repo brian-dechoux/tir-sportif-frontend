@@ -12,6 +12,8 @@ export interface CloseToastAction extends BaseAction {
   type: ActionTypes.CLOSE_TOAST;
 }
 
+export type ToastActions = OpenToastAction | CloseToastAction;
+
 export function openToast(message: string, variant: ToastVariant): OpenToastAction {
   return {
     type: ActionTypes.OPEN_TOAST,

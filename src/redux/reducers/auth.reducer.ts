@@ -1,12 +1,10 @@
 import { ActionTypes } from 'redux/actions/action.enum';
 import AuthState from 'redux/states/auth.state.type';
-import { ExpireTokenAction, LoginAction, LogoutAction } from 'redux/actions/auth.actions';
+import { AuthActions } from 'redux/actions/auth.actions';
 
 const initialState: AuthState = {
   token: null,
 };
-
-type AuthActions = LoginAction | LogoutAction | ExpireTokenAction;
 
 export default function(state: AuthState = initialState, action: AuthActions) {
   switch (action.type) {

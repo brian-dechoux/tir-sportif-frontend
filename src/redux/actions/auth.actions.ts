@@ -6,6 +6,7 @@ import AuthService from 'services/auth.service';
 import { BaseAction } from './base.action';
 import { error } from './error.actions';
 import AppState from 'redux/states/app.state.type';
+import { Actions } from '../../store';
 
 export interface LoginAction extends BaseAction {
   type: ActionTypes.LOGIN;
@@ -20,11 +21,13 @@ export interface ExpireTokenAction extends BaseAction {
   type: ActionTypes.EXPIRE_TOKEN;
 }
 
+export type AuthActions = LoginAction | LogoutAction | ExpireTokenAction;
+
 export function login(
   username: string,
   password: string
-): ThunkAction<void, AppState, undefined, any> {
-  return (dispatch: ThunkDispatch<AppState, undefined, any>) => {
+): ThunkAction<void, AppState, undefined, Actions> {
+  return (dispatch: ThunkDispatch<AppState, undefined, Actions>) => {
     AuthService.login(username, password)
       .then(response => {
         if (response.status === 200) {
@@ -51,8 +54,8 @@ export function login(
   };
 }
 
-export function logout(): ThunkAction<void, AppState, undefined, any> {
-  return (dispatch: ThunkDispatch<AppState, undefined, any>) => {
+export function logout(): ThunkAction<void, AppState, undefined, Actions> {
+  return (dispatch: ThunkDispatch<AppState, undefined, Actions>) => {
     AuthService.logout()
       .then(() => {
         dispatch({
