@@ -17,6 +17,7 @@ import { customTheme } from './configurations/theme.configuration';
 import ChallengeListContainer from './components/challenge/challenge-list/challenge-list.container';
 import { loadTokenIfAvailable } from './redux/actions/auth.actions';
 
+// TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
   const useStyles = makeStyles(() => ({
     main: {
