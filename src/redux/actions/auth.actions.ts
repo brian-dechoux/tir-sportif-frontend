@@ -31,6 +31,7 @@ export function login(
     AuthService.login(username, password)
       .then(response => {
         if (response.status === 200) {
+          localStorage.setItem('token', response.data.jwtToken);
           dispatch({
             type: ActionTypes.LOGIN,
             token: response.data.jwtToken,
@@ -70,10 +71,24 @@ export function logout(): ThunkAction<void, AppState, undefined, Actions> {
   };
 }
 
-export function expireToken(): ExpireTokenAction {
-  error('Session expirée, veuillez vous connecter à nouveau');
-  push(ROUTES.RESULTS);
-  return {
-    type: ActionTypes.EXPIRE_TOKEN,
+export function loadTokenIfAvailable(): ThunkAction<void, AppState, undefined, Actions> {
+  return (dispatch: ThunkDispatch<AppState, undefined, Actions>) => {
+    const savedToken = localStorage.getItem('token');
+    if (savedToken) {
+      dispatch({
+        type: ActionTypes.LOGIN,
+        token: savedToken,
+      });
+    }
+  };
+}
+
+export function expireToken(): ThunkAction<void, AppState, undefined, Actions> {
+  return (dispatch: ThunkDispatch<AppState, undefined, Actions>) => {
+    dispatch(error('Session expirée, veuillez vous connecter à nouveau'));
+    dispatch(push(ROUTES.RESULTS));
+    dispatch({
+      type: ActionTypes.EXPIRE_TOKEN,
+    });
   };
 }

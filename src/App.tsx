@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 import './App.css';
@@ -15,10 +15,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import ToastContainer from './components/toast/toast.container';
 import { customTheme } from './configurations/theme.configuration';
 import ChallengeListContainer from './components/challenge/challenge-list/challenge-list.container';
-import { getCountries } from './redux/actions/general.actions';
+import { loadTokenIfAvailable } from './redux/actions/auth.actions';
 
-// Problem with negative path matching: https://github.com/pillarjs/path-to-regexp/issues/99
-const App: React.FC = () => {
+const App = () => {
   const useStyles = makeStyles(() => ({
     main: {
       background: customTheme.mainBackground,
@@ -28,7 +27,11 @@ const App: React.FC = () => {
     },
   }));
   const classes = useStyles();
-  store.dispatch(getCountries());
+
+  useEffect(() => {
+    store.dispatch(loadTokenIfAvailable());
+  }, []);
+
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>

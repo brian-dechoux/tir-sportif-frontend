@@ -3,7 +3,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import {
   Box,
   Button,
-  Checkbox, Divider,
+  Checkbox,
   FormControl,
   Grid,
   InputLabel,
@@ -27,8 +27,10 @@ import { GetClubResponse } from 'services/models/club.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { GetCategoryResponse } from 'services/models/category.model';
 import { ToastVariant } from 'components/toast/toast';
+import { GetCountryResponse } from '../../../services/models/country.model';
 
 type ChallengeCreationProps = {
+  countries: GetCountryResponse[];
   actions: {
     error: (message: string) => any;
     openToast: (message: string, variant: ToastVariant) => any;
@@ -41,10 +43,9 @@ const DEFAULT_CLUB = {
   name: 'ST Club Briey',
 };
 
-const DEFAULT_ADDRESS: CreateAddressRequest = {
-  street: 'Rue de Dolhain',
-  city: 'Val de Briey',
-  countryId: 74,
+const DEFAULT_COUNTRY = {
+  id: 74,
+  name: 'France',
 };
 
 const ChallengeCreation = (props: ChallengeCreationProps) => {
@@ -62,8 +63,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   const [inputAddressStreet, setAddressStreet] = useState<string>('');
   const [inputAddressZip, setAddressZip] = useState<string>('');
   const [inputAddressCity, setAddressCity] = useState<string>('');
-  //FIXME
-  const [inputAddressCountry, setAddressCountry] = useState<string>('');
+  const [selectedCountry, setSelectedCountry] = useState(DEFAULT_COUNTRY.name);
 
   useEffect(() => {
     let unmounted = false;
@@ -107,11 +107,20 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
           selectedDisciplines.some(selectedDiscipline => selectedDiscipline === discipline.label)
         )
         .map(discipline => discipline.id);
+      const addressPayload: CreateAddressRequest = {
+        number: inputAddressNumber,
+        street: inputAddressStreet,
+        zip: inputAddressZip,
+        city: inputAddressCity,
+        countryId:
+          props.countries.find(country => country.name === selectedCountry)?.id ??
+          DEFAULT_COUNTRY.id,
+      };
       ChallengeService.createChallenge(
         inputName,
-        DEFAULT_ADDRESS,
+        addressPayload,
         datePayload,
-        clubPayload ? clubPayload.id : DEFAULT_CLUB.id,
+        clubPayload?.id ?? DEFAULT_CLUB.id,
         categoriesPayload,
         disciplinesPayload
       )
@@ -124,7 +133,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
           }
         })
         .catch(() => {
-          props.actions.error('Impossible de créer le challenge')
+          props.actions.error('Impossible de créer le challenge');
           setFormSent(false);
         });
     }
@@ -136,7 +145,6 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   const [selectedDateTime, setSelectedDateTime] = useState<Date | null>(null);
   const [addressStreetValid, setAddressStreetValid] = useState(true);
   const [addressCityValid, setAddressCityValid] = useState(true);
-  const [addressCountryValid, setAddressCountryValid] = useState(true);
 
   const formValid = ![
     challengeNameValid,
@@ -146,7 +154,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
     selectedDisciplines.length > 0,
     addressStreetValid,
     addressCityValid,
-    addressCountryValid,
+    !!selectedCountry,
   ].some(validation => !validation);
 
   const handleNameChange = (event: any) => {
@@ -169,8 +177,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
 
   const handleCountryChange = (event: any) => {
     const newValue = event.target.value;
-    // FIXME setAddressCountryValid(!!newValue);
-    setAddressCountry(newValue);
+    setSelectedCountry(newValue);
   };
 
   const handleClubChange = (event: any) => {
@@ -263,7 +270,16 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                   <TextField required fullWidth label="Ville" onChange={handleCityChange} />
                 </Grid>
                 <Grid item md={3}>
-                  <TextField required fullWidth label="Pays" onChange={handleCountryChange} />
+                  <FormControl required fullWidth>
+                    <InputLabel>Pays</InputLabel>
+                    <Select value={selectedCountry} onChange={handleCountryChange}>
+                      {props.countries.map(country => (
+                        <MenuItem key={country.id} value={country.name}>
+                          {country.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </Grid>
                 <Grid item xs={12}>
                   <Typography variant="subtitle2">Informations sportives</Typography>

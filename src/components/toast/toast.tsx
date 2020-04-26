@@ -90,6 +90,9 @@ const useStylesToast = makeStyles((theme: Theme) => ({
   },
 }));
 
+// TODO Redo toast:
+//  - Remove toast inner status from store (isClosed)
+//  - Keep an array of toasts in the store to display multiple of them
 const Toast = (props: ToastProps) => {
   const classes = useStylesToast();
 

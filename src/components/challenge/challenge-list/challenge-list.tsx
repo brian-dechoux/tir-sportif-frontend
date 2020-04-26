@@ -15,7 +15,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import AddIcon from '@material-ui/icons/Add';
 import { GetChallengeListElementResponse } from 'services/models/challenge.model';
 import { ROUTES } from 'configurations/server.configuration';
-import { CallHistoryMethodAction } from 'connected-react-router';
 import { LabelDisplayedRowsArgs } from '@material-ui/core/TablePagination/TablePagination';
 import { formatString } from 'utils/date.utils';
 import { EMPTY_PAGE, Page } from 'services/models/page.model';
@@ -24,10 +23,7 @@ import ChallengeService from 'services/challenge.service';
 type ChallengeListProps = {
   actions: {
     error: (message: string) => any;
-    push: (
-      path: string,
-      state?: any | undefined
-    ) => any;
+    push: (path: string, state?: any | undefined) => any;
   };
 };
 
@@ -118,7 +114,11 @@ const ChallengeList = (props: ChallengeListProps) => {
                     colSpan={3}
                     count={pagedChallenges.totalElements}
                     rowsPerPage={pagedChallenges.pageable.pageSize}
-                    page={pagedChallenges.pageable.pageNumber === -1 ? 0 : pagedChallenges.pageable.pageNumber}
+                    page={
+                      pagedChallenges.pageable.pageNumber === -1
+                        ? 0
+                        : pagedChallenges.pageable.pageNumber
+                    }
                     labelRowsPerPage={labels.rowsPerPage}
                     labelDisplayedRows={labels.displayedRowsArgs}
                     onChangePage={(event, pageNumber: number) =>

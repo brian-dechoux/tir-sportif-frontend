@@ -34,7 +34,7 @@ export const customTheme = {
 export const dateTheme = {
   format: {
     pickers: 'dd/MM/yyyy HH:mm',
-    server: "dd/MM/yyyy'T'HH:mm",
+    server: "yyyy-MM-dd'T'HH:mm",
   },
   timeZone: 'Europe/Paris',
   locale: fr,

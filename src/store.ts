@@ -22,7 +22,7 @@ const middleware = [
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-// TODO Remove initial state, type the first any, add router in AppState, and set auth State with token in App.tsx
+// TODO fix typescript issues (createStore returns any type...)
 export const store = createStore<AppState | undefined, Actions, any, any>(
   createRootReducer(history),
   composeEnhancers(applyMiddleware(...middleware))

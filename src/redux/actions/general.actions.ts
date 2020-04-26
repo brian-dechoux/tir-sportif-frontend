@@ -4,7 +4,7 @@ import { BaseAction } from './base.action';
 import { ActionTypes } from './action.enum';
 import CountryService from 'services/country.service';
 import { error } from './error.actions';
-import { GetCountryResponse } from '../../services/models/country.model';
+import { GetCountryResponse } from 'services/models/country.model';
 import { Actions } from '../../store';
 
 export interface GetCountriesAction extends BaseAction {
