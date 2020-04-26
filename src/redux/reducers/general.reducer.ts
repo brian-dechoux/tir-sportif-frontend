@@ -1,6 +1,6 @@
 import { ActionTypes } from 'redux/actions/action.enum';
 import GeneralState from 'redux/states/general.state.type';
-import { GeneralActions } from '../actions/general.actions';
+import { GeneralActions } from 'redux/actions/general.actions';
 
 const initialState: GeneralState = {
   countries: [],

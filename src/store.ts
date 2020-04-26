@@ -11,20 +11,6 @@ import { ToastActions } from './redux/actions/toast.actions';
 
 export const history = createBrowserHistory();
 
-const initialAppState: AppState = {
-  general: {
-    countries: [],
-  },
-  toast: {
-    isShown: false,
-    message: '',
-    variant: 'success',
-  },
-  auth: {
-    token: localStorage.getItem('token'),
-  },
-};
-
 export type Actions = CallHistoryMethodAction | AuthActions | GeneralActions | ToastActions;
 
 const middleware = [
@@ -37,8 +23,7 @@ const middleware = [
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 // TODO Remove initial state, type the first any, add router in AppState, and set auth State with token in App.tsx
-export const store = createStore<any, Actions, any, any>(
+export const store = createStore<AppState | undefined, Actions, any, any>(
   createRootReducer(history),
-  initialAppState,
   composeEnhancers(applyMiddleware(...middleware))
 );
