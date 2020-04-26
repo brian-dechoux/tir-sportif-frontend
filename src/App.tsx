@@ -37,7 +37,7 @@ const App = () => {
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <MuiThemeProvider theme={customTheme.mui}>
-          <Grid container direction="column" spacing={2}>
+          <Grid container direction="column" spacing={2} xs={12}>
             <Grid item>
               <HeaderContainer />
               <ToastContainer />
