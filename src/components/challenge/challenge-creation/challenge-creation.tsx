@@ -108,9 +108,9 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
         )
         .map(discipline => discipline.id);
       const addressPayload: CreateAddressRequest = {
-        number: inputAddressNumber,
+        number: inputAddressNumber === '' ? undefined : inputAddressNumber,
         street: inputAddressStreet,
-        zip: inputAddressZip,
+        zip: inputAddressZip === '' ? undefined : inputAddressZip,
         city: inputAddressCity,
         countryId:
           props.countries.find(country => country.name === selectedCountry)?.id ??
