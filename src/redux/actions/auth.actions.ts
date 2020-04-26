@@ -87,6 +87,7 @@ export function expireToken(): ThunkAction<void, AppState, undefined, Actions> {
   return (dispatch: ThunkDispatch<AppState, undefined, Actions>) => {
     dispatch(error('Session expirée, veuillez vous connecter à nouveau'));
     dispatch(push(ROUTES.RESULTS));
+    localStorage.removeItem('token');
     dispatch({
       type: ActionTypes.EXPIRE_TOKEN,
     });

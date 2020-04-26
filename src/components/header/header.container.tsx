@@ -12,12 +12,6 @@ class HeaderContainer extends React.PureComponent<
 > {
   render() {
     const token = this.props.token;
-    if (token != null) {
-      localStorage.setItem('token', token);
-    } else {
-      localStorage.removeItem('token');
-    }
-
     return <Header isAuthenticated={token != null} actions={this.props.actions} />;
   }
 }
