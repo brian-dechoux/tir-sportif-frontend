@@ -36,13 +36,7 @@ type ChallengeDetailProps = {
 };
 
 const ChallengeDetail = (props: ChallengeDetailProps) => {
-  const useStyles = makeStyles((theme) => ({
-    withFlexGrow: {
-      flex: 1,
-    },
-    withPaddingRight: {
-      paddingRight: theme.spacing(1),
-    },
+  const useStyles = makeStyles(theme => ({
     divider: {
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(2),
@@ -163,53 +157,51 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
   } else {
     return (
       <>
-        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
-          <Box display="flex" width={1}>
-            <Box flexGrow={1}>
-              <Button variant="outlined" component={Link} to={ROUTES.CHALLENGE.LIST}>
-                RETOUR
+        <Box display="flex" width={1}>
+          <Box flexGrow={1}>
+            <Button variant="outlined" component={Link} to={ROUTES.CHALLENGE.LIST}>
+              RETOUR
+            </Button>
+          </Box>
+          <Box display="flex">
+            <Box pr={1}>
+              <Button variant="contained" color="secondary" type="button">
+                ÉDITER
               </Button>
             </Box>
-            <Box display="flex">
-              <Box pr={1}>
-                <Button variant="contained" color="secondary" type="button">
-                  ÉDITER
-                </Button>
-              </Box>
-              <Box>
-                <Button variant="contained" type="button" className={classes.deleteButton}>
-                  SUPPRIMER
-                </Button>
-              </Box>
+            <Box>
+              <Button variant="contained" type="button" className={classes.deleteButton}>
+                SUPPRIMER
+              </Button>
             </Box>
           </Box>
-          <Box display="flex" justifyContent="center" pb={1}>
-            <Box width={0.6}>
-              <Grid container direction="column" alignItems="center">
-                <Grid item xs={12}>
-                  <Typography variant="h6">{challengeInformation.name}</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="body1">
-                    Se déroulera à {challengeInformation.address.city}, le{' '}
-                    {formatString(challengeInformation.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Box>
-          </Box>
-          <Divider />
-          <Box pt={2}>
-            <Grid container direction="column" justify="center">
+        </Box>
+        <Box display="flex" justifyContent="center" pb={1}>
+          <Box width={0.6}>
+            <Grid container direction="column" alignItems="center">
               <Grid item xs={12}>
-                <Typography variant="h6">Tireurs inscrits</Typography>
+                <Typography variant="h6">{challengeInformation.name}</Typography>
               </Grid>
               <Grid item xs={12}>
-                {shootersBlock}
+                <Typography variant="body1">
+                  Se déroulera à {challengeInformation.address.city}, le{' '}
+                  {formatString(challengeInformation.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
+                </Typography>
               </Grid>
             </Grid>
           </Box>
-        </MuiPickersUtilsProvider>
+        </Box>
+        <Divider />
+        <Box pt={2}>
+          <Grid container direction="column" justify="center" spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="h6">Tireurs inscrits</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              {shootersBlock}
+            </Grid>
+          </Grid>
+        </Box>
       </>
     );
   }
