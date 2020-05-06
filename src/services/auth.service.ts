@@ -2,7 +2,7 @@ import cli from '../configurations/http-client.configuration';
 import { AxiosResponse } from 'axios';
 import { AuthenticationResponse } from './models/auth.model';
 
-class AuthService {
+export class AuthService {
   login(username: string, password: string): Promise<AxiosResponse<AuthenticationResponse>> {
     const payload = {
       username: username,

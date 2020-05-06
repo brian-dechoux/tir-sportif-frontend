@@ -2,7 +2,7 @@ import cli from 'configurations/http-client.configuration';
 import { AxiosResponse } from 'axios';
 import { GetCountryResponse } from './models/country.model';
 
-class CountryService {
+export class CountryService {
   getCountries(): Promise<AxiosResponse<GetCountryResponse[]>> {
     return cli.get('/countries');
   }

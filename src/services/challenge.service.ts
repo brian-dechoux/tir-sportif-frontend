@@ -6,7 +6,7 @@ import { CreateAddressRequest } from './models/address.model';
 import { formatDate } from '../utils/date.utils';
 import { dateTheme } from '../configurations/theme.configuration';
 
-class ChallengeService {
+export class ChallengeService {
   getChallenges(
     rowsPerPage: number,
     page: number

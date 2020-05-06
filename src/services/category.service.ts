@@ -2,7 +2,7 @@ import cli from 'configurations/http-client.configuration';
 import { AxiosResponse } from 'axios';
 import { GetCategoryResponse } from './models/category.model';
 
-class CategoryService {
+export class CategoryService {
   getCategories(): Promise<AxiosResponse<GetCategoryResponse[]>> {
     return cli.get('/categories');
   }

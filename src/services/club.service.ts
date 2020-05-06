@@ -2,7 +2,7 @@ import cli from 'configurations/http-client.configuration';
 import { AxiosResponse } from 'axios';
 import { GetClubResponse } from './models/club.model';
 
-class ClubService {
+export class ClubService {
   getClubs(): Promise<AxiosResponse<GetClubResponse[]>> {
     return cli.get('/clubs');
   }
