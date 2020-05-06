@@ -2,7 +2,7 @@ import React from 'react';
 import { LogoProps } from './logo-props.type';
 
 const LogoText = (props: LogoProps) => (
-  <svg width={109.73} height={44.61} {...props}>
+  <svg {...props}>
     <defs>
       <style>
         {

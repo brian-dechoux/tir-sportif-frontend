@@ -2,7 +2,7 @@ import React from 'react';
 import { LogoProps } from './logo-props.type';
 
 const LogoIcon = (props: LogoProps) => (
-  <svg width={45.479} height={44.61} {...props}>
+  <svg {...props}>
     <defs>
       <style>{'.logo_simple_svg__a{fill:#1c1d1e}.logo_simple_svg__b{fill:#ea6f30}'}</style>
     </defs>

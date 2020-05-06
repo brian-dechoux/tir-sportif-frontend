@@ -27,7 +27,7 @@ import { GetClubResponse } from 'services/models/club.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { GetCategoryResponse } from 'services/models/category.model';
 import { ToastVariant } from 'components/toast/toast';
-import { GetCountryResponse } from '../../../services/models/country.model';
+import { GetCountryResponse } from 'services/models/country.model';
 
 type ChallengeCreationProps = {
   countries: GetCountryResponse[];
@@ -198,6 +198,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   };
 
   if (clubs.length === 0 || categories.length === 0 || disciplines.length === 0) {
+    // TODO spinner (with message ?)
     return null;
   } else {
     return (

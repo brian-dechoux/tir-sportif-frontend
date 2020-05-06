@@ -21,6 +21,8 @@ const muiCustomTheme = createMuiTheme({
   },
 });
 
+// TODO adjust width 100% on header and main
+//  adjust main height 100% screen
 export const customTheme = {
   mui: muiCustomTheme,
   spacing: 2,
@@ -34,7 +36,7 @@ export const customTheme = {
 export const dateTheme = {
   format: {
     pickers: 'dd/MM/yyyy HH:mm',
-    server: "yyyy-MM-dd'T'HH:mm",
+    server: "yyyy-MM-dd'T'HH:mm:ssx",
   },
   timeZone: 'Europe/Paris',
   locale: fr,
@@ -44,5 +46,5 @@ export const dateTheme = {
     okLabel: 'VALIDER',
     todayLabel: "AUJOURD'HUI",
     invalidDateMessage: 'Mauvais format de date',
-  }
+  },
 };

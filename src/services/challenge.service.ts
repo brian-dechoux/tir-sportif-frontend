@@ -1,10 +1,14 @@
-import { CreateChallengeResponse, GetChallengeListElementResponse } from './models/challenge.model';
+import {
+  CreateChallengeResponse,
+  GetChallengeListElementResponse,
+  GetChallengeResponse,
+} from './models/challenge.model';
 import { Page } from './models/page.model';
 import cli from 'configurations/http-client.configuration';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { CreateAddressRequest } from './models/address.model';
-import { formatDate } from '../utils/date.utils';
-import { dateTheme } from '../configurations/theme.configuration';
+import { formatDate } from 'utils/date.utils';
+import { dateTheme } from 'configurations/theme.configuration';
 
 export class ChallengeService {
   getChallenges(
@@ -18,6 +22,10 @@ export class ChallengeService {
       },
     };
     return cli.get('/challenges', params);
+  }
+
+  getChallenge(id: number): Promise<AxiosResponse<GetChallengeResponse>> {
+    return cli.get(`/challenges/${id}`);
   }
 
   createChallenge(

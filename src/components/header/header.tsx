@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -28,6 +29,13 @@ const Header = (props: HeaderProps) => {
   const useStyles = makeStyles(() => ({
     withFlexGrow: {
       flex: 1,
+    },
+    withPaddingTop: {
+      paddingTop: '0.3em',
+    },
+    customizeToolbar: {
+      margin: 0,
+      minHeight: 36,
     },
   }));
   const classes = useStyles();
@@ -78,8 +86,8 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      <Toolbar>
-        <div>
+      <Toolbar className={classes.customizeToolbar}>
+        <div className={classes.withPaddingTop}>
           <LogoIcon height="3rem" width="3rem" />
           <LogoText height="3rem" width="9rem" />
         </div>

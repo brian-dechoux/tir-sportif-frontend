@@ -19,6 +19,7 @@ import { LabelDisplayedRowsArgs } from '@material-ui/core/TablePagination/TableP
 import { formatString } from 'utils/date.utils';
 import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import ChallengeService from 'services/challenge.service';
+import { makeStyles } from '@material-ui/core/styles';
 
 type ChallengeListProps = {
   actions: {
@@ -36,6 +37,15 @@ const labels = {
 // TODO Add CSS for table:
 //  - cells align=center
 const ChallengeList = (props: ChallengeListProps) => {
+  const useStyles = makeStyles(() => ({
+    tableRow: {
+      '&:hover': {
+        cursor: 'pointer',
+      },
+    },
+  }));
+  const classes = useStyles();
+
   const [pagedChallenges, setPagedChallenges] = useState<Page<GetChallengeListElementResponse>>(
     EMPTY_PAGE()
   );
@@ -98,7 +108,12 @@ const ChallengeList = (props: ChallengeListProps) => {
               </TableHead>
               <TableBody>
                 {pagedChallenges.content.map(challenge => (
-                  <TableRow key={challenge.id}>
+                  <TableRow
+                    className={classes.tableRow}
+                    hover
+                    key={challenge.id}
+                    onClick={() => props.actions.push(`${ROUTES.CHALLENGE.LIST}/${challenge.id}`)}
+                  >
                     <TableCell align="center">{challenge.name}</TableCell>
                     <TableCell align="center">
                       {formatString(challenge.startDate, "dd MMMM yyyy 'à' hh'h'mm")}

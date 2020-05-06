@@ -16,6 +16,7 @@ import ToastContainer from './components/toast/toast.container';
 import { customTheme } from './configurations/theme.configuration';
 import ChallengeListContainer from './components/challenge/challenge-list/challenge-list.container';
 import { loadTokenIfAvailable } from './redux/actions/auth.actions';
+import ChallengeDetailContainer from './components/challenge/challenge-detail/challenge-detail.container';
 
 // TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
@@ -37,7 +38,7 @@ const App = () => {
     <Provider store={store}>
       <ConnectedRouter history={history}>
         <MuiThemeProvider theme={customTheme.mui}>
-          <Grid container direction="column" spacing={2} xs={12}>
+          <Grid container direction="column" spacing={2}>
             <Grid item>
               <HeaderContainer />
               <ToastContainer />
@@ -45,25 +46,29 @@ const App = () => {
             <Grid item className={classes.main}>
               <Container className={classes.container}>
                 <Box pt={2} pb={2} width={1}>
-                  <Route path={ROUTES.RESULTS}>
+                  <Route exact path={ROUTES.RESULTS}>
                     <ResultsContainer />
                   </Route>
 
-                  <Route path={ROUTES.CHALLENGE.LIST}>
+                  <Route exact path={ROUTES.CHALLENGE.LIST}>
                     <AuthenticatedRedirectContainer>
                       <ChallengeListContainer />
                     </AuthenticatedRedirectContainer>
                   </Route>
 
-                  <Route path={ROUTES.CHALLENGE.CREATION}>
+                  <Route exact path={ROUTES.CHALLENGE.CREATION}>
                     <ChallengeCreationContainer />
                   </Route>
 
-                  <Route path={ROUTES.CLUBS}>
+                  <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId`}>
+                    <ChallengeDetailContainer />
+                  </Route>
+
+                  <Route exact path={ROUTES.CLUBS}>
                     <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
                   </Route>
 
-                  <Route path={ROUTES.MYCLUB}>
+                  <Route exact path={ROUTES.MYCLUB}>
                     <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
                   </Route>
 
