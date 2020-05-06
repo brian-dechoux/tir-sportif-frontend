@@ -20,18 +20,13 @@ import { formatString } from 'utils/date.utils';
 import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import ChallengeService from 'services/challenge.service';
 import { makeStyles } from '@material-ui/core/styles';
+import { paginationTheme } from '../../../configurations/theme.configuration';
 
 type ChallengeListProps = {
   actions: {
     error: (message: string) => any;
     push: (path: string, state?: any | undefined) => any;
   };
-};
-
-const labels = {
-  rowsPerPage: "Nombre d'éléments par page",
-  displayedRowsArgs: (paginationInfo: LabelDisplayedRowsArgs) =>
-    `Element ${paginationInfo.from} à ${paginationInfo.to}, sur un total de: ${paginationInfo.count}`,
 };
 
 // TODO Add CSS for table:
@@ -50,7 +45,6 @@ const ChallengeList = (props: ChallengeListProps) => {
     EMPTY_PAGE()
   );
 
-  // TODO use effect here ?
   const handleChangePage = (pageSize: number, pageNumber: number) => {
     ChallengeService.getChallenges(pageSize, pageNumber)
       .then(response => {
@@ -63,6 +57,7 @@ const ChallengeList = (props: ChallengeListProps) => {
       });
   };
 
+  // TODO useEffect ?
   if (pagedChallenges.pageable?.pageNumber === -1) {
     handleChangePage(pagedChallenges.pageable.pageSize, 0);
   }
@@ -134,8 +129,8 @@ const ChallengeList = (props: ChallengeListProps) => {
                         ? 0
                         : pagedChallenges.pageable.pageNumber
                     }
-                    labelRowsPerPage={labels.rowsPerPage}
-                    labelDisplayedRows={labels.displayedRowsArgs}
+                    labelRowsPerPage={paginationTheme.rowsPerPage}
+                    labelDisplayedRows={paginationTheme.displayedRowsArgs}
                     onChangePage={(event, pageNumber: number) =>
                       handleChangePage(pagedChallenges.pageable.pageSize, pageNumber)
                     }

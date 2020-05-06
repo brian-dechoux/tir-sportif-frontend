@@ -1,11 +1,13 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import { fr } from 'date-fns/locale';
+import { LabelDisplayedRowsArgs } from '@material-ui/core/TablePagination/TablePagination';
 
 export const customColors = {
   white: '#ffffff',
   lightGrey: '#f5f5f5',
   black: '#000000',
   orange: '#EA6F30',
+  red: '#bf1c2e',
 };
 
 const muiCustomTheme = createMuiTheme({
@@ -47,4 +49,10 @@ export const dateTheme = {
     todayLabel: "AUJOURD'HUI",
     invalidDateMessage: 'Mauvais format de date',
   },
+};
+
+export const paginationTheme = {
+  rowsPerPage: "Nombre d'éléments par page",
+  displayedRowsArgs: (paginationInfo: LabelDisplayedRowsArgs) =>
+    `Element ${paginationInfo.from} à ${paginationInfo.to}, sur un total de: ${paginationInfo.count}`,
 };

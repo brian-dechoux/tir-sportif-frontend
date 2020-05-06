@@ -2,6 +2,7 @@ import { GetClubResponse } from './club.model';
 import { GetCategoryResponse } from './category.model';
 import { GetDisciplineResponse } from './discipline.model';
 import { CreateAddressRequest, GetAddressResponse } from './address.model';
+import { GetShooterResponse } from './shooter.model';
 
 export interface GetChallengeListElementResponse {
   id: number;
@@ -31,7 +32,7 @@ export interface CreateChallengeResponse {
   disciplines: GetDisciplineResponse[];
 }
 
-export interface GetChallengeResponse {
+export interface GetChallengeWithParticipationsResponse {
   id: number;
 
   name: string;
@@ -45,4 +46,23 @@ export interface GetChallengeResponse {
   categories: GetCategoryResponse[];
 
   disciplines: GetDisciplineResponse[];
+
+  participations: GetParticipationResponse[];
+}
+
+// TODO Redux categories and disciplines.... use IDs here instead of full objects
+export interface GetParticipationResponse {
+  id: number;
+
+  shooter: GetShooterResponse;
+
+  category: GetCategoryResponse;
+
+  disciplines: GetDisciplineResponse;
+
+  useElectronicTarget: boolean;
+
+  paid: boolean;
+
+  outrank: boolean;
 }
