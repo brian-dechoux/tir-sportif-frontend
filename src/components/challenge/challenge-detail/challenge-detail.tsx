@@ -193,14 +193,19 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
         </Box>
         <Divider />
         <Box pt={2}>
-          <Grid container direction="column" justify="center" spacing={2}>
-            <Grid item xs={12}>
+          <Box display="flex" width={1}>
+            <Box flexGrow={1}>
               <Typography variant="h6">Tireurs inscrits</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              {shootersBlock}
-            </Grid>
-          </Grid>
+            </Box>
+            <Box>
+              <Button variant="contained" color="secondary" component={Link} to={`${ROUTES.CHALLENGE.LIST}/${challengeInformation.id}${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
+                INSCRIRE UN TIREUR
+              </Button>
+            </Box>
+          </Box>
+          <Box pt={2} display="flex" width={1}>
+            {shootersBlock}
+          </Box>
         </Box>
       </>
     );

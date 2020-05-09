@@ -4,6 +4,9 @@ export const ROUTES = {
   CHALLENGE: {
     LIST: '/challenges',
     CREATION: '/challenge/create',
+    SHOOTER: {
+      CREATION: '/shooters/create',
+    },
   },
   CLUBS: '/clubs',
   MYCLUB: '/myclub',

@@ -28,6 +28,7 @@ import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { GetCategoryResponse } from 'services/models/category.model';
 import { ToastVariant } from 'components/toast/toast';
 import { GetCountryResponse } from 'services/models/country.model';
+import { DEFAULT_CLUB, DEFAULT_COUNTRY } from '../../../App.constants';
 
 type ChallengeCreationProps = {
   countries: GetCountryResponse[];
@@ -36,16 +37,6 @@ type ChallengeCreationProps = {
     openToast: (message: string, variant: ToastVariant) => any;
     push: (path: string, state?: any | undefined) => any;
   };
-};
-
-const DEFAULT_CLUB = {
-  id: 1,
-  name: 'ST Club Briey',
-};
-
-const DEFAULT_COUNTRY = {
-  id: 74,
-  name: 'France',
 };
 
 const ChallengeCreation = (props: ChallengeCreationProps) => {
@@ -83,7 +74,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
         .catch(() => {
           if (!unmounted) {
             props.actions.error(
-              "Impossible de récupérer les listes d'information nécessaire à la création d'un challenge"
+              "Impossible de récupérer les listes d'information nécessaires à la création d'un challenge"
             );
           }
         });
@@ -357,45 +348,3 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
 };
 
 export default ChallengeCreation;
-
-/*
-const [inputAddressNumber, setAddressNumber] = useState<string>('');
-const [inputAddressStreet, setAddressStreet] = useState<string>('');
-const [inputAddressZip, setAddressZip] = useState<string>('');
-const [inputAddressCity, setAddressCity] = useState<string>('');
-const [inputAddressCountry, setAddressCountry] = useState<number>(1);
-
-const handleAddressNumberChange = (event: any) => {
-  setAddressNumber(event.target.value);
-};
-const handleAddressStreetChange = (event: any) => {
-  setAddressStreet(event.target.value);
-};
-const handleAddressZipChange = (event: any) => {
-  setAddressZip(event.target.value);
-};
-const handleAddressCityChange = (event: any) => {
-  setAddressCity(event.target.value);
-};
-const handleAddressCountryChange = (event: any) => {
-  setAddressCountry(event.target.value);
-};
-
-<Grid container>
-  <Grid item md={1}>
-    <TextField id="standard-basic" label="Numéro" onChange={handleAddressNumberChange} />
-  </Grid>
-  <Grid item md={6}>
-    <TextField id="standard-basic" label="Rue" onChange={handleAddressStreetChange} />
-  </Grid>
-  <Grid item md={1}>
-    <TextField id="standard-basic" label="Code postal" onChange={handleAddressZipChange} />
-  </Grid>
-  <Grid item md={3}>
-    <TextField id="standard-basic" label="Ville" onChange={handleAddressCityChange} />
-  </Grid>
-  <Grid item md={1}>
-    <TextField id="standard-basic" label="Pays" onChange={handleAddressCountryChange} />
-  </Grid>
-</Grid>
- */
