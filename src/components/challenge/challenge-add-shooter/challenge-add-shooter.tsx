@@ -72,13 +72,13 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
   const [inputLastname, setLastname] = useState('');
   const [inputFirstname, setFirstname] = useState('');
   const [selectedClub, setSelectedClub] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [participations, setParticipations] = useState<Participation[]>([]);
-  const [inputAddressNumber, setAddressNumber] = useState<string>('');
-  const [inputAddressStreet, setAddressStreet] = useState<string>('');
-  const [inputAddressZip, setAddressZip] = useState<string>('');
-  const [inputAddressCity, setAddressCity] = useState<string>('');
-  const [selectedCountry, setSelectedCountry] = useState(DEFAULT_COUNTRY.name);
+  const [inputAddressNumber, setAddressNumber] = useState('');
+  const [inputAddressStreet, setAddressStreet] = useState('');
+  const [inputAddressZip, setAddressZip] = useState('');
+  const [inputAddressCity, setAddressCity] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
 
   useEffect(() => {
     let unmounted = false;
@@ -350,7 +350,7 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
                     AJOUTER LES DISCIPLINES À L'INSCRIPTION DU TIREUR
                   </Typography>
                 </Grid>
-                <Grid item>
+                <Grid item xs={2}>
                   <Button
                     disabled={availableDisciplines.length === 0}
                     variant="contained"
@@ -359,6 +359,7 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
                   >
                     AJOUTER
                   </Button>
+
                   <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
                     <DialogTitle>AJOUTER UNE DISCIPLINE</DialogTitle>
                     <DialogContent>
@@ -441,6 +442,13 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
                       </Button>
                     </DialogActions>
                   </Dialog>
+                </Grid>
+                <Grid item xs={10}>
+                  <Box fontStyle="italic">
+                    <Typography variant="body2" hidden={availableDisciplines.length > 0}>
+                      * Le tireur est inscrit à toutes les disciplines proposées par le challenge
+                    </Typography>
+                  </Box>
                 </Grid>
                 <Grid item xs={12}>
                   <TableContainer component={Paper}>
