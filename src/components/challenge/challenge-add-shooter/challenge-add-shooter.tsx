@@ -28,7 +28,6 @@ import { ROUTES } from 'configurations/server.configuration';
 import { customTheme, dateTheme } from 'configurations/theme.configuration';
 import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
-import DisciplineService from 'services/discipline.service';
 import { GetClubResponse } from 'services/models/club.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { GetCategoryResponse } from 'services/models/category.model';

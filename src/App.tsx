@@ -18,6 +18,7 @@ import ChallengeListContainer from './components/challenge/challenge-list/challe
 import { loadTokenIfAvailable } from './redux/actions/auth.actions';
 import ChallengeDetailContainer from './components/challenge/challenge-detail/challenge-detail.container';
 import ChallengeAddShooterContainer from './components/challenge/challenge-add-shooter/challenge-add-shooter.container';
+import ChallengeShooterContainer from './components/challenge/challenge-shooter/challenge-shooter.container';
 
 // TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
@@ -67,6 +68,10 @@ const App = () => {
 
                   <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
                     <ChallengeAddShooterContainer />
+                  </Route>
+
+                  <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId`}>
+                    <ChallengeShooterContainer />
                   </Route>
 
                   <Route exact path={ROUTES.CLUBS}>

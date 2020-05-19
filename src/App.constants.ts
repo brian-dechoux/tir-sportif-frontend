@@ -7,3 +7,5 @@ export const DEFAULT_COUNTRY = {
   id: 74,
   name: 'France',
 };
+
+export const NA = 'N/A';

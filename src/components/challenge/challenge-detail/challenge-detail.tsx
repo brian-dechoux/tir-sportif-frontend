@@ -23,6 +23,7 @@ import { ROUTES } from 'configurations/server.configuration';
 import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import TableContainer from '@material-ui/core/TableContainer';
 import { customColors, paginationTheme } from 'configurations/theme.configuration';
+import { NA } from '../../../App.constants';
 
 type ChallengeDetailProps = {
   challengeId: number;
@@ -41,6 +42,11 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
     deleteButton: {
       backgroundColor: customColors.red,
       color: customColors.white,
+    },
+    tableRow: {
+      '&:hover': {
+        cursor: 'pointer',
+      },
     },
   }));
   const classes = useStyles();
@@ -110,10 +116,14 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
           </TableHead>
           <TableBody>
             {pagedParticipants.content.map(participant => (
-              <TableRow key={participant.id}>
+              <TableRow key={participant.id}
+                        className={classes.tableRow}
+                        hover
+                        onClick={() => props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}${ROUTES.CHALLENGE.SHOOTER.LIST}/${participant.id}`)}
+              >
                 <TableCell align="center">{participant.lastname}</TableCell>
                 <TableCell align="center">{participant.firstname}</TableCell>
-                <TableCell align="center">{participant.clubName ?? 'N/A'}</TableCell>
+                <TableCell align="center">{participant.clubName ?? NA}</TableCell>
               </TableRow>
             ))}
           </TableBody>

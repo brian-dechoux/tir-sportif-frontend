@@ -4,6 +4,7 @@ import { GetDisciplineResponse } from './discipline.model';
 import { CreateAddressRequest, GetAddressResponse } from './address.model';
 import { GetShooterResponse } from './shooter.model';
 
+// TODO Redux categories and disciplines.... use IDs here instead of full objects
 export interface GetChallengeListElementResponse {
   id: number;
 
@@ -67,15 +68,16 @@ export interface CreateDisciplineParticipationRequest {
   outrank: boolean;
 }
 
-// TODO Redux categories and disciplines.... use IDs here instead of full objects
+export interface GetShooterParticipationsResponse {
+  shooter: GetShooterResponse;
+
+  participations: GetParticipationResponse[];
+}
+
 export interface GetParticipationResponse {
   id: number;
 
-  shooter: GetShooterResponse;
-
-  category: GetCategoryResponse;
-
-  disciplines: GetDisciplineResponse;
+  discipline: GetDisciplineResponse;
 
   useElectronicTarget: boolean;
 
