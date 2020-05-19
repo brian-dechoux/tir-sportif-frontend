@@ -8,9 +8,17 @@ import { openToast } from 'redux/actions/toast.actions';
 import { Actions } from '../../../store';
 import AppState from 'redux/states/app.state.type';
 import { getCountries } from 'redux/actions/general.actions';
+import { ROUTES } from 'configurations/server.configuration';
+import { RouteChildrenProps, withRouter } from 'react-router';
+
+interface ChallengeAddShooterRouterProps {
+  challengeId: string;
+}
 
 class ChallengeAddShooterContainer extends React.PureComponent<
-  ReturnType<typeof mapStateToProps> & ReturnType<typeof mapDispatchToProps>,
+  RouteChildrenProps<ChallengeAddShooterRouterProps> &
+    ReturnType<typeof mapStateToProps> &
+    ReturnType<typeof mapDispatchToProps>,
   {}
 > {
   render() {
@@ -18,7 +26,17 @@ class ChallengeAddShooterContainer extends React.PureComponent<
       // TODO BDX put it in local storage
       this.props.actions.getCountries();
     }
-    return <ChallengeAddShooter {...this.props} />;
+    if (this.props.match && this.props.match.params && this.props.match.params.challengeId) {
+      const paramChallengeId = this.props.match.params.challengeId;
+      const parsedChallengeId = parseInt(paramChallengeId, 10);
+      const props = {
+        ...this.props,
+        challengeId: parsedChallengeId,
+      };
+      return <ChallengeAddShooter {...props} />;
+    } else {
+      return this.props.actions.push(ROUTES.CHALLENGE.LIST);
+    }
   }
 }
 
@@ -40,4 +58,6 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
   ),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChallengeAddShooterContainer);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(ChallengeAddShooterContainer)
+);

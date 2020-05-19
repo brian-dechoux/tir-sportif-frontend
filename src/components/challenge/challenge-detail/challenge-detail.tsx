@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import DateFnsUtils from '@date-io/date-fns';
-import { fr } from 'date-fns/locale';
-import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import {
   Box,
   Button,
@@ -18,14 +15,14 @@ import {
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { GetChallengeWithParticipationsResponse, GetParticipationResponse } from 'services/models/challenge.model';
+import { GetChallengeResponse, GetParticipationResponse } from 'services/models/challenge.model';
 import ChallengeService from 'services/challenge.service';
 import { formatString } from 'utils/date.utils';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
-import { EMPTY_PAGE, Page } from '../../../services/models/page.model';
+import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import TableContainer from '@material-ui/core/TableContainer';
-import { customColors, paginationTheme } from '../../../configurations/theme.configuration';
+import { customColors, paginationTheme } from 'configurations/theme.configuration';
 
 type ChallengeDetailProps = {
   challengeId: number;
@@ -48,9 +45,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
   }));
   const classes = useStyles();
 
-  const [challengeInformation, setChallengeInformation] = useState<
-    GetChallengeWithParticipationsResponse
-  >();
+  const [challengeInformation, setChallengeInformation] = useState<GetChallengeResponse>();
   const [pagedParticipations, setPagedParticipations] = useState<Page<GetParticipationResponse>>(
     EMPTY_PAGE()
   );

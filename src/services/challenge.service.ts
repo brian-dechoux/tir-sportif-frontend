@@ -1,7 +1,9 @@
 import {
   CreateChallengeResponse,
+  CreateParticipationsRequest,
   GetChallengeListElementResponse,
-  GetChallengeWithParticipationsResponse, GetParticipationResponse,
+  GetChallengeResponse,
+  GetParticipationResponse,
 } from './models/challenge.model';
 import { Page } from './models/page.model';
 import cli from 'configurations/http-client.configuration';
@@ -24,7 +26,7 @@ export class ChallengeService {
     return cli.get('/challenges', params);
   }
 
-  getChallenge(id: number): Promise<AxiosResponse<GetChallengeWithParticipationsResponse>> {
+  getChallenge(id: number): Promise<AxiosResponse<GetChallengeResponse>> {
     return cli.get(`/challenges/${id}`);
   }
 
@@ -53,12 +55,19 @@ export class ChallengeService {
     const payload = {
       name: name,
       address: address,
-      startDate: formatDate(startDate, dateTheme.format.server),
+      startDate: formatDate(startDate, dateTheme.format.dateTimeServer),
       organiserClubId: organiserClubId,
       categoryIds: categoryIds,
       disciplineIds: disciplineIds,
     };
     return cli.post('/challenges', payload, {});
+  }
+
+  createParticipations(
+    challengeId: number,
+    participations: CreateParticipationsRequest
+  ): Promise<AxiosResponse<void>> {
+    return cli.post(`/challenges/${challengeId}/participations`, participations);
   }
 }
 

@@ -1,4 +1,4 @@
-import { GetAddressResponse } from './address.model';
+import { CreateAddressRequest, GetAddressResponse } from './address.model';
 import { GetClubResponse } from './club.model';
 import { GetCategoryResponse } from './category.model';
 
@@ -15,5 +15,35 @@ export interface GetShooterResponse {
 
   club?: GetClubResponse;
 
-  category?: GetCategoryResponse;
+  category: GetCategoryResponse;
+}
+
+export interface CreateShooterRequest {
+  lastname: string;
+
+  firstname: string;
+
+  birthdate?: string;
+
+  address?: CreateAddressRequest;
+
+  clubId?: number;
+
+  categoryId: number;
+}
+
+export interface CreateShooterResponse {
+  id: number;
+
+  lastname: string;
+
+  firstname: string;
+
+  birthdate?: string;
+
+  address?: CreateAddressRequest;
+
+  clubId?: number;
+
+  categoryId: number;
 }

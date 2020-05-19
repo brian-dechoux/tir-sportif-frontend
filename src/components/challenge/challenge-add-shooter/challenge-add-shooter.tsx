@@ -6,33 +6,26 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
   DialogTitle,
-  ExpansionPanel,
-  ExpansionPanelDetails,
-  ExpansionPanelSummary,
   FormControl,
   FormControlLabel,
   FormGroup,
   Grid,
   InputLabel,
-  ListItemText,
   MenuItem,
   Paper,
   Select,
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
-  TablePagination,
   TableRow,
   TextField,
   Typography,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
-import { customTheme, paginationTheme } from 'configurations/theme.configuration';
+import { customTheme, dateTheme } from 'configurations/theme.configuration';
 import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
 import DisciplineService from 'services/discipline.service';
@@ -41,13 +34,22 @@ import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { GetCategoryResponse } from 'services/models/category.model';
 import { ToastVariant } from 'components/toast/toast';
 import { GetCountryResponse } from 'services/models/country.model';
-import { DEFAULT_CLUB, DEFAULT_COUNTRY } from '../../../App.constants';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { formatString } from '../../../utils/date.utils';
 import TableContainer from '@material-ui/core/TableContainer';
-import { Participation } from '../../../services/models/participation.model';
+import {
+  CreateDisciplineParticipationRequest,
+  CreateParticipationsRequest,
+  Participation,
+} from 'services/models/challenge.model';
+import ChallengeService from 'services/challenge.service';
+import { CreateShooterRequest } from 'services/models/shooter.model';
+import DateFnsUtils from '@date-io/date-fns';
+import { fr } from 'date-fns/locale';
+import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { formatDate } from 'utils/date.utils';
+import ShooterService from 'services/shooter.service';
 
-type ChallengeCreationProps = {
+type ChallengeAddShooterProps = {
+  challengeId: number;
   countries: GetCountryResponse[];
   actions: {
     error: (message: string) => any;
@@ -58,7 +60,7 @@ type ChallengeCreationProps = {
 
 const booleanToText = (bool: boolean) => (bool ? 'Oui' : 'Non');
 
-const ChallengeAddShooter = (props: ChallengeCreationProps) => {
+const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
   const [formSent, setFormSent] = useState(false);
 
   const [displayInformationForm, setDisplayInformationForm] = useState(true);
@@ -73,6 +75,7 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
   const [inputFirstname, setFirstname] = useState('');
   const [selectedClub, setSelectedClub] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [birthdate, setBirthdate] = useState<Date | null>(null);
   const [participations, setParticipations] = useState<Participation[]>([]);
   const [inputAddressNumber, setAddressNumber] = useState('');
   const [inputAddressStreet, setAddressStreet] = useState('');
@@ -84,11 +87,12 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
     let unmounted = false;
     if (clubs.length === 0 && categories.length === 0 && disciplines.length === 0) {
       Promise.all([
+        ChallengeService.getChallenge(props.challengeId),
         ClubService.getClubs(),
         CategoryService.getCategories(),
         DisciplineService.getDisciplines(),
       ])
-        .then(([clubsResponse, categoriesResponse, disciplinesResponse]) => {
+        .then(([challengeResponse, clubsResponse, categoriesResponse, disciplinesResponse]) => {
           if (!unmounted) {
             setClubs(clubsResponse.data);
             setCategories(categoriesResponse.data);
@@ -109,9 +113,66 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
     };
   }, [clubs, categories, disciplines]);
 
-  //TODO
   useEffect(() => {
     if (formSent) {
+      const datePayload = birthdate
+        ? formatDate(birthdate, dateTheme.format.dateTimeServer)
+        : undefined;
+      // FIXME -1 or 0 stuff -> Select properly
+      const categoryIdPayload = categories.find(category => category.label === selectedCategory) ?.id ?? -1;
+      const clubIdPayload = clubs.find(club => club.name === selectedClub)?.id ?? undefined;
+      const addressPayload = (inputAddressStreet && inputAddressCity && selectedCountry) ? {
+              number: inputAddressNumber,
+              street: inputAddressStreet,
+              zip: inputAddressZip,
+              city: inputAddressCity,
+              countryId: props.countries.find(club => club.name === selectedClub)?.id ?? -1,
+            }
+          : undefined;
+      const shooterCreationPayload: CreateShooterRequest = {
+        lastname: inputLastname,
+        firstname: inputFirstname,
+        clubId: clubIdPayload,
+        categoryId: categoryIdPayload,
+        birthdate: datePayload,
+        address: addressPayload,
+      };
+      ShooterService.createShooter(shooterCreationPayload)
+        .then(response => {
+          if (response.status === 201) {
+            const createdShooterId = response.data.id;
+            const participationsPayload: CreateDisciplineParticipationRequest[] = participations.map(
+              participation => ({
+                // FIXME -1 -> Select properly
+                disciplineId: disciplines.find(discipline => discipline.label === participation.discipline)?.id ?? -1,
+                useElectronicTarget: participation.useElectronicTarget,
+                paid: participation.paid,
+                outrank: participation.outrank,
+              })
+            );
+            const createParticipationsPayload: CreateParticipationsRequest = {
+              shooterId: createdShooterId,
+              disciplinesInformation: participationsPayload,
+            };
+            return ChallengeService.createParticipations(
+              props.challengeId,
+              createParticipationsPayload
+            ).then(response => {
+              if (response.status === 201) {
+                props.actions.openToast('La tireur a été inscrit au challenge', 'success');
+                props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`);
+              } else {
+                throw new Error();
+              }
+            });
+          } else {
+            throw new Error();
+          }
+        })
+        .catch(() => {
+          props.actions.error("Impossible d'inscrire le tireur");
+          setFormSent(false);
+        });
     }
   }, [formSent]);
 
@@ -123,7 +184,7 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
   );
 
   const [disciplinesValid, setDisciplinesValid] = useState(true);
-  const disciplinesFormValid = disciplines.length > 0;
+  const disciplinesFormValid = participations.length > 0;
 
   const handleLastnameChange = (event: any) => {
     const newValue = event.target.value;
@@ -178,7 +239,7 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
     if (newParticipationDiscipline) {
       const newParticipation: Participation = {
         discipline: newParticipationDiscipline,
-        electronic: newParticipationElectronic,
+        useElectronicTarget: newParticipationElectronic,
         outrank: newParticipationOutrank,
         paid: newParticipationPaid,
       };
@@ -211,122 +272,147 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
   } else {
     if (displayInformationForm) {
       return (
-        <form noValidate>
-          <Box display="flex" justifyContent="center">
-            <Box display="flex" width={0.6}>
-              <Grid container spacing={3} alignItems="center">
-                <Grid item xs={12}>
-                  <Typography variant="h6">INSCRIRE UN TIREUR</Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle2">Informations générales</Typography>
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    error={!lastnameValid}
-                    fullWidth
-                    required
-                    label="Nom"
-                    onChange={handleLastnameChange}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    error={!firsnameValid}
-                    fullWidth
-                    required
-                    label="Prénom"
-                    onChange={handleFirstnameChange}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <FormControl fullWidth>
-                    <InputLabel>Club de rattachement</InputLabel>
-                    <Select value={selectedClub} onChange={handleClubChange}>
-                      {clubs.map(club => (
-                        <MenuItem key={club.id} value={club.name}>
-                          {club.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={6}>
-                  <FormControl required fullWidth error={!categoryValid}>
-                    <InputLabel>Catégorie</InputLabel>
-                    <Select
-                      value={selectedCategory}
-                      onChange={handleCategoryChange}
-                      renderValue={customTheme.selectSimpleRender}
-                    >
-                      {categories.map(category => (
-                        <MenuItem key={category.id} value={category.label}>
-                          {category.label}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12}>
-                  <Typography variant="subtitle2">Addresse</Typography>
-                </Grid>
-                <Grid item md={3}>
-                  <TextField
-                    fullWidth
-                    label="Numéro"
-                    onChange={(event: any) => setAddressNumber(event.target.value)}
-                  />
-                </Grid>
-                <Grid item md={9}>
-                  <TextField fullWidth label="Rue" onChange={handleStreetChange} />
-                </Grid>
-                <Grid item md={3}>
-                  <TextField
-                    fullWidth
-                    label="Code postal"
-                    onChange={(event: any) => setAddressZip(event.target.value)}
-                  />
-                </Grid>
-                <Grid item md={6}>
-                  <TextField fullWidth label="Ville" onChange={handleCityChange} />
-                </Grid>
-                <Grid item md={3}>
-                  <FormControl fullWidth>
-                    <InputLabel>Pays</InputLabel>
-                    <Select value={selectedCountry} onChange={handleCountryChange}>
-                      {props.countries.map(country => (
-                        <MenuItem key={country.id} value={country.name}>
-                          {country.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item container spacing={2} justify="flex-end" alignItems="center">
-                  <Grid item>
-                    <Button variant="outlined" component={Link} to={ROUTES.CHALLENGE.LIST}>
-                      ANNULER
-                    </Button>
+        <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
+          <form noValidate>
+            <Box display="flex" justifyContent="center">
+              <Box display="flex" width={0.6}>
+                <Grid container spacing={3} alignItems="center">
+                  <Grid item xs={12}>
+                    <Typography variant="h6">INSCRIRE UN TIREUR</Typography>
                   </Grid>
-                  <Grid>
-                    <Button
-                      disabled={!informationFormValid}
-                      variant="contained"
-                      color="secondary"
-                      type="button"
-                      onClick={() => {
-                        setDisplayInformationForm(false);
-                        setDisplayDisciplinesForm(true);
-                      }}
-                    >
-                      SUIVANT
-                    </Button>
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle2">Informations générales</Typography>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      error={!lastnameValid}
+                      fullWidth
+                      required
+                      label="Nom"
+                      onChange={handleLastnameChange}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <TextField
+                      error={!firsnameValid}
+                      fullWidth
+                      required
+                      label="Prénom"
+                      onChange={handleFirstnameChange}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormControl fullWidth>
+                      <InputLabel>Club de rattachement</InputLabel>
+                      <Select value={selectedClub} onChange={handleClubChange}>
+                        {clubs.map(club => (
+                          <MenuItem key={club.id} value={club.name}>
+                            {club.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormControl required fullWidth error={!categoryValid}>
+                      <InputLabel>Catégorie</InputLabel>
+                      <Select
+                        value={selectedCategory}
+                        onChange={handleCategoryChange}
+                        renderValue={customTheme.selectSimpleRender}
+                      >
+                        {categories.map(category => (
+                          <MenuItem key={category.id} value={category.label}>
+                            {category.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <FormControl fullWidth>
+                      <DatePicker
+                        disableFuture
+                        placeholder="10/10/1990"
+                        format={dateTheme.format.datePickers}
+                        margin="normal"
+                        id="birthdate-picker"
+                        label="Date de naissance"
+                        value={birthdate}
+                        onChange={setBirthdate}
+                        clearLabel={dateTheme.pickerLabels.clearLabel}
+                        cancelLabel={dateTheme.pickerLabels.cancelLabel}
+                        okLabel={dateTheme.pickerLabels.okLabel}
+                        todayLabel={dateTheme.pickerLabels.todayLabel}
+                        invalidDateMessage={dateTheme.pickerLabels.invalidDateMessage}
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Typography variant="subtitle2">Addresse</Typography>
+                  </Grid>
+                  <Grid item md={3}>
+                    <TextField
+                      fullWidth
+                      label="Numéro"
+                      onChange={(event: any) => setAddressNumber(event.target.value)}
+                    />
+                  </Grid>
+                  <Grid item md={9}>
+                    <TextField fullWidth label="Rue" onChange={handleStreetChange} />
+                  </Grid>
+                  <Grid item md={3}>
+                    <TextField
+                      fullWidth
+                      label="Code postal"
+                      onChange={(event: any) => setAddressZip(event.target.value)}
+                    />
+                  </Grid>
+                  <Grid item md={6}>
+                    <TextField fullWidth label="Ville" onChange={handleCityChange} />
+                  </Grid>
+                  <Grid item md={3}>
+                    <FormControl fullWidth>
+                      <InputLabel>Pays</InputLabel>
+                      <Select value={selectedCountry} onChange={handleCountryChange}>
+                        {props.countries.map(country => (
+                          <MenuItem key={country.id} value={country.name}>
+                            {country.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  <Grid item container spacing={2} justify="flex-end" alignItems="center">
+                    <Grid item>
+                      <Button
+                        variant="outlined"
+                        component={Link}
+                        to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}
+                      >
+                        ANNULER
+                      </Button>
+                    </Grid>
+                    <Grid>
+                      <Button
+                        disabled={!informationFormValid}
+                        variant="contained"
+                        color="secondary"
+                        type="button"
+                        onClick={() => {
+                          setDisplayInformationForm(false);
+                          setDisplayDisciplinesForm(true);
+                        }}
+                      >
+                        SUIVANT
+                      </Button>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
+              </Box>
             </Box>
-          </Box>
-        </form>
+          </form>
+        </MuiPickersUtilsProvider>
       );
     } else if (displayDisciplinesForm) {
       return (
@@ -474,7 +560,7 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
                           <TableRow key={participation.discipline}>
                             <TableCell align="center">{participation.discipline}</TableCell>
                             <TableCell align="center">
-                              {booleanToText(participation.electronic)}
+                              {booleanToText(participation.useElectronicTarget)}
                             </TableCell>
                             <TableCell align="center">
                               {booleanToText(participation.outrank)}
@@ -490,7 +576,11 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
                 </Grid>
                 <Grid item container spacing={2} justify="flex-end" alignItems="center">
                   <Grid item>
-                    <Button variant="outlined" component={Link} to={ROUTES.CHALLENGE.LIST}>
+                    <Button
+                      variant="outlined"
+                      component={Link}
+                      to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}
+                    >
                       ANNULER
                     </Button>
                   </Grid>
@@ -500,10 +590,7 @@ const ChallengeAddShooter = (props: ChallengeCreationProps) => {
                       variant="contained"
                       color="secondary"
                       type="button"
-                      onClick={() => {
-                        setDisplayInformationForm(false);
-                        setDisplayDisciplinesForm(true);
-                      }}
+                      onClick={() => setFormSent(true)}
                     >
                       VALIDER L'INSCRIPTION
                     </Button>

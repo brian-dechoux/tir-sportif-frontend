@@ -231,7 +231,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       required
                       disablePast
                       placeholder="10/10/2010 10:10"
-                      format={dateTheme.format.pickers}
+                      format={dateTheme.format.dateTimePickers}
                       margin="normal"
                       ampm={false}
                       id="datetime-picker"

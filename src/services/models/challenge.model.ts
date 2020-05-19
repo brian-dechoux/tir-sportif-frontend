@@ -32,7 +32,7 @@ export interface CreateChallengeResponse {
   disciplines: GetDisciplineResponse[];
 }
 
-export interface GetChallengeWithParticipationsResponse {
+export interface GetChallengeResponse {
   id: number;
 
   name: string;
@@ -46,8 +46,25 @@ export interface GetChallengeWithParticipationsResponse {
   categories: GetCategoryResponse[];
 
   disciplines: GetDisciplineResponse[];
+}
 
-  participations: GetParticipationResponse[];
+export interface CreateParticipationsRequest {
+  shooterId: number;
+  disciplinesInformation: CreateDisciplineParticipationRequest[];
+}
+
+export interface Participation {
+  discipline: string;
+  useElectronicTarget: boolean;
+  outrank: boolean;
+  paid: boolean;
+}
+
+export interface CreateDisciplineParticipationRequest {
+  disciplineId: number;
+  useElectronicTarget: boolean;
+  paid: boolean;
+  outrank: boolean;
 }
 
 // TODO Redux categories and disciplines.... use IDs here instead of full objects

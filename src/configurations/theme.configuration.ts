@@ -38,8 +38,11 @@ export const customTheme = {
 // TODO Split format in pickers, server, etc
 export const dateTheme = {
   format: {
-    pickers: 'dd/MM/yyyy HH:mm',
-    server: "yyyy-MM-dd'T'HH:mm:ssx",
+    timePickers: 'HH:mm',
+    datePickers: 'dd/MM/yyyy',
+    dateTimePickers: 'dd/MM/yyyy HH:mm',
+    dateTimeServer: "yyyy-MM-dd'T'HH:mm:ssx",
+    dateServer: 'yyyy-MM-dd',
   },
   timeZone: 'Europe/Paris',
   locale: fr,
