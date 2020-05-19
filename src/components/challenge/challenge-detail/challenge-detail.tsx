@@ -193,7 +193,12 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
               <Typography variant="h6">Tireurs inscrits</Typography>
             </Box>
             <Box>
-              <Button variant="contained" color="secondary" component={Link} to={`${ROUTES.CHALLENGE.LIST}/${challengeInformation.id}${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to={`${ROUTES.CHALLENGE.LIST}/${challengeInformation.id}${ROUTES.CHALLENGE.SHOOTER.CREATION}`}
+              >
                 INSCRIRE UN TIREUR
               </Button>
             </Box>
