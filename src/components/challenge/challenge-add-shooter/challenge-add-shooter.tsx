@@ -83,6 +83,8 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
   const [inputAddressCity, setAddressCity] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
 
+  // TODO Use properly Select to handle JSON, instead of direct string
+  //  It will avoid useless array checks afterwards
   useEffect(() => {
     let unmounted = false;
     if (clubs.length === 0 && categories.length === 0 && disciplines.length === 0) {
