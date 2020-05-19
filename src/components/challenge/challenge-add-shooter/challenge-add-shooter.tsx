@@ -60,6 +60,7 @@ type ChallengeAddShooterProps = {
 
 const booleanToText = (bool: boolean) => (bool ? 'Oui' : 'Non');
 
+// FIXME use challenge categories ?
 const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
   const [formSent, setFormSent] = useState(false);
 
@@ -92,14 +93,13 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
         ChallengeService.getChallenge(props.challengeId),
         ClubService.getClubs(),
         CategoryService.getCategories(),
-        DisciplineService.getDisciplines(),
       ])
-        .then(([challengeResponse, clubsResponse, categoriesResponse, disciplinesResponse]) => {
+        .then(([challengeResponse, clubsResponse, categoriesResponse]) => {
           if (!unmounted) {
             setClubs(clubsResponse.data);
             setCategories(categoriesResponse.data);
-            setDisciplines(disciplinesResponse.data);
-            setAvailableDisciplines(disciplinesResponse.data);
+            setDisciplines(challengeResponse.data.disciplines);
+            setAvailableDisciplines(challengeResponse.data.disciplines);
           }
         })
         .catch(() => {
@@ -172,6 +172,8 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
           }
         })
         .catch(() => {
+          // TODO Reset full form in case of error
+          // FIXME one route for participation + create ?
           props.actions.error("Impossible d'inscrire le tireur");
           setFormSent(false);
         });
@@ -247,11 +249,13 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
       };
       setDisciplinesValid(true);
       setParticipations([...participations, newParticipation]);
-      setAvailableDisciplines(
-        availableDisciplines.filter(
-          availableDiscipline => availableDiscipline.label !== newParticipationDiscipline
-        )
-      );
+      if (!newParticipationOutrank) {
+        setAvailableDisciplines(
+          availableDisciplines.filter(
+            availableDiscipline => availableDiscipline.label !== newParticipationDiscipline
+          )
+        );
+      }
       setNewParticipationDiscipline('');
       setNewParticipationElectronic(false);
       setNewParticipationOutrank(false);
@@ -534,7 +538,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
                 <Grid item xs={10}>
                   <Box fontStyle="italic">
                     <Typography variant="body2" hidden={availableDisciplines.length > 0}>
-                      * Le tireur est inscrit à toutes les disciplines proposées par le challenge
+                      * Le tireur est inscrit et classé à toutes les disciplines proposées par le challenge
                     </Typography>
                   </Box>
                 </Grid>

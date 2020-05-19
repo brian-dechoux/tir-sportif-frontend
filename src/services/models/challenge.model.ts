@@ -83,3 +83,15 @@ export interface GetParticipationResponse {
 
   outrank: boolean;
 }
+
+export interface GetParticipantResponse {
+  id: number;
+
+  lastname: string;
+
+  firstname: string;
+
+  clubId: number;
+
+  clubName: string;
+}

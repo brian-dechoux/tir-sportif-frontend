@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { GetChallengeResponse, GetParticipationResponse } from 'services/models/challenge.model';
+import { GetChallengeResponse, GetParticipantResponse } from 'services/models/challenge.model';
 import ChallengeService from 'services/challenge.service';
 import { formatString } from 'utils/date.utils';
 import { Link } from 'react-router-dom';
@@ -46,7 +46,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
   const classes = useStyles();
 
   const [challengeInformation, setChallengeInformation] = useState<GetChallengeResponse>();
-  const [pagedParticipations, setPagedParticipations] = useState<Page<GetParticipationResponse>>(
+  const [pagedParticipants, setPagedParticipants] = useState<Page<GetParticipantResponse>>(
     EMPTY_PAGE()
   );
 
@@ -68,13 +68,13 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
     return () => {
       unmounted = true;
     };
-  }, [challengeInformation, pagedParticipations]);
+  }, [challengeInformation, pagedParticipants]);
 
   const handleChangePage = (pageSize: number, pageNumber: number) => {
-    ChallengeService.getParticipations(props.challengeId, pageSize, pageNumber)
+    ChallengeService.getParticipants(props.challengeId, pageSize, pageNumber)
       .then(response => {
         if (response.status === 200) {
-          setPagedParticipations(response.data);
+          setPagedParticipants(response.data);
         }
       })
       .catch(() => {
@@ -83,8 +83,8 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
   };
 
   // TODO useEffect ?
-  if (pagedParticipations.pageable?.pageNumber === -1) {
-    handleChangePage(pagedParticipations.pageable.pageSize, 0);
+  if (pagedParticipants.pageable?.pageNumber === -1) {
+    handleChangePage(pagedParticipants.pageable.pageSize, 0);
   }
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,7 +93,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
   };
 
   const shootersBlock =
-    pagedParticipations.totalElements > 0 ? (
+    pagedParticipants.totalElements > 0 ? (
       <TableContainer component={Paper}>
         <Table stickyHeader>
           <colgroup>
@@ -109,11 +109,11 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {pagedParticipations.content.map(participation => (
-              <TableRow key={participation.id}>
-                <TableCell align="center">{participation.shooter.lastname}</TableCell>
-                <TableCell align="center">{participation.shooter.firstname}</TableCell>
-                <TableCell align="center">{participation.shooter.club?.name ?? 'N/A'}</TableCell>
+            {pagedParticipants.content.map(participant => (
+              <TableRow key={participant.id}>
+                <TableCell align="center">{participant.lastname}</TableCell>
+                <TableCell align="center">{participant.firstname}</TableCell>
+                <TableCell align="center">{participant.clubName ?? 'N/A'}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -121,17 +121,17 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
             <TableRow>
               <TablePagination
                 colSpan={3}
-                count={pagedParticipations.totalElements}
-                rowsPerPage={pagedParticipations.pageable.pageSize}
+                count={pagedParticipants.totalElements}
+                rowsPerPage={pagedParticipants.pageable.pageSize}
                 page={
-                  pagedParticipations.pageable.pageNumber === -1
+                  pagedParticipants.pageable.pageNumber === -1
                     ? 0
-                    : pagedParticipations.pageable.pageNumber
+                    : pagedParticipants.pageable.pageNumber
                 }
                 labelRowsPerPage={paginationTheme.rowsPerPage}
                 labelDisplayedRows={paginationTheme.displayedRowsArgs}
                 onChangePage={(event, pageNumber: number) =>
-                  handleChangePage(pagedParticipations.pageable.pageSize, pageNumber)
+                  handleChangePage(pagedParticipants.pageable.pageSize, pageNumber)
                 }
                 onChangeRowsPerPage={handleChangeRowsPerPage}
               />
