@@ -93,6 +93,21 @@ export class ChallengeService {
   ): Promise<AxiosResponse<GetParticipationResultsResponse>> {
     return cli.get(`/challenges/${challengeId}/results/participations/${participationId}`);
   }
+
+  addShotResult(
+    challengeId: number,
+    participationId: number,
+    serieNb: number,
+    shotNb: number | null,
+    points: number
+  ): Promise<AxiosResponse<null>> {
+    const payload = {
+      serieNumber: serieNb,
+      shotNumber: shotNb,
+      points: points,
+    };
+    return cli.post(`/challenges/${challengeId}/participations/${participationId}/shot-result`, payload, {});
+  }
 }
 
 export default new ChallengeService();

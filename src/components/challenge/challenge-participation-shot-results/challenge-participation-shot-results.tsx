@@ -3,18 +3,18 @@ import {
   Box,
   Button,
   Divider,
-  Grid,
+  Grid, Input,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
+  TableRow, TextField,
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
-import { ROUTES } from 'configurations/server.configuration';
+import { ERRORS, ROUTES } from 'configurations/server.configuration';
 import TableContainer from '@material-ui/core/TableContainer';
 import { customColors } from 'configurations/theme.configuration';
 import { GetShooterResponse } from 'services/models/shooter.model';
@@ -81,6 +81,22 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     };
   }, []);
 
+  const addShotResult = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number | null) => {
+    let target = event.target;
+    if (target.value) {
+      const points: number = parseFloat(target.value);
+      ChallengeService.addShotResult(props.challengeId, props.participationId, serieNb, shotNb, points)
+        .catch(errorResponse => {
+          if (errorResponse.response.data.code === ERRORS.WRONG_SHOT_POINTS_FORMAT) {
+            props.actions.error("La discipline actuelle n'accepte pas les nombres à virgule");
+          } else {
+            props.actions.error("Une erreur s'est produite");
+          }
+          target.value = '';
+        });
+    }
+  }
+
   const displayTable = (participationResults: GetParticipationResultsResponse, discipline: GetDisciplineResponse) => {
     const headRowShotCells = [];
     for (let i = 1; i <= discipline.nbShotsPerSerie; i++) {
@@ -105,8 +121,16 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
               <TableBody>
                 {participationResults.points.map((participationResultSerie, participationResultSerieIndex) => (
                   <TableRow key={participationResultSerieIndex}>
-                    {participationResultSerie.map((participationResultSerieShotPoints) => (
-                      <TableCell align="center">{participationResultSerieShotPoints}</TableCell>
+                    {participationResultSerie.map((participationResultSerieShotPoints, participationResultShotIndex) => (
+                      <TableCell align="center">
+                        <Input
+                          type="number"
+                          inputProps = {{ step: discipline.useDecimalResults ? 0.1 : 1 }}
+                          onChange={(e) =>
+                            addShotResult(e, participationResultSerieIndex + 1, participationResultShotIndex + 1 === participationResultSerie.length ? null : participationResultShotIndex)}
+                          defaultValue={participationResultSerieShotPoints}
+                        />
+                      </TableCell>
                     ))}
                   </TableRow>
                 ))}

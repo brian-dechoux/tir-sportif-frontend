@@ -15,7 +15,7 @@ cli.interceptors.response.use(
     if (onRejected.response.status === 401) {
       store.dispatch(expireToken());
     }
-    return Promise.reject(error);
+    return Promise.reject(onRejected);
   }
 );
 
