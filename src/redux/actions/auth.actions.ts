@@ -43,13 +43,9 @@ export function login(
         if (errorResponse.response.status === 401) {
           if (errorResponse.response.data.code === ERRORS.EXPIRED_TOKEN) {
             dispatch(expireToken());
-          } else {
-            dispatch(
-              error('Les informations remplies ne correspondent pas à un utilisateur connu')
-            );
           }
         } else {
-          dispatch(error("Une erreur s'est produite durant l'authentification"));
+          dispatch(error(errorResponse.response.data.message));
         }
       });
   };

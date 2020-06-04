@@ -17,6 +17,5 @@ export const ROUTES = {
 };
 
 export const ERRORS = {
-  EXPIRED_TOKEN: 'AUTH001',
-  WRONG_SHOT_POINTS_FORMAT: 'SR0003',
+  EXPIRED_TOKEN: 'AUTH001'
 };

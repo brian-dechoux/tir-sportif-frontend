@@ -52,23 +52,21 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
 
   useEffect(() => {
     let unmounted = false;
-    if (!shooterParticipations) {
-      ChallengeService.getParticipations(props.challengeId, props.shooterId)
-        .then(participationsResponse => {
-          if (!unmounted) {
-            setShooterParticipations(participationsResponse.data);
-          }
-        })
-        .catch(() => {
-          if (!unmounted) {
-            props.actions.error('Impossible de récupérer les informations du tireur inscrit au challenge');
-          }
-        });
-    }
+    ChallengeService.getParticipations(props.challengeId, props.shooterId)
+      .then(participationsResponse => {
+        if (!unmounted) {
+          setShooterParticipations(participationsResponse.data);
+        }
+      })
+      .catch(() => {
+        if (!unmounted) {
+          props.actions.error('Impossible de récupérer les informations du tireur inscrit au challenge');
+        }
+      });
     return () => {
       unmounted = true;
     };
-  }, [shooterParticipations]);
+  }, []);
 
   const participationsBlock =
     (shooterParticipations?.participations?.length ?? 0) > 0 ? (
@@ -113,6 +111,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
     // TODO spinner (with message?)
     return null;
   } else {
+    // TODO reuse component from addShooter page here, or move it from other page to button here
     return (
       <>
         <Box display="flex" width={1}>

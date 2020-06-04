@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import Configuration from 'configurations/environment.configuration';
 import { store } from '../store';
-import { error } from 'redux/actions/error.actions';
 import { expireToken } from 'redux/actions/auth.actions';
 
 const cli = axios.create({

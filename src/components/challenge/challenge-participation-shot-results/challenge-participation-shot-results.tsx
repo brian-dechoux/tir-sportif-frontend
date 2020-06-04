@@ -23,6 +23,7 @@ import DisciplineService from 'services/discipline.service';
 import ChallengeService from 'services/challenge.service';
 import { GetParticipationResultsResponse } from 'services/models/challenge.model';
 import ShooterService from 'services/shooter.service';
+import debounce from '../../../utils/debounce.utils';
 
 type ChallengeParticipationShotResultsProps = {
   challengeId: number;
@@ -81,20 +82,23 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     };
   }, []);
 
+  let debounceFn: any;
   const addShotResult = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number | null) => {
-    let target = event.target;
-    if (target.value) {
-      const points: number = parseFloat(target.value);
-      ChallengeService.addShotResult(props.challengeId, props.participationId, serieNb, shotNb, points)
-        .catch(errorResponse => {
-          if (errorResponse.response.data.code === ERRORS.WRONG_SHOT_POINTS_FORMAT) {
-            props.actions.error("La discipline actuelle n'accepte pas les nombres à virgule");
-          } else {
-            props.actions.error("Une erreur s'est produite");
-          }
-          target.value = '';
-        });
+    event.persist();
+    if (!debounceFn) {
+      debounceFn = debounce(() => {
+        let target = event.target;
+        if (target.value) {
+          const points: number = parseFloat(target.value);
+          ChallengeService.addShotResult(props.challengeId, props.participationId, serieNb, shotNb, points)
+            .catch(errorResponse => {
+              props.actions.error(errorResponse.response.data.message);
+              target.value = '';
+            });
+        }
+      }, 300);
     }
+    debounceFn();
   }
 
   const displayTable = (participationResults: GetParticipationResultsResponse, discipline: GetDisciplineResponse) => {
@@ -126,8 +130,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                         <Input
                           type="number"
                           inputProps = {{ step: discipline.useDecimalResults ? 0.1 : 1 }}
-                          onChange={(e) =>
-                            addShotResult(e, participationResultSerieIndex + 1, participationResultShotIndex + 1 === participationResultSerie.length ? null : participationResultShotIndex)}
+                          onChange={(e) => addShotResult(e, participationResultSerieIndex + 1, participationResultShotIndex + 1 === participationResultSerie.length ? -1 : participationResultShotIndex)}
                           defaultValue={participationResultSerieShotPoints}
                         />
                       </TableCell>
@@ -163,8 +166,8 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                 <Typography variant="h6">{shooter.firstname} {shooter.lastname}</Typography>
               </Grid>
               <Grid item xs={12}>
-                <Typography variant="body1">
-                  Résultats de tir pour la discipline: {discipline.label}
+                <Typography variant="body2">
+                  {discipline.label}
                 </Typography>
               </Grid>
             </Grid>
