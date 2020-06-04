@@ -8,25 +8,17 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableFooter,
   TableHead,
-  TablePagination,
   TableRow,
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-  GetChallengeResponse,
-  GetParticipantResponse,
-  GetParticipationResponse, GetShooterParticipationsResponse,
-} from 'services/models/challenge.model';
+import { GetShooterParticipationsResponse } from 'services/models/challenge.model';
 import ChallengeService from 'services/challenge.service';
-import { formatString } from 'utils/date.utils';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
-import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import TableContainer from '@material-ui/core/TableContainer';
-import { customColors, paginationTheme } from 'configurations/theme.configuration';
+import { customColors } from 'configurations/theme.configuration';
 import { NA } from '../../../App.constants';
 
 type ChallengeShooterProps = {
@@ -56,7 +48,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
   }));
   const classes = useStyles();
 
-  const [shooterParticipations, setShooterParticipations] = useState<GetShooterParticipationsResponse | null>(null);
+  const [shooterParticipations, setShooterParticipations] = useState<GetShooterParticipationsResponse>();
 
   useEffect(() => {
     let unmounted = false;
@@ -79,34 +71,43 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
   }, [shooterParticipations]);
 
   const participationsBlock =
-    (<TableContainer component={Paper}>
-      <Table stickyHeader>
-        <colgroup>
-          <col width={0.4} />
-          <col width={0.2} />
-          <col width={0.2} />
-          <col width={0.2} />
-        </colgroup>
-        <TableHead>
-          <TableRow>
-            <TableCell align="center">DISCIPLINE</TableCell>
-            <TableCell align="center">CIBLE ÉLECTRONIQUE</TableCell>
-            <TableCell align="center">HORS CLASSEMENT</TableCell>
-            <TableCell align="center">A PAYÉ</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {shooterParticipations?.participations?.map(participation => (
-            <TableRow key={participation.id}>
-              <TableCell align="center">{participation.discipline.label}</TableCell>
-              <TableCell align="center">{participation.useElectronicTarget ? 'Oui' : 'Non'}</TableCell>
-              <TableCell align="center">{participation.outrank ? 'Oui' : 'Non'}</TableCell>
-              <TableCell align="center">{participation.paid ? 'Oui' : 'Non'}</TableCell>
+    (shooterParticipations?.participations?.length ?? 0) > 0 ? (
+      <TableContainer component={Paper}>
+        <Table stickyHeader>
+          <colgroup>
+            <col width={0.4} />
+            <col width={0.2} />
+            <col width={0.2} />
+            <col width={0.2} />
+          </colgroup>
+          <TableHead>
+            <TableRow>
+              <TableCell align="center">DISCIPLINE</TableCell>
+              <TableCell align="center">CIBLE ÉLECTRONIQUE</TableCell>
+              <TableCell align="center">HORS CLASSEMENT</TableCell>
+              <TableCell align="center">A PAYÉ</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>);
+          </TableHead>
+          <TableBody>
+            {shooterParticipations?.participations?.map(participation => (
+              <TableRow
+                className={classes.tableRow}
+                key={participation.id}
+                hover
+                onClick={() => props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}${ROUTES.CHALLENGE.SHOOTER.LIST}/${props.shooterId}${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/${participation.discipline.id}/${participation.id}`)}
+              >
+                <TableCell align="center">{participation.discipline.label}</TableCell>
+                <TableCell align="center">{participation.useElectronicTarget ? 'Oui' : 'Non'}</TableCell>
+                <TableCell align="center">{participation.outrank ? 'Oui' : 'Non'}</TableCell>
+                <TableCell align="center">{participation.paid ? 'Oui' : 'Non'}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    ) : (
+      <Typography variant="body1">Aucune participation enregistrée pour le moment</Typography>
+    );
 
   if (!shooterParticipations) {
     // TODO spinner (with message?)

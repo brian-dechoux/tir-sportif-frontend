@@ -7,6 +7,9 @@ export const ROUTES = {
     SHOOTER: {
       LIST: '/shooters',
       CREATION: '/shooter/create',
+      SHOT_RESULTS: {
+        LIST: '/shot-results'
+      }
     },
   },
   CLUBS: '/clubs',

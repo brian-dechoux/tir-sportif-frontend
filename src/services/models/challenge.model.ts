@@ -97,3 +97,15 @@ export interface GetParticipantResponse {
 
   clubName: string;
 }
+
+export interface GetParticipationResultsResponse {
+  participationReference: GetParticipationResultReferenceResponse;
+
+  points: number[][];
+}
+
+export interface GetParticipationResultReferenceResponse {
+  participationId: number;
+
+  outrank: boolean;
+}

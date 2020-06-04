@@ -4,6 +4,7 @@ import {
   GetChallengeListElementResponse,
   GetChallengeResponse,
   GetParticipantResponse,
+  GetParticipationResultsResponse,
   GetShooterParticipationsResponse,
 } from './models/challenge.model';
 import { Page } from './models/page.model';
@@ -31,6 +32,25 @@ export class ChallengeService {
     return cli.get(`/challenges/${id}`);
   }
 
+  createChallenge(
+    name: string,
+    address: CreateAddressRequest,
+    startDate: Date,
+    organiserClubId: number,
+    categoryIds: number[],
+    disciplineIds: number[]
+  ): Promise<AxiosResponse<CreateChallengeResponse>> {
+    const payload = {
+      name: name,
+      address: address,
+      startDate: formatDate(startDate, dateTheme.format.dateTimeServer),
+      organiserClubId: organiserClubId,
+      categoryIds: categoryIds,
+      disciplineIds: disciplineIds,
+    };
+    return cli.post('/challenges', payload, {});
+  }
+
   getParticipants(
     challengeId: number,
     rowsPerPage: number,
@@ -52,30 +72,26 @@ export class ChallengeService {
     return cli.get(`/challenges/${challengeId}/participants/${participantId}/participations`);
   }
 
-  createChallenge(
-    name: string,
-    address: CreateAddressRequest,
-    startDate: Date,
-    organiserClubId: number,
-    categoryIds: number[],
-    disciplineIds: number[]
-  ): Promise<AxiosResponse<CreateChallengeResponse>> {
-    const payload = {
-      name: name,
-      address: address,
-      startDate: formatDate(startDate, dateTheme.format.dateTimeServer),
-      organiserClubId: organiserClubId,
-      categoryIds: categoryIds,
-      disciplineIds: disciplineIds,
-    };
-    return cli.post('/challenges', payload, {});
-  }
-
   createParticipations(
     challengeId: number,
     participations: CreateParticipationsRequest
   ): Promise<AxiosResponse<void>> {
     return cli.post(`/challenges/${challengeId}/participations`, participations);
+  }
+
+  getShooterShotResults(
+    challengeId: number,
+    participantId: number,
+    disciplineId: number
+  ): Promise<AxiosResponse<GetParticipationResultsResponse[]>> {
+    return cli.get(`/challenges/${challengeId}/results/participants/${participantId}/disciplines/${disciplineId}`);
+  }
+
+  getParticipationShotResults(
+    challengeId: number,
+    participationId: number
+  ): Promise<AxiosResponse<GetParticipationResultsResponse>> {
+    return cli.get(`/challenges/${challengeId}/results/participations/${participationId}`);
   }
 }
 

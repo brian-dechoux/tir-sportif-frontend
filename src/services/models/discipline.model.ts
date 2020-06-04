@@ -6,4 +6,8 @@ export interface GetDisciplineResponse {
   label: string;
 
   useDecimalResults: boolean;
+
+  nbSeries: number;
+
+  nbShotsPerSerie: number;
 }

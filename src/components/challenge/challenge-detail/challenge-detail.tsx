@@ -58,23 +58,22 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
 
   useEffect(() => {
     let unmounted = false;
-    if (!challengeInformation) {
-      ChallengeService.getChallenge(props.challengeId)
-        .then(challengeResponse => {
-          if (!unmounted) {
-            setChallengeInformation(challengeResponse.data);
-          }
-        })
-        .catch(() => {
-          if (!unmounted) {
-            props.actions.error('Impossible de récupérer les informations du challenge demandé');
-          }
-        });
-    }
+    ChallengeService.getChallenge(props.challengeId)
+      .then(challengeResponse => {
+        if (!unmounted) {
+          setChallengeInformation(challengeResponse.data);
+          handleChangePage(pagedParticipants.pageable.pageSize, 0);
+        }
+      })
+      .catch(() => {
+        if (!unmounted) {
+          props.actions.error('Impossible de récupérer les informations du challenge demandé');
+        }
+      });
     return () => {
       unmounted = true;
     };
-  }, [challengeInformation, pagedParticipants]);
+  }, []);
 
   const handleChangePage = (pageSize: number, pageNumber: number) => {
     ChallengeService.getParticipants(props.challengeId, pageSize, pageNumber)
@@ -87,11 +86,6 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
         props.actions.error('Impossible de récupérer la liste des inscrits au challenge');
       });
   };
-
-  // TODO useEffect ?
-  if (pagedParticipants.pageable?.pageNumber === -1) {
-    handleChangePage(pagedParticipants.pageable.pageSize, 0);
-  }
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newRowsPerPageValue: number = parseInt(event.target.value, 10);

@@ -6,6 +6,10 @@ export class DisciplineService {
   getDisciplines(): Promise<AxiosResponse<GetDisciplineResponse[]>> {
     return cli.get('/disciplines');
   }
+
+  getDiscipline(disciplineId: number): Promise<AxiosResponse<GetDisciplineResponse>> {
+    return cli.get(`/disciplines/${disciplineId}`);
+  }
 }
 
 export default new DisciplineService();
