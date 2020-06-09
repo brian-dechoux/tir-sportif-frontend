@@ -55,6 +55,8 @@ export const dateTheme = {
   },
 };
 
+export const booleanToText = (bool: boolean) => (bool ? 'Oui' : 'Non');
+
 export const paginationTheme = {
   rowsPerPage: "Nombre d'éléments par page",
   displayedRowsArgs: (paginationInfo: LabelDisplayedRowsArgs) =>
