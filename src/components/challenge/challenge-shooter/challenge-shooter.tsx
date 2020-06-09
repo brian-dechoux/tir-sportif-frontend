@@ -13,19 +13,28 @@ import {
   Typography,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { GetShooterParticipationsResponse } from 'services/models/challenge.model';
+import {
+  CreateParticipationsRequest,
+  GetShooterParticipationsResponse,
+  Participation,
+} from 'services/models/challenge.model';
 import ChallengeService from 'services/challenge.service';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import TableContainer from '@material-ui/core/TableContainer';
 import { customColors } from 'configurations/theme.configuration';
-import { NA } from '../../../App.constants';
+import { NA } from 'App.constants';
+import { GetDisciplineResponse } from 'services/models/discipline.model';
+import { ToastVariant } from '../../toast/toast';
+import ChallengeDisciplineParticipationDialog
+  from '../challenge-discipline-participation/challenge-discipline-participation-dialog';
 
 type ChallengeShooterProps = {
   challengeId: number;
   shooterId: number;
   actions: {
     error: (message: string) => any;
+    openToast: (message: string, variant: ToastVariant) => any;
     push: (path: string, state?: any | undefined) => any;
   };
 };
@@ -49,13 +58,18 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
   const classes = useStyles();
 
   const [shooterParticipations, setShooterParticipations] = useState<GetShooterParticipationsResponse>();
+  const [disciplines, setDisciplines] = useState<GetDisciplineResponse[]>([]);
 
   useEffect(() => {
     let unmounted = false;
-    ChallengeService.getParticipations(props.challengeId, props.shooterId)
-      .then(participationsResponse => {
+    Promise.all([
+      ChallengeService.getChallenge(props.challengeId),
+      ChallengeService.getParticipations(props.challengeId, props.shooterId)
+    ])
+      .then(([challengeResponse, participationsResponse]) => {
         if (!unmounted) {
           setShooterParticipations(participationsResponse.data);
+          setDisciplines(challengeResponse.data.disciplines);
         }
       })
       .catch(() => {
@@ -107,13 +121,63 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
       <Typography variant="body1">Aucune participation enregistrée pour le moment</Typography>
     );
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [newParticipation, setNewParticipation] = useState<Participation>();
+
+  useEffect(() => {
+    if (newParticipation) {
+      const createParticipationsPayload: CreateParticipationsRequest = {
+        shooterId: props.shooterId,
+        disciplinesInformation: [{
+          disciplineId: disciplines.find(discipline => discipline.label === newParticipation.discipline)?.id ?? -1,
+          useElectronicTarget: newParticipation.useElectronicTarget,
+          paid: newParticipation.paid,
+          outrank: newParticipation.outrank,
+        }],
+      };
+      ChallengeService.createParticipations(
+        props.challengeId,
+        createParticipationsPayload
+      ).then(response => {
+        if (response.status === 201) {
+          // TODO refresh here ! backend should return created data in order to have the generated ID
+          props.actions.openToast('La participation a été ajoutée pour le tireur', 'success');
+        }
+      }).catch(() => {
+        props.actions.error("Impossible d'ajouter une participation pour ce tireur");
+      });
+    }
+  }, [newParticipation]);
+
+  const handleParticipationDialogOpening = () => {
+    setDialogOpen(true);
+    setNewParticipation(undefined);
+  }
+
+  const handleParticipationDialogValidation = (newParticipation: Participation) => {
+    setNewParticipation(newParticipation);
+    setDialogOpen(false);
+  }
+
+  const handleParticipationDialogClose = () => {
+    setDialogOpen(false);
+  }
+
+  const dialog = dialogOpen ?
+    <ChallengeDisciplineParticipationDialog
+      disciplines={disciplines}
+      callbackValidateFn={handleParticipationDialogValidation}
+      callbackCloseFn={handleParticipationDialogClose}
+      actions={props.actions}
+    /> : null;
+
   if (!shooterParticipations) {
     // TODO spinner (with message?)
     return null;
   } else {
-    // TODO reuse component from addShooter page here, or move it from other page to button here
     return (
       <>
+        {dialog}
         <Box display="flex" width={1}>
           <Box flexGrow={1}>
             <Button variant="outlined" component={Link} to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}>
@@ -137,7 +201,8 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
           <Box width={0.6}>
             <Grid container direction="column" alignItems="center">
               <Grid item xs={12}>
-                <Typography variant="h6">{shooterParticipations?.shooter.firstname} {shooterParticipations?.shooter.lastname}</Typography>
+                <Typography
+                  variant="h6">{shooterParticipations?.shooter.firstname} {shooterParticipations?.shooter.lastname}</Typography>
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body1">
@@ -152,7 +217,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
             </Grid>
           </Box>
         </Box>
-        <Divider />
+        <Divider/>
         <Box pt={2}>
           <Box display="flex" width={1}>
             <Box flexGrow={1}>
@@ -162,6 +227,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
               <Button
                 variant="contained"
                 color="secondary"
+                onClick={() => handleParticipationDialogOpening()}
               >
                 AJOUTER UNE PARTICIPATION
               </Button>

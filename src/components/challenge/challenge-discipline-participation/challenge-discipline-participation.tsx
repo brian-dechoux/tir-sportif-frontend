@@ -2,19 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
-  Checkbox,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
   Grid,
-  InputLabel,
-  MenuItem,
   Paper,
-  Select,
   Table,
   TableBody,
   TableCell,
@@ -24,7 +13,7 @@ import {
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
-import { booleanToText, customTheme } from 'configurations/theme.configuration';
+import { booleanToText } from 'configurations/theme.configuration';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { ToastVariant } from 'components/toast/toast';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -34,6 +23,7 @@ import {
   Participation,
 } from 'services/models/challenge.model';
 import ChallengeService from 'services/challenge.service';
+import ChallengeDisciplineParticipationDialog from './challenge-discipline-participation-dialog';
 
 type ChallengeDisciplineParticipationProps = {
   challengeId: number;
@@ -87,58 +77,42 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
     }
   }, [formSent]);
 
-  const [disciplinesValid, setDisciplinesValid] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const disciplinesFormValid = participations.length > 0;
 
-  const [newParticipationDiscipline, setNewParticipationDiscipline] = useState<string>('');
-  const [newParticipationElectronic, setNewParticipationElectronic] = useState(false);
-  const [newParticipationOutrank, setNewParticipationOutrank] = useState(false);
-  const [newParticipationPaid, setNewParticipationPaid] = useState(false);
-  const participationDialogFormValid = !!newParticipationDiscipline;
-
-  const handleNewParticipationDisciplineChange = (event: any) => {
-    const newValue = event.target.value;
-    setNewParticipationDiscipline(newValue);
-  };
-
-  const handleNewParticipationCreation = () => {
-    if (newParticipationDiscipline) {
-      const newParticipation: Participation = {
-        discipline: newParticipationDiscipline,
-        useElectronicTarget: newParticipationElectronic,
-        outrank: newParticipationOutrank,
-        paid: newParticipationPaid,
-      };
-      setDisciplinesValid(true);
+  // FIXME revoir availableDiscipline....
+  //  Ils devraient toujours etre dispo, mais avec un outrank lock si deja un ranked
+  const handleParticipationDialogValidation = (newParticipation: Participation) => {
+    if (newParticipation.discipline) {
       setParticipations([...participations, newParticipation]);
-      if (!newParticipationOutrank) {
+      if (!newParticipation.outrank) {
         setAvailableDisciplines(
           availableDisciplines.filter(
-            availableDiscipline => availableDiscipline.label !== newParticipationDiscipline
+            availableDiscipline => availableDiscipline.label !== newParticipation.discipline
           )
         );
       }
-      setNewParticipationDiscipline('');
-      setNewParticipationElectronic(false);
-      setNewParticipationOutrank(false);
-      setNewParticipationPaid(false);
     }
-    setOpen(false);
   };
 
-  const [open, setOpen] = useState(false);
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const handleParticipationDialogClose = () => {
+    setDialogOpen(false);
+  }
+
+  const dialog = dialogOpen ?
+    <ChallengeDisciplineParticipationDialog
+      disciplines={props.disciplines}
+      callbackValidateFn={handleParticipationDialogValidation}
+      callbackCloseFn={handleParticipationDialogClose}
+      actions={props.actions}
+    /> : null;
 
   if (props.disciplines.length === 0) {
     // TODO spinner (with message ?)
     return null;
   } else {
-    return (
+    return (<>
+      {dialog}
       <Box display="flex" justifyContent="center" pt={2}>
         <Box display="flex" width={0.6}>
           <Grid container spacing={3} alignItems="center">
@@ -152,93 +126,11 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
                 disabled={availableDisciplines.length === 0}
                 variant="contained"
                 color="secondary"
-                onClick={handleClickOpen}
+                onClick={() => setDialogOpen(true)}
               >
                 AJOUTER
               </Button>
 
-              <Dialog fullWidth maxWidth="md" open={open} onClose={handleClose}>
-                <DialogTitle>AJOUTER UNE DISCIPLINE</DialogTitle>
-                <DialogContent>
-                  <Grid container spacing={1} alignItems="center">
-                    <Grid item xs={12}>
-                      <FormControl required fullWidth error={!disciplinesValid}>
-                        <InputLabel>Discipline</InputLabel>
-                        <Select
-                          value={newParticipationDiscipline}
-                          onChange={handleNewParticipationDisciplineChange}
-                          renderValue={customTheme.selectSimpleRender}
-                        >
-                          {availableDisciplines.map(discipline => (
-                            <MenuItem key={discipline.id} value={discipline.label}>
-                              {discipline.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={newParticipationElectronic}
-                              onChange={() =>
-                                setNewParticipationElectronic(!newParticipationElectronic)
-                              }
-                              color="primary"
-                            />
-                          }
-                          label="CIBLE ÉLECTRONIQUE"
-                        />
-                      </FormGroup>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={newParticipationOutrank}
-                              onChange={() =>
-                                setNewParticipationOutrank(!newParticipationOutrank)
-                              }
-                              color="primary"
-                            />
-                          }
-                          label="HORS CLASSEMENT"
-                        />
-                      </FormGroup>
-                    </Grid>
-                    <Grid item xs={4}>
-                      <FormGroup>
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={newParticipationPaid}
-                              onChange={() => setNewParticipationPaid(!newParticipationPaid)}
-                              color="primary"
-                            />
-                          }
-                          label="A PAYÉ"
-                        />
-                      </FormGroup>
-                    </Grid>
-                  </Grid>
-                </DialogContent>
-                <DialogActions>
-                  <Button variant="outlined" onClick={handleClose}>
-                    ANNULER
-                  </Button>
-                  <Button
-                    disabled={!participationDialogFormValid}
-                    onClick={handleNewParticipationCreation}
-                    variant="contained"
-                    color="secondary"
-                  >
-                    AJOUTER
-                  </Button>
-                </DialogActions>
-              </Dialog>
             </Grid>
             <Grid item xs={10}>
               <Box fontStyle="italic">
@@ -310,7 +202,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
           </Grid>
         </Box>
       </Box>
-    );
+    </>);
   }
 };
 
