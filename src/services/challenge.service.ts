@@ -75,7 +75,7 @@ export class ChallengeService {
   createParticipations(
     challengeId: number,
     participations: CreateParticipationsRequest
-  ): Promise<AxiosResponse<void>> {
+  ): Promise<AxiosResponse<GetShooterParticipationsResponse>> {
     return cli.post(`/challenges/${challengeId}/participations`, participations);
   }
 

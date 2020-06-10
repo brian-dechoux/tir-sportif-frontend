@@ -39,8 +39,8 @@ type ChallengeDisciplineParticipationProps = {
 const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipationProps) => {
   const [formSent, setFormSent] = useState(false);
 
-  const [availableDisciplines, setAvailableDisciplines] = useState(props.disciplines);
   const [participations, setParticipations] = useState<Participation[]>([]);
+  const [disciplineParticipations, setDisciplineParticipations] = useState();
 
   useEffect(() => {
     if (formSent) {
@@ -85,13 +85,10 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
   const handleParticipationDialogValidation = (newParticipation: Participation) => {
     if (newParticipation.discipline) {
       setParticipations([...participations, newParticipation]);
-      if (!newParticipation.outrank) {
-        setAvailableDisciplines(
-          availableDisciplines.filter(
-            availableDiscipline => availableDiscipline.label !== newParticipation.discipline
-          )
-        );
-      }
+      setDisciplineParticipations(props.disciplines.map(discipline => ({
+        definition: discipline,
+        alreadyRanked: participations.some(participation => participation.discipline === discipline.label && !participation.outrank)
+      })));
     }
   };
 
@@ -101,7 +98,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
 
   const dialog = dialogOpen ?
     <ChallengeDisciplineParticipationDialog
-      disciplines={props.disciplines}
+      disciplines={disciplineParticipations}
       callbackValidateFn={handleParticipationDialogValidation}
       callbackCloseFn={handleParticipationDialogClose}
       actions={props.actions}
@@ -123,7 +120,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
             </Grid>
             <Grid item xs={2}>
               <Button
-                disabled={availableDisciplines.length === 0}
+                disabled={props.disciplines.length === 0}
                 variant="contained"
                 color="secondary"
                 onClick={() => setDialogOpen(true)}
@@ -134,7 +131,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
             </Grid>
             <Grid item xs={10}>
               <Box fontStyle="italic">
-                <Typography variant="body2" hidden={availableDisciplines.length > 0}>
+                <Typography variant="body2" hidden={props.disciplines.length > 0}>
                   * Le tireur est inscrit et classé à toutes les disciplines proposées par le challenge
                 </Typography>
               </Box>

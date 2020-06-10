@@ -27,7 +27,7 @@ import { NA } from 'App.constants';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { ToastVariant } from '../../toast/toast';
 import ChallengeDisciplineParticipationDialog
-  from '../challenge-discipline-participation/challenge-discipline-participation-dialog';
+  , { DisciplineParticipation } from '../challenge-discipline-participation/challenge-discipline-participation-dialog';
 
 type ChallengeShooterProps = {
   challengeId: number;
@@ -59,6 +59,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
 
   const [shooterParticipations, setShooterParticipations] = useState<GetShooterParticipationsResponse>();
   const [disciplines, setDisciplines] = useState<GetDisciplineResponse[]>([]);
+  const [disciplineParticipations, setDisciplineParticipations] = useState<DisciplineParticipation[]>([]);
 
   useEffect(() => {
     let unmounted = false;
@@ -70,6 +71,10 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
         if (!unmounted) {
           setShooterParticipations(participationsResponse.data);
           setDisciplines(challengeResponse.data.disciplines);
+          setDisciplineParticipations(challengeResponse.data.disciplines.map(discipline => ({
+            definition: discipline,
+            alreadyRanked: participationsResponse.data.participations.some(participation => participation.discipline.id === discipline.id && !participation.outrank)
+          })))
         }
       })
       .catch(() => {
@@ -142,6 +147,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
         if (response.status === 201) {
           // TODO refresh here ! backend should return created data in order to have the generated ID
           props.actions.openToast('La participation a été ajoutée pour le tireur', 'success');
+          setShooterParticipations(response.data);
         }
       }).catch(() => {
         props.actions.error("Impossible d'ajouter une participation pour ce tireur");
@@ -165,7 +171,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
 
   const dialog = dialogOpen ?
     <ChallengeDisciplineParticipationDialog
-      disciplines={disciplines}
+      disciplines={disciplineParticipations}
       callbackValidateFn={handleParticipationDialogValidation}
       callbackCloseFn={handleParticipationDialogClose}
       actions={props.actions}
