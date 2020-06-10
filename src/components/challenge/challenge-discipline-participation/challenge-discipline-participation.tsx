@@ -36,11 +36,18 @@ type ChallengeDisciplineParticipationProps = {
   };
 };
 
+const disciplineToDisciplineParticipation = (discipline: GetDisciplineResponse, participations: Participation[]) => ({
+  definition: discipline,
+  alreadyRanked: participations.some(participation => participation.discipline === discipline.label && !participation.outrank)
+})
+
 const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipationProps) => {
   const [formSent, setFormSent] = useState(false);
 
   const [participations, setParticipations] = useState<Participation[]>([]);
-  const [disciplineParticipations, setDisciplineParticipations] = useState();
+  const [disciplineParticipations, setDisciplineParticipations] = useState(
+    props.disciplines.map(discipline => disciplineToDisciplineParticipation(discipline, participations))
+  );
 
   useEffect(() => {
     if (formSent) {
@@ -63,7 +70,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
         )
       }).then(response => {
         if (response.status === 201) {
-          props.actions.openToast('La tireur a été inscrit au challenge', 'success');
+          props.actions.openToast('Le tireur a été inscrit au challenge', 'success');
           props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`);
         } else {
           throw new Error();
@@ -80,15 +87,11 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
   const [dialogOpen, setDialogOpen] = useState(false);
   const disciplinesFormValid = participations.length > 0;
 
-  // FIXME revoir availableDiscipline....
-  //  Ils devraient toujours etre dispo, mais avec un outrank lock si deja un ranked
   const handleParticipationDialogValidation = (newParticipation: Participation) => {
     if (newParticipation.discipline) {
-      setParticipations([...participations, newParticipation]);
-      setDisciplineParticipations(props.disciplines.map(discipline => ({
-        definition: discipline,
-        alreadyRanked: participations.some(participation => participation.discipline === discipline.label && !participation.outrank)
-      })));
+      const updatedParticipations = [...participations, newParticipation];
+      setParticipations(updatedParticipations);
+      setDisciplineParticipations(props.disciplines.map(discipline => disciplineToDisciplineParticipation(discipline, updatedParticipations)));
     }
   };
 

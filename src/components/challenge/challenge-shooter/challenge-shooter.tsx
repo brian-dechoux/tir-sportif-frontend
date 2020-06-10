@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  CreateParticipationsRequest,
+  CreateParticipationsRequest, GetParticipationResponse,
   GetShooterParticipationsResponse,
   Participation,
 } from 'services/models/challenge.model';
@@ -38,6 +38,11 @@ type ChallengeShooterProps = {
     push: (path: string, state?: any | undefined) => any;
   };
 };
+
+const disciplineToDisciplineParticipation = (discipline: GetDisciplineResponse, participations: GetParticipationResponse[]) => ({
+  definition: discipline,
+  alreadyRanked: participations.some(participation => participation.discipline.id === discipline.id && !participation.outrank)
+})
 
 const ChallengeShooter = (props: ChallengeShooterProps) => {
   const useStyles = makeStyles(theme => ({
@@ -71,10 +76,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
         if (!unmounted) {
           setShooterParticipations(participationsResponse.data);
           setDisciplines(challengeResponse.data.disciplines);
-          setDisciplineParticipations(challengeResponse.data.disciplines.map(discipline => ({
-            definition: discipline,
-            alreadyRanked: participationsResponse.data.participations.some(participation => participation.discipline.id === discipline.id && !participation.outrank)
-          })))
+          setDisciplineParticipations(challengeResponse.data.disciplines.map(discipline => disciplineToDisciplineParticipation(discipline, participationsResponse.data.participations)))
         }
       })
       .catch(() => {
@@ -148,6 +150,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
           // TODO refresh here ! backend should return created data in order to have the generated ID
           props.actions.openToast('La participation a été ajoutée pour le tireur', 'success');
           setShooterParticipations(response.data);
+          setDisciplineParticipations(disciplines.map(discipline => disciplineToDisciplineParticipation(discipline, response.data.participations)))
         }
       }).catch(() => {
         props.actions.error("Impossible d'ajouter une participation pour ce tireur");

@@ -48,9 +48,10 @@ const ChallengeDisciplineParticipationDialog = (props: ChallengeDisciplinePartic
   const handleNewParticipationDisciplineChange = (event: any) => {
     const newValue = event.target.value;
     setNewParticipationDiscipline(newValue);
-    setNewParticipationOutrank(true);
-    setOutrankLocked(newValue !== ''
-      && (props.disciplines.find(discipline => discipline.definition.label === newValue)?.alreadyRanked ?? false));
+    const outrankLocked = newValue !== ''
+      && (props.disciplines.find(discipline => discipline.definition.label === newValue)?.alreadyRanked ?? false);
+    setNewParticipationOutrank(outrankLocked);
+    setOutrankLocked(outrankLocked);
   };
 
   const handleClose = () => {
