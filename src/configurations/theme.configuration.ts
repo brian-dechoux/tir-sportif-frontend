@@ -23,8 +23,6 @@ const muiCustomTheme = createMuiTheme({
   },
 });
 
-// TODO adjust width 100% on header and main
-//  adjust main height 100% screen
 export const customTheme = {
   mui: muiCustomTheme,
   spacing: 2,
@@ -35,7 +33,6 @@ export const customTheme = {
   selectSimpleRender: (selected: any) => (selected as string),
 };
 
-// TODO Split format in pickers, server, etc
 export const dateTheme = {
   format: {
     timePickers: 'HH:mm',

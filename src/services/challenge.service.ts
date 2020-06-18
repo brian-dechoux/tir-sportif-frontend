@@ -51,6 +51,10 @@ export class ChallengeService {
     return cli.post('/challenges', payload, {});
   }
 
+  deleteChallenge(id: number): Promise<AxiosResponse<null>> {
+    return cli.delete(`/challenges/${id}`, {});
+  }
+
   getParticipants(
     challengeId: number,
     rowsPerPage: number,

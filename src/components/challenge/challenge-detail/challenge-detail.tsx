@@ -22,13 +22,18 @@ import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import TableContainer from '@material-ui/core/TableContainer';
-import { customColors, paginationTheme } from 'configurations/theme.configuration';
+import { paginationTheme } from 'configurations/theme.configuration';
 import { NA } from '../../../App.constants';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
+import { ToastVariant } from '../../toast/toast';
 
 type ChallengeDetailProps = {
   challengeId: number;
   actions: {
     error: (message: string) => any;
+    openToast: (message: string, variant: ToastVariant) => any;
     push: (path: string, state?: any | undefined) => any;
   };
 };
@@ -39,10 +44,6 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(2),
     },
-    deleteButton: {
-      backgroundColor: customColors.red,
-      color: customColors.white,
-    },
     tableRow: {
       '&:hover': {
         cursor: 'pointer',
@@ -51,17 +52,32 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
   }));
   const classes = useStyles();
 
+  const [challengeDeleted, setChallengeDeleted] = useState(false);
   const [challengeInformation, setChallengeInformation] = useState<GetChallengeResponse>();
   const [pagedParticipants, setPagedParticipants] = useState<Page<GetParticipantResponse>>(
     EMPTY_PAGE()
   );
 
   useEffect(() => {
+    if (challengeDeleted) {
+      ChallengeService.deleteChallenge(props.challengeId)
+        .then((response) => {
+          if (response.status === 200) {
+            props.actions.openToast('Challenge supprimé', 'success');
+            props.actions.push(ROUTES.CHALLENGE.LIST);
+          } else {
+            props.actions.error('Impossible de supprimer le challenge');
+          }
+        }).catch(() => props.actions.error('Impossible de supprimer le challenge'))
+    }
+  }, [challengeDeleted]);
+
+  useEffect(() => {
     let unmounted = false;
     ChallengeService.getChallenge(props.challengeId)
-      .then(challengeResponse => {
+      .then(response => {
         if (!unmounted) {
-          setChallengeInformation(challengeResponse.data);
+          setChallengeInformation(response.data);
           handleChangePage(pagedParticipants.pageable.pageSize, 0);
         }
       })
@@ -165,12 +181,17 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
           <Box display="flex">
             <Box pr={1}>
               <Button variant="contained" color="secondary" type="button">
-                ÉDITER
+                <EditIcon />  ÉDITER
               </Button>
             </Box>
             <Box>
-              <Button variant="contained" type="button" className={classes.deleteButton}>
-                SUPPRIMER
+              <Button
+                variant="contained"
+                color="secondary"
+                type="button"
+                onClick={() => setChallengeDeleted(true)}
+              >
+                <DeleteIcon />  SUPPRIMER
               </Button>
             </Box>
           </Box>
@@ -203,7 +224,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
                 component={Link}
                 to={`${ROUTES.CHALLENGE.LIST}/${challengeInformation.id}${ROUTES.CHALLENGE.SHOOTER.CREATION}`}
               >
-                INSCRIRE UN TIREUR
+                <AddIcon /> INSCRIRE UN TIREUR
               </Button>
             </Box>
           </Box>
