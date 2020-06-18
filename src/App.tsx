@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
 import './App.css';
+import clsx from 'clsx';
 import { history, store } from './store';
 import 'typeface-roboto';
 import ResultsContainer from './components/results/results.container';
@@ -30,6 +31,9 @@ const App = () => {
     container: {
       background: customTheme.containerBackground,
     },
+    flexGrow: {
+      "flex-grow": 1
+    }
   }));
   const classes = useStyles();
 
@@ -40,59 +44,61 @@ const App = () => {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <MuiThemeProvider theme={customTheme.mui}>
-          <Grid container direction="column" spacing={2}>
-            <Grid item>
-              <HeaderContainer />
-              <ToastContainer />
+        <Box height="calc(100vh - 0.5em)" display="flex" flexDirection="column">
+          <MuiThemeProvider theme={customTheme.mui}>
+            <Grid container direction="column" spacing={2} className={clsx(classes.flexGrow)}>
+              <Grid item>
+                <HeaderContainer />
+                <ToastContainer />
+              </Grid>
+              <Grid item className={clsx(classes.main, classes.flexGrow)}>
+                <Container className={classes.container}>
+                  <Box pt={2} pb={2} width={1}>
+                    <Route exact path={ROUTES.RESULTS}>
+                      <ResultsContainer />
+                    </Route>
+
+                    <Route exact path={ROUTES.CHALLENGE.LIST}>
+                      <AuthenticatedRedirectContainer>
+                        <ChallengeListContainer />
+                      </AuthenticatedRedirectContainer>
+                    </Route>
+
+                    <Route exact path={ROUTES.CHALLENGE.CREATION}>
+                      <ChallengeCreationContainer />
+                    </Route>
+
+                    <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId`}>
+                      <ChallengeDetailContainer />
+                    </Route>
+
+                    <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
+                      <ChallengeAddShooterContainer />
+                    </Route>
+
+                    <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId`}>
+                      <ChallengeShooterContainer />
+                    </Route>
+
+                    <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/:disciplineId/:participationId`}>
+                      <ChallengeShotResultsContainer />
+                    </Route>
+
+                    <Route exact path={ROUTES.CLUBS}>
+                      <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
+                    </Route>
+
+                    <Route exact path={ROUTES.MYCLUB}>
+                      <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
+                    </Route>
+
+                    <Redirect exact from="/" to={ROUTES.CHALLENGE.LIST} />
+                  </Box>
+                </Container>
+              </Grid>
             </Grid>
-            <Grid item className={classes.main}>
-              <Container className={classes.container}>
-                <Box pt={2} pb={2} width={1}>
-                  <Route exact path={ROUTES.RESULTS}>
-                    <ResultsContainer />
-                  </Route>
-
-                  <Route exact path={ROUTES.CHALLENGE.LIST}>
-                    <AuthenticatedRedirectContainer>
-                      <ChallengeListContainer />
-                    </AuthenticatedRedirectContainer>
-                  </Route>
-
-                  <Route exact path={ROUTES.CHALLENGE.CREATION}>
-                    <ChallengeCreationContainer />
-                  </Route>
-
-                  <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId`}>
-                    <ChallengeDetailContainer />
-                  </Route>
-
-                  <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
-                    <ChallengeAddShooterContainer />
-                  </Route>
-
-                  <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId`}>
-                    <ChallengeShooterContainer />
-                  </Route>
-
-                  <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/:disciplineId/:participationId`}>
-                    <ChallengeShotResultsContainer />
-                  </Route>
-
-                  <Route exact path={ROUTES.CLUBS}>
-                    <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
-                  </Route>
-
-                  <Route exact path={ROUTES.MYCLUB}>
-                    <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
-                  </Route>
-
-                  <Redirect exact from="/" to={ROUTES.CHALLENGE.LIST} />
-                </Box>
-              </Container>
-            </Grid>
-          </Grid>
-        </MuiThemeProvider>
+          </MuiThemeProvider>
+        </Box>
       </ConnectedRouter>
     </Provider>
   );
