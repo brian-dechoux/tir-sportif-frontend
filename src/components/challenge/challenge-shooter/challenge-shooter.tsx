@@ -217,7 +217,13 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
           </Box>
           <Box display="flex">
             <Box pr={1}>
-              <Button variant="contained" color="secondary" type="button" startIcon={<EditIcon />}>
+              <Button
+                variant="contained"
+                color="secondary"
+                type="button"
+                startIcon={<EditIcon />}
+                disabled
+              >
                 ÉDITER
               </Button>
             </Box>
