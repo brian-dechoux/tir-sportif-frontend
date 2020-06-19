@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
-  Button,
+  Box,
+  Button, Divider,
   Grid,
   Paper,
   Table,
@@ -9,7 +10,7 @@ import {
   TableFooter,
   TableHead,
   TablePagination,
-  TableRow,
+  TableRow, Typography,
 } from '@material-ui/core';
 import TableContainer from '@material-ui/core/TableContainer';
 import AddIcon from '@material-ui/icons/Add';
@@ -20,6 +21,9 @@ import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import ChallengeService from 'services/challenge.service';
 import { makeStyles } from '@material-ui/core/styles';
 import { paginationTheme } from '../../../configurations/theme.configuration';
+import { Link } from 'react-router-dom';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 type ChallengeListProps = {
   actions: {
@@ -74,8 +78,9 @@ const ChallengeList = (props: ChallengeListProps) => {
 
   return (
     <>
-      <Grid container direction="column" justify="center" spacing={2}>
-        <Grid item>
+      <Box display="flex" width={1}>
+        <Box flexGrow={1}></Box>
+        <Box>
           <Button
             variant="contained"
             color="secondary"
@@ -84,9 +89,19 @@ const ChallengeList = (props: ChallengeListProps) => {
           >
             CRÉER UN CHALLENGE
           </Button>
-        </Grid>
-        <Grid item>
-          <TableContainer component={Paper}>
+        </Box>
+      </Box>
+      <Box display="flex" justifyContent="center" pb={1}>
+        <Box width={0.6}>
+          <Grid container direction="column" alignItems="center">
+            <Grid item xs={12}>
+              <Typography variant="h6">Challenges</Typography>
+            </Grid>
+          </Grid>
+        </Box>
+      </Box>
+      <Box pt={2} display="flex" width={1}>
+        <TableContainer component={Paper}>
             <Table stickyHeader>
               <colgroup>
                 <col width={0.3} />
@@ -122,7 +137,7 @@ const ChallengeList = (props: ChallengeListProps) => {
               <TableFooter>
                 <TableRow>
                   <TablePagination
-                    colSpan={3}
+                    colSpan={4}
                     count={pagedChallenges.totalElements}
                     rowsPerPage={pagedChallenges.pageable.pageSize}
                     page={
@@ -140,9 +155,8 @@ const ChallengeList = (props: ChallengeListProps) => {
                 </TableRow>
               </TableFooter>
             </Table>
-          </TableContainer>
-        </Grid>
-      </Grid>
+        </TableContainer>
+      </Box>
     </>
   );
 };

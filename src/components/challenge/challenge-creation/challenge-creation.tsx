@@ -120,7 +120,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
             props.actions.openToast('Challenge créé avec succès', 'success');
             props.actions.push(ROUTES.CHALLENGE.LIST);
           } else {
-            props.actions.error('Impossible de créer le challenge');
+            throw new Error();
           }
         })
         .catch(() => {

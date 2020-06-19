@@ -108,4 +108,6 @@ export interface GetParticipationResultReferenceResponse {
   participationId: number;
 
   outrank: boolean;
+
+  useElectronicTarget: boolean;
 }

@@ -3,20 +3,19 @@ import {
   Box,
   Button,
   Divider,
-  Grid, Input,
+  Grid,
+  Input,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TableRow, TextField,
+  TableRow,
   Typography,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
-import { ERRORS, ROUTES } from 'configurations/server.configuration';
+import { ROUTES } from 'configurations/server.configuration';
 import TableContainer from '@material-ui/core/TableContainer';
-import { customColors } from 'configurations/theme.configuration';
 import { GetShooterResponse } from 'services/models/shooter.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import DisciplineService from 'services/discipline.service';
@@ -37,23 +36,6 @@ type ChallengeParticipationShotResultsProps = {
 };
 
 const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResultsProps) => {
-  const useStyles = makeStyles(theme => ({
-    divider: {
-      paddingTop: theme.spacing(1),
-      paddingBottom: theme.spacing(2),
-    },
-    deleteButton: {
-      backgroundColor: customColors.red,
-      color: customColors.white,
-    },
-    tableRow: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
-  }));
-  const classes = useStyles();
-
   const [shooter, setShooter] = useState<GetShooterResponse>();
   const [discipline, setDiscipline] = useState<GetDisciplineResponse>();
   const [shotResults, setShotResults] = useState<GetParticipationResultsResponse>();
@@ -131,7 +113,11 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                         <Input
                           type="number"
                           inputProps = {{ step: discipline.useDecimalResults ? 0.1 : 1 }}
-                          onChange={(e) => addShotResult(e, participationResultSerieIndex + 1, participationResultShotIndex + 1 === participationResultSerie.length ? -1 : participationResultShotIndex)}
+                          onChange={(e) => addShotResult(
+                            e,
+                            participationResultSerieIndex + 1,
+                            participationResultShotIndex + 1 === participationResultSerie.length ? -1 : participationResultShotIndex
+                          )}
                           defaultValue={participationResultSerieShotPoints}
                         />
                       </TableCell>
@@ -168,7 +154,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body2">
-                  {discipline.label}
+                  {discipline.label}, {shotResults.participationReference.useElectronicTarget ? 'sur cible électronique' : 'sur cible traditionnelle'}
                 </Typography>
               </Grid>
             </Grid>

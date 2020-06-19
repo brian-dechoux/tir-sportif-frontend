@@ -66,9 +66,12 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
             props.actions.openToast('Challenge supprimé', 'success');
             props.actions.push(ROUTES.CHALLENGE.LIST);
           } else {
-            props.actions.error('Impossible de supprimer le challenge');
+            throw new Error();
           }
-        }).catch(() => props.actions.error('Impossible de supprimer le challenge'))
+        }).catch(() => {
+          props.actions.error('Impossible de supprimer le challenge');
+          setChallengeDeleted(false);
+      })
     }
   }, [challengeDeleted]);
 

@@ -23,12 +23,15 @@ import ChallengeService from 'services/challenge.service';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import TableContainer from '@material-ui/core/TableContainer';
-import { NA } from 'App.constants';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { ToastVariant } from '../../toast/toast';
 import ChallengeDisciplineParticipationDialog, { DisciplineParticipation } from '../challenge-discipline-participation/challenge-discipline-participation-dialog';
 import EditIcon from '@material-ui/icons/Edit';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import AddIcon from '@material-ui/icons/Add';
+import DoneIcon from '@material-ui/icons/Done';
+import ClearIcon from '@material-ui/icons/Clear';
+import { booleanToIcons } from 'configurations/theme.configuration';
 
 type ChallengeShooterProps = {
   challengeId: number;
@@ -122,7 +125,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
             <TableRow>
               <TableCell align="center">DISCIPLINE</TableCell>
               <TableCell align="center">CIBLE ÉLECTRONIQUE</TableCell>
-              <TableCell align="center">HORS CLASSEMENT</TableCell>
+              <TableCell align="center">CLASSÉ</TableCell>
               <TableCell align="center">A PAYÉ</TableCell>
             </TableRow>
           </TableHead>
@@ -135,9 +138,9 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
                 onClick={() => props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}${ROUTES.CHALLENGE.SHOOTER.LIST}/${props.shooterId}${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/${participation.discipline.id}/${participation.id}`)}
               >
                 <TableCell align="center">{participation.discipline.label}</TableCell>
-                <TableCell align="center">{participation.useElectronicTarget ? 'Oui' : 'Non'}</TableCell>
-                <TableCell align="center">{participation.outrank ? 'Oui' : 'Non'}</TableCell>
-                <TableCell align="center">{participation.paid ? 'Oui' : 'Non'}</TableCell>
+                <TableCell align="center">{booleanToIcons(participation.useElectronicTarget)}</TableCell>
+                <TableCell align="center">{booleanToIcons(!participation.outrank)}</TableCell>
+                <TableCell align="center">{booleanToIcons(participation.paid)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -240,12 +243,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body1">
-                  Catégorie: {shooterParticipations?.shooter.category.label}
-                </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body1">
-                  Club: {shooterParticipations?.shooter.club?.name ?? NA}
+                  Tire dans la catégorie {shooterParticipations?.shooter.category.label}, {shooterParticipations.shooter.club?.name ? `et fait partie du club: ${shooterParticipations.shooter.club?.name}` : 'en libre'}
                 </Typography>
               </Grid>
             </Grid>
@@ -262,6 +260,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
                 variant="contained"
                 color="secondary"
                 onClick={() => handleParticipationDialogOpening()}
+                startIcon={<AddIcon />}
               >
                 AJOUTER UNE PARTICIPATION
               </Button>

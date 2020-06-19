@@ -1,6 +1,9 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 import { fr } from 'date-fns/locale';
 import { LabelDisplayedRowsArgs } from '@material-ui/core/TablePagination/TablePagination';
+import DoneIcon from '@material-ui/icons/Done';
+import ClearIcon from '@material-ui/icons/Clear';
+import React from 'react';
 
 export const customColors = {
   white: '#ffffff',
@@ -53,6 +56,7 @@ export const dateTheme = {
 };
 
 export const booleanToText = (bool: boolean) => (bool ? 'Oui' : 'Non');
+export const booleanToIcons = (bool: boolean) => (bool ? <DoneIcon color="secondary" fontSize="large" /> : <ClearIcon />);
 
 export const paginationTheme = {
   rowsPerPage: "Nombre d'éléments par page",
