@@ -83,6 +83,10 @@ export class ChallengeService {
     return cli.post(`/challenges/${challengeId}/participations`, participations);
   }
 
+  deleteParticipant(challengeId: number, participantId: number): Promise<AxiosResponse<null>> {
+    return cli.delete(`/challenges/${challengeId}/participants/${participantId}`, {});
+  }
+
   getShooterShotResults(
     challengeId: number,
     participantId: number,

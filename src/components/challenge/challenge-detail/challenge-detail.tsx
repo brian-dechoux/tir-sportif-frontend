@@ -224,8 +224,9 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
                 color="secondary"
                 component={Link}
                 to={`${ROUTES.CHALLENGE.LIST}/${challengeInformation.id}${ROUTES.CHALLENGE.SHOOTER.CREATION}`}
+                startIcon={<AddIcon />}
               >
-                <AddIcon /> INSCRIRE UN TIREUR
+                INSCRIRE UN TIREUR
               </Button>
             </Box>
           </Box>

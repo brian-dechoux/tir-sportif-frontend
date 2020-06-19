@@ -62,9 +62,28 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
   }));
   const classes = useStyles();
 
+  const [participantDeleted, setParticipantDeleted] = useState(false);
   const [shooterParticipations, setShooterParticipations] = useState<GetShooterParticipationsResponse>();
   const [disciplines, setDisciplines] = useState<GetDisciplineResponse[]>([]);
   const [disciplineParticipations, setDisciplineParticipations] = useState<DisciplineParticipation[]>([]);
+
+  useEffect(() => {
+    if (participantDeleted) {
+      ChallengeService.deleteParticipant(props.challengeId, props.shooterId)
+        .then((response) => {
+          if (response.status === 200) {
+            props.actions.openToast('Le participant a été désinscrit', 'success');
+            props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`);
+          } else {
+            props.actions.error('Impossible de désinscrire le participant');
+            setParticipantDeleted(false);
+          }
+        }).catch(() => {
+          props.actions.error('Impossible de désinscrire le participant');
+          setParticipantDeleted(false);
+      })
+    }
+  }, [participantDeleted]);
 
   useEffect(() => {
     let unmounted = false;
@@ -200,7 +219,13 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
               </Button>
             </Box>
             <Box>
-              <Button variant="contained" color="secondary" type="button" startIcon={<RemoveCircleIcon />}>
+              <Button
+                variant="contained"
+                color="secondary"
+                type="button"
+                startIcon={<RemoveCircleIcon />}
+                onClick={() => setParticipantDeleted(true)}
+              >
                 DÉSINSCRIRE
               </Button>
             </Box>
