@@ -180,8 +180,8 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
           </Box>
           <Box display="flex">
             <Box pr={1}>
-              <Button variant="contained" color="secondary" type="button">
-                <EditIcon />  ÉDITER
+              <Button variant="contained" color="secondary" type="button" startIcon={<EditIcon />}>
+                ÉDITER
               </Button>
             </Box>
             <Box>
@@ -190,8 +190,9 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
                 color="secondary"
                 type="button"
                 onClick={() => setChallengeDeleted(true)}
+                startIcon={<DeleteIcon />}
               >
-                <DeleteIcon />  SUPPRIMER
+                SUPPRIMER
               </Button>
             </Box>
           </Box>

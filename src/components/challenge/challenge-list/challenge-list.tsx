@@ -80,9 +80,9 @@ const ChallengeList = (props: ChallengeListProps) => {
             variant="contained"
             color="secondary"
             onClick={handleClickOnCreateChallengeButton}
+            startIcon={<AddIcon />}
           >
-            <AddIcon />
-            CREER UN CHALLENGE
+            CRÉER UN CHALLENGE
           </Button>
         </Grid>
         <Grid item>

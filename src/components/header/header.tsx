@@ -16,6 +16,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import LogoIcon from 'components/svg/logo-icon';
 import LogoText from 'components/svg/logo-text';
 import { makeStyles } from '@material-ui/core/styles';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 type HeaderProps = {
   isAuthenticated: boolean;
@@ -57,7 +58,12 @@ const Header = (props: HeaderProps) => {
   };
 
   if (props.isAuthenticated) {
-    authButtons = <Button onClick={() => props.actions.logout()}>Se déconnecter</Button>;
+    authButtons = <Button
+      onClick={() => props.actions.logout()}
+      startIcon={<ExitToAppIcon />}
+    >
+      SE DÉCONNECTER
+    </Button>;
 
     menuButtons = (
       <>
@@ -68,7 +74,7 @@ const Header = (props: HeaderProps) => {
           RESULTATS
         </Button>
         <Button component={Link} to={ROUTES.CLUBS}>
-          CLUBS
+          CLUBS ET TIREURS
         </Button>
         <Button component={Link} to={ROUTES.MYCLUB}>
           MON CLUB
@@ -77,9 +83,11 @@ const Header = (props: HeaderProps) => {
     );
   } else {
     authButtons = (
-      <Button onClick={handleDialogOpen}>
-        <PersonIcon />
-        Se connecter
+      <Button
+        onClick={handleDialogOpen}
+        startIcon={<PersonIcon />}
+      >
+        SE CONNECTER
       </Button>
     );
   }

@@ -14,7 +14,8 @@ import {
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import {
-  CreateParticipationsRequest, GetParticipationResponse,
+  CreateParticipationsRequest,
+  GetParticipationResponse,
   GetShooterParticipationsResponse,
   Participation,
 } from 'services/models/challenge.model';
@@ -22,12 +23,12 @@ import ChallengeService from 'services/challenge.service';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import TableContainer from '@material-ui/core/TableContainer';
-import { customColors } from 'configurations/theme.configuration';
 import { NA } from 'App.constants';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { ToastVariant } from '../../toast/toast';
-import ChallengeDisciplineParticipationDialog
-  , { DisciplineParticipation } from '../challenge-discipline-participation/challenge-discipline-participation-dialog';
+import ChallengeDisciplineParticipationDialog, { DisciplineParticipation } from '../challenge-discipline-participation/challenge-discipline-participation-dialog';
+import EditIcon from '@material-ui/icons/Edit';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 
 type ChallengeShooterProps = {
   challengeId: number;
@@ -50,9 +51,8 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(2),
     },
-    deleteButton: {
-      backgroundColor: customColors.red,
-      color: customColors.white,
+    button: {
+      margin: theme.spacing(1),
     },
     tableRow: {
       '&:hover': {
@@ -195,12 +195,12 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
           </Box>
           <Box display="flex">
             <Box pr={1}>
-              <Button variant="contained" color="secondary" type="button">
+              <Button variant="contained" color="secondary" type="button" startIcon={<EditIcon />}>
                 ÉDITER
               </Button>
             </Box>
             <Box>
-              <Button variant="contained" type="button" className={classes.deleteButton}>
+              <Button variant="contained" color="secondary" type="button" startIcon={<RemoveCircleIcon />}>
                 DÉSINSCRIRE
               </Button>
             </Box>
