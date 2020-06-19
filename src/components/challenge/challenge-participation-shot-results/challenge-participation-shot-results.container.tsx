@@ -7,6 +7,7 @@ import { Actions } from 'store';
 import { RouteChildrenProps, withRouter } from 'react-router';
 import { ROUTES } from 'configurations/server.configuration';
 import ChallengeParticipationShotResults from './challenge-participation-shot-results';
+import { openToast } from 'redux/actions/toast.actions';
 
 interface ChallengeShotResultsRouterProps {
   challengeId: string;
@@ -46,6 +47,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
   actions: bindActionCreators(
     {
       error: error,
+      openToast: openToast,
       push: push,
     },
     dispatch

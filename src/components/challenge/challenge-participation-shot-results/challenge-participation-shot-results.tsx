@@ -23,6 +23,9 @@ import ChallengeService from 'services/challenge.service';
 import { GetParticipationResultsResponse } from 'services/models/challenge.model';
 import ShooterService from 'services/shooter.service';
 import debounce from '../../../utils/debounce.utils';
+import EditIcon from '@material-ui/icons/Edit';
+import DeleteIcon from '@material-ui/icons/Delete';
+import { ToastVariant } from '../../toast/toast';
 
 type ChallengeParticipationShotResultsProps = {
   challengeId: number;
@@ -31,14 +34,34 @@ type ChallengeParticipationShotResultsProps = {
   participationId: number;
   actions: {
     error: (message: string) => any;
+    openToast: (message: string, variant: ToastVariant) => any;
     push: (path: string, state?: any | undefined) => any;
   };
 };
 
 const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResultsProps) => {
+
+  const [participationDeleted, setParticipationDeleted] = useState(false);
   const [shooter, setShooter] = useState<GetShooterResponse>();
   const [discipline, setDiscipline] = useState<GetDisciplineResponse>();
   const [shotResults, setShotResults] = useState<GetParticipationResultsResponse>();
+
+  useEffect(() => {
+    if (participationDeleted) {
+      ChallengeService.deleteParticipation(props.challengeId, props.participationId)
+        .then((response) => {
+          if (response.status === 200) {
+            props.actions.openToast('Participation supprimée', 'success');
+            props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}${ROUTES.CHALLENGE.SHOOTER.LIST}/${props.shooterId}`)
+          } else {
+            throw new Error();
+          }
+        }).catch(() => {
+        props.actions.error('Impossible de supprimer la participation');
+        setParticipationDeleted(false);
+      })
+    }
+  }, [participationDeleted]);
 
   useEffect(() => {
     let unmounted = false;
@@ -144,6 +167,24 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                     to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}${ROUTES.CHALLENGE.SHOOTER.LIST}/${props.shooterId}`}>
               RETOUR
             </Button>
+          </Box>
+          <Box display="flex">
+            <Box pr={1}>
+              <Button variant="contained" color="secondary" type="button" startIcon={<EditIcon />}>
+                ÉDITER
+              </Button>
+            </Box>
+            <Box>
+              <Button
+                variant="contained"
+                color="secondary"
+                type="button"
+                onClick={() => setParticipationDeleted(true)}
+                startIcon={<DeleteIcon />}
+              >
+                SUPPRIMER
+              </Button>
+            </Box>
           </Box>
         </Box>
         <Box display="flex" justifyContent="center" pb={1}>
