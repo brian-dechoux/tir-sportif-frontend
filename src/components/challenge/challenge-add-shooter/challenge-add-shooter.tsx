@@ -28,6 +28,7 @@ import ChallengeDisciplineParticipation from '../challenge-discipline-participat
 import ChallengeService from 'services/challenge.service';
 import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 type ChallengeAddShooterProps = {
   challengeId: number;
@@ -324,6 +325,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
                 setDisplayDisciplinesForm(false);
                 setDisplayInformationForm(true);
               }}
+              startIcon={<KeyboardBackspaceIcon />}
             >
               RETOUR
             </Button>

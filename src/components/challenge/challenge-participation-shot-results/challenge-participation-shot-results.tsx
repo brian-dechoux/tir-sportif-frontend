@@ -26,6 +26,7 @@ import debounce from '../../../utils/debounce.utils';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ToastVariant } from '../../toast/toast';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 type ChallengeParticipationShotResultsProps = {
   challengeId: number;
@@ -163,8 +164,12 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
       <>
         <Box display="flex" width={1}>
           <Box flexGrow={1}>
-            <Button variant="outlined" component={Link}
-                    to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}${ROUTES.CHALLENGE.SHOOTER.LIST}/${props.shooterId}`}>
+            <Button
+              variant="outlined"
+              component={Link}
+              to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}${ROUTES.CHALLENGE.SHOOTER.LIST}/${props.shooterId}`}
+              startIcon={<KeyboardBackspaceIcon />}
+            >
               RETOUR
             </Button>
           </Box>

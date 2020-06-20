@@ -29,9 +29,8 @@ import ChallengeDisciplineParticipationDialog, { DisciplineParticipation } from 
 import EditIcon from '@material-ui/icons/Edit';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import AddIcon from '@material-ui/icons/Add';
-import DoneIcon from '@material-ui/icons/Done';
-import ClearIcon from '@material-ui/icons/Clear';
 import { booleanToIcons } from 'configurations/theme.configuration';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 type ChallengeShooterProps = {
   challengeId: number;
@@ -211,7 +210,12 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
         {dialog}
         <Box display="flex" width={1}>
           <Box flexGrow={1}>
-            <Button variant="outlined" component={Link} to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}>
+            <Button
+              variant="outlined"
+              component={Link}
+              to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}
+              startIcon={<KeyboardBackspaceIcon />}
+            >
               RETOUR
             </Button>
           </Box>

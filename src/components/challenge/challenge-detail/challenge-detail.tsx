@@ -27,6 +27,7 @@ import { NA } from '../../../App.constants';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import { ToastVariant } from '../../toast/toast';
 
 type ChallengeDetailProps = {
@@ -180,6 +181,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
             <Button
               variant="outlined"
               component={Link} to={ROUTES.CHALLENGE.LIST}
+              startIcon={<KeyboardBackspaceIcon />}
             >
               RETOUR
             </Button>
