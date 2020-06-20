@@ -93,7 +93,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
   const addShotResult = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number | null) => {
     event.persist();
     if (!debounceFn) {
-      debounceFn = debounce(() => {
+      debounceFn = debounce((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number) => {
         let target = event.target;
         if (target.value) {
           const points: number = parseFloat(target.value);
@@ -105,7 +105,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
         }
       }, 300);
     }
-    debounceFn();
+    debounceFn(event, serieNb, shotNb);
   }
 
   const displayTable = (participationResults: GetParticipationResultsResponse, discipline: GetDisciplineResponse) => {
