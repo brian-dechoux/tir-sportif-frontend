@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from '@material-ui/core';
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import ErrorIcon from '@material-ui/icons/Error';
 
@@ -35,7 +35,6 @@ type ActionValidationDialogProps = {
   callbackCloseFn?: () => any | undefined
 };
 
-// TODO Use this for validation actions
 const ActionValidationDialog = (props: ActionValidationDialogProps) => {
   const [dialogOpen, setDialogOpen] = useState(true);
 
@@ -52,7 +51,11 @@ const ActionValidationDialog = (props: ActionValidationDialogProps) => {
   }
 
   const cancelButton = props.dialogType === DialogType.WARNING ?
-    <Button variant="outlined" onClick={handleClose}>
+    <Button
+      variant="text"
+      size="small"
+      onClick={handleClose}
+    >
       ANNULER
     </Button> : null;
 
@@ -64,16 +67,19 @@ const ActionValidationDialog = (props: ActionValidationDialogProps) => {
       open={dialogOpen}
       onClose={handleClose}
     >
-      <DialogTitle>{getDialogTypeSpec(props.dialogType).icon} {props.dialogTitle}</DialogTitle>
+      <DialogTitle>
+        <Typography variant="h6">{getDialogTypeSpec(props.dialogType).icon} {props.dialogTitle}</Typography>
+      </DialogTitle>
       <DialogContent>
         <Typography variant="body2">{props.dialogContentMessage}</Typography>
       </DialogContent>
       <DialogActions>
         {cancelButton}
         <Button
-          onClick={handleValidation}
-          variant="contained"
+          variant="text"
           color="secondary"
+          size="small"
+          onClick={handleValidation}
         >
           {getDialogTypeSpec(props.dialogType).validateButtonText}
         </Button>
