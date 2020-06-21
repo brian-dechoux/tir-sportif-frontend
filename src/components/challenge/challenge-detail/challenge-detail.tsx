@@ -29,6 +29,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import { ToastVariant } from '../../toast/toast';
+import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 
 type ChallengeDetailProps = {
   challengeId: number;
@@ -53,6 +54,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
   }));
   const classes = useStyles();
 
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [challengeDeleted, setChallengeDeleted] = useState(false);
   const [challengeInformation, setChallengeInformation] = useState<GetChallengeResponse>();
   const [pagedParticipants, setPagedParticipants] = useState<Page<GetParticipantResponse>>(
@@ -111,6 +113,18 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
     const newRowsPerPageValue: number = parseInt(event.target.value, 10);
     handleChangePage(newRowsPerPageValue, 0);
   };
+
+  const dialog = dialogOpen ?
+    <ActionValidationDialog
+      dialogType={DialogType.WARNING}
+      dialogTitle="Confirmation de suppression"
+      dialogContentMessage="Confirmez-vous la suppression du challenge ?"
+      callbackValidateFn={() => {
+        setChallengeDeleted(true);
+        setDialogOpen(false);
+      }}
+      callbackCloseFn={() => setDialogOpen(false)}
+    /> : null;
 
   const shootersBlock =
     pagedParticipants.totalElements > 0 ? (
@@ -203,11 +217,12 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
                 variant="contained"
                 color="secondary"
                 type="button"
-                onClick={() => setChallengeDeleted(true)}
+                onClick={() => setDialogOpen(true)}
                 startIcon={<DeleteIcon />}
               >
                 SUPPRIMER
               </Button>
+              {dialog}
             </Box>
           </Box>
         </Box>

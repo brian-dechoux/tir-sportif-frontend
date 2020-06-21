@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, Typography } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import ErrorIcon from '@material-ui/icons/Error';
 
-enum DialogType {
+export enum DialogType {
   INFO, WARNING
 }
 
@@ -32,7 +32,7 @@ type ActionValidationDialogProps = {
   dialogTitle: string
   dialogContentMessage: string
   callbackValidateFn: () => any
-  callbackCloseFn: () => any
+  callbackCloseFn?: () => any | undefined
 };
 
 // TODO Use this for validation actions
@@ -41,7 +41,9 @@ const ActionValidationDialog = (props: ActionValidationDialogProps) => {
 
   const handleClose = () => {
     setDialogOpen(false);
-    props.callbackCloseFn();
+    if (props.callbackCloseFn) {
+      props.callbackCloseFn();
+    }
   };
 
   const handleValidation = () => {
@@ -55,17 +57,16 @@ const ActionValidationDialog = (props: ActionValidationDialogProps) => {
     </Button> : null;
 
   return (
-    <Dialog fullWidth maxWidth="md" open={dialogOpen} onClose={handleClose}>
-      <DialogTitle>{props.dialogTitle}</DialogTitle>
+    <Dialog
+      disableBackdropClick
+      disableEscapeKeyDown
+      maxWidth="md"
+      open={dialogOpen}
+      onClose={handleClose}
+    >
+      <DialogTitle>{getDialogTypeSpec(props.dialogType).icon} {props.dialogTitle}</DialogTitle>
       <DialogContent>
-        <Grid container spacing={1} alignItems="center">
-          <Grid item xs={2}>
-            {getDialogTypeSpec(props.dialogType).icon}
-          </Grid>
-          <Grid item xs={10}>
-            {props.dialogContentMessage}
-          </Grid>
-        </Grid>
+        <Typography variant="body2">{props.dialogContentMessage}</Typography>
       </DialogContent>
       <DialogActions>
         {cancelButton}

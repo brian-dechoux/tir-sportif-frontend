@@ -31,6 +31,7 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import AddIcon from '@material-ui/icons/Add';
 import { booleanToIcons } from 'configurations/theme.configuration';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 
 type ChallengeShooterProps = {
   challengeId: number;
@@ -64,10 +65,13 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
   }));
   const classes = useStyles();
 
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [confirmationDialogOpen, setConfirmationDialogOpen] = useState(false);
   const [participantDeleted, setParticipantDeleted] = useState(false);
   const [shooterParticipations, setShooterParticipations] = useState<GetShooterParticipationsResponse>();
   const [disciplines, setDisciplines] = useState<GetDisciplineResponse[]>([]);
   const [disciplineParticipations, setDisciplineParticipations] = useState<DisciplineParticipation[]>([]);
+  const [newParticipation, setNewParticipation] = useState<Participation>();
 
   useEffect(() => {
     if (participantDeleted) {
@@ -149,9 +153,6 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
       <Typography variant="body1">Aucune participation enregistrée pour le moment</Typography>
     );
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [newParticipation, setNewParticipation] = useState<Participation>();
-
   useEffect(() => {
     if (newParticipation) {
       const createParticipationsPayload: CreateParticipationsRequest = {
@@ -201,6 +202,18 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
       actions={props.actions}
     /> : null;
 
+  const confirmationDialog = confirmationDialogOpen ?
+    <ActionValidationDialog
+      dialogType={DialogType.WARNING}
+      dialogTitle="Confirmation de désinscription"
+      dialogContentMessage="Confirmez-vous la désinscription ?"
+      callbackValidateFn={() => {
+        setParticipantDeleted(true);
+        setDialogOpen(false);
+      }}
+      callbackCloseFn={() => setDialogOpen(false)}
+    /> : null;
+
   if (!shooterParticipations) {
     // TODO spinner (with message?)
     return null;
@@ -237,10 +250,11 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
                 color="secondary"
                 type="button"
                 startIcon={<RemoveCircleIcon />}
-                onClick={() => setParticipantDeleted(true)}
+                onClick={() => setConfirmationDialogOpen(true)}
               >
                 DÉSINSCRIRE
               </Button>
+              {confirmationDialog}
             </Box>
           </Box>
         </Box>

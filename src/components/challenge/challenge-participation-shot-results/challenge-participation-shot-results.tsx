@@ -14,7 +14,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
-import { ROUTES } from 'configurations/server.configuration';
+import { ERRORS, ROUTES } from 'configurations/server.configuration';
 import TableContainer from '@material-ui/core/TableContainer';
 import { GetShooterResponse } from 'services/models/shooter.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
@@ -27,6 +27,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ToastVariant } from '../../toast/toast';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 
 type ChallengeParticipationShotResultsProps = {
   challengeId: number;
@@ -42,6 +43,7 @@ type ChallengeParticipationShotResultsProps = {
 
 const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResultsProps) => {
 
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [participationDeleted, setParticipationDeleted] = useState(false);
   const [shooter, setShooter] = useState<GetShooterResponse>();
   const [discipline, setDiscipline] = useState<GetDisciplineResponse>();
@@ -57,10 +59,14 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
           } else {
             throw new Error();
           }
-        }).catch(() => {
-        props.actions.error('Impossible de supprimer la participation');
-        setParticipationDeleted(false);
-      })
+        }).catch((errorResponse) => {
+          if (errorResponse.response.status === 403 && errorResponse.response.data.code === ERRORS.SHOT_RESULTS_SAVED_FOR_PARTICIPATION) {
+            props.actions.error('Impossible de supprimer la participation: Des résultats de tir ont été sauvés');
+          } else {
+            props.actions.error('Impossible de supprimer la participation');
+          }
+          setParticipationDeleted(false);
+        })
     }
   }, [participationDeleted]);
 
@@ -156,6 +162,18 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     )
   }
 
+  const dialog = dialogOpen ?
+    <ActionValidationDialog
+      dialogType={DialogType.WARNING}
+      dialogTitle="Confirmation de suppression"
+      dialogContentMessage="Confirmez-vous la suppression d'inscription pour cette discipline ?"
+      callbackValidateFn={() => {
+        setParticipationDeleted(true);
+        setDialogOpen(false);
+      }}
+      callbackCloseFn={() => setDialogOpen(false)}
+    /> : null;
+
   if (!(shooter && discipline && shotResults)) {
     return null;
   } else {
@@ -190,11 +208,12 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                 variant="contained"
                 color="secondary"
                 type="button"
-                onClick={() => setParticipationDeleted(true)}
+                onClick={() => setDialogOpen(true)}
                 startIcon={<DeleteIcon />}
               >
                 SUPPRIMER
               </Button>
+              {dialog}
             </Box>
           </Box>
         </Box>
