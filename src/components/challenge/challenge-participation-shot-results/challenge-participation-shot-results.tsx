@@ -20,7 +20,7 @@ import { GetShooterResponse } from 'services/models/shooter.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import DisciplineService from 'services/discipline.service';
 import ChallengeService from 'services/challenge.service';
-import { GetParticipationResultsResponse } from 'services/models/challenge.model';
+import { GetParticipationResultsResponse, GetParticipationSerieResultsResponse } from 'services/models/challenge.model';
 import ShooterService from 'services/shooter.service';
 import debounce from '../../../utils/debounce.utils';
 import EditIcon from '@material-ui/icons/Edit';
@@ -136,9 +136,23 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                 </TableRow>
               </TableHead>
               <TableBody>
-                {participationResults.points.map((participationResultSerie, participationResultSerieIndex) => (
-                  <TableRow key={participationResultSerieIndex}>
-                    {participationResultSerie.map((participationResultSerieShotPoints, participationResultShotIndex) => (
+                {participationResults.serieResults.map((serieResult: GetParticipationSerieResultsResponse, participationResultSerieIndex: number) => (
+                    <TableRow key={participationResultSerieIndex}>
+                      {serieResult.points.map((participationResultSerieShotPoints: number, participationResultShotIndex: number) => {
+                        return (
+                          <TableCell align="center">
+                            <Input
+                              type="number"
+                              inputProps = {{ step: discipline.useDecimalResults ? 0.1 : 1 }}
+                              onChange={(e) => addShotResult(
+                                e,
+                                participationResultSerieIndex + 1,
+                                participationResultShotIndex + 1 === serieResult.points.length ? -1 : participationResultShotIndex
+                              )}
+                              defaultValue={participationResultSerieShotPoints}
+                            />
+                          </TableCell>
+                        )})}
                       <TableCell align="center">
                         <Input
                           type="number"
@@ -146,14 +160,19 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                           onChange={(e) => addShotResult(
                             e,
                             participationResultSerieIndex + 1,
-                            participationResultShotIndex + 1 === participationResultSerie.length ? -1 : participationResultShotIndex
+                            null
                           )}
-                          defaultValue={participationResultSerieShotPoints}
+                          defaultValue={serieResult.manualTotal ? serieResult.manualTotal : serieResult.calculatedTotal}
                         />
                       </TableCell>
-                    ))}
-                  </TableRow>
-                ))}
+                    </TableRow>
+                  ))}
+                <TableRow key="participationTotal">
+                  <TableCell colSpan={participationResults.participationReference.nbShotsPerSerie}>
+                    <Typography variant="body1">Nombre total de points pour cette participation</Typography>
+                  </TableCell>
+                  <TableCell align="center">0</TableCell>
+                </TableRow>
               </TableBody>
             </Table>
           </TableContainer>

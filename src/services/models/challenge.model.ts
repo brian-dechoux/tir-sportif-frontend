@@ -101,11 +101,21 @@ export interface GetParticipantResponse {
 export interface GetParticipationResultsResponse {
   participationReference: GetParticipationResultReferenceResponse;
 
-  points: number[][];
+  serieResults: GetParticipationSerieResultsResponse[];
+}
+
+export interface GetParticipationSerieResultsResponse {
+  points: number[];
+
+  calculatedTotal: number;
+
+  manualTotal?: number;
 }
 
 export interface GetParticipationResultReferenceResponse {
   participationId: number;
+
+  nbShotsPerSerie: number,
 
   outrank: boolean;
 
