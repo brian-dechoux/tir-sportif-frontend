@@ -4,13 +4,13 @@ import {
   Button,
   Divider,
   Grid,
-  Input,
+  Input, InputAdornment,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TableRow,
+  TableRow, Tooltip,
   Typography,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -28,6 +28,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { ToastVariant } from '../../toast/toast';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
+import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 
 type ChallengeParticipationShotResultsProps = {
   challengeId: number;
@@ -163,6 +164,13 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                             null
                           )}
                           defaultValue={serieResult.manualTotal ? serieResult.manualTotal : serieResult.calculatedTotal}
+                          startAdornment={serieResult.manualTotal ?
+                              <InputAdornment position="start">
+                                <Tooltip title="Valeur manuelle" placement="top" arrow>
+                                  <PriorityHighIcon color="secondary" />
+                                </Tooltip>
+                              </InputAdornment> : null
+                          }
                         />
                       </TableCell>
                     </TableRow>
@@ -171,7 +179,15 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                   <TableCell colSpan={participationResults.participationReference.nbShotsPerSerie}>
                     <Typography variant="body1">Nombre total de points pour cette participation</Typography>
                   </TableCell>
-                  <TableCell align="center">0</TableCell>
+                  <TableCell align="center">
+                    <Typography variant="h6">
+                      {
+                        participationResults.serieResults
+                          .map(serieResult => serieResult.manualTotal ? serieResult.manualTotal : serieResult.calculatedTotal)
+                          .reduce((sum, x) => sum + x)
+                      }
+                    </Typography>
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
