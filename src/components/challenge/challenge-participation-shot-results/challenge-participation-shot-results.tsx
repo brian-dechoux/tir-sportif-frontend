@@ -54,6 +54,11 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
   const [shooter, setShooter] = useState<GetShooterResponse>();
   const [discipline, setDiscipline] = useState<GetDisciplineResponse>();
   const [participationResults, setParticipationResults] = useState<GetParticipationResultsResponse>();
+  const [lastPointValue, setLastPointValue] = useState<number>();
+
+  const handleInputClick = (points: number) => {
+    setLastPointValue(points);
+  }
 
   useEffect(() => {
     if (participationDeleted) {
@@ -114,7 +119,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
             })
             .catch(errorResponse => {
               props.actions.error(errorResponse.response.data.message);
-              target.value = '';
+              target.value = lastPointValue ? lastPointValue.toString(10) : '';
             });
         }
       }, 300);
@@ -152,6 +157,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                             <Input
                               type="number"
                               inputProps = {{ step: discipline.useDecimalResults ? 0.1 : 1 }}
+                              onClick={() => handleInputClick(participationResultSerieShotPoints)}
                               onChange={(e) => addShotResult(
                                 e,
                                 participationResultSerieIndex,
