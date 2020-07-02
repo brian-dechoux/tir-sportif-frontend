@@ -34,6 +34,7 @@ import { ToastVariant } from '../../toast/toast';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
+import InfoIcon from '@material-ui/icons/Info';
 
 type ChallengeParticipationShotResultsProps = {
   challengeId: number;
@@ -130,7 +131,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
   const displayTable = (participationResults: GetParticipationResultsResponse, discipline: GetDisciplineResponse) => {
     const headRowShotCells = [];
     for (let i = 1; i <= discipline.nbShotsPerSerie; i++) {
-      headRowShotCells.push(<TableCell align="center">TIR {i}</TableCell>)
+      headRowShotCells.push(<TableCell align="center" key={`header${i}`}>TIR {i}</TableCell>)
     }
     return (
       <>
@@ -181,9 +182,16 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                           startAdornment={serieResult.manualTotal ?
                               <InputAdornment position="start">
                                 <Tooltip title="Valeur manuelle" placement="top" arrow>
-                                  <PriorityHighIcon color="secondary" />
+                                  <InfoIcon color="secondary" fontSize="small"/>
                                 </Tooltip>
                               </InputAdornment> : null
+                          }
+                          endAdornment={serieResult.manualTotal && serieResult.manualTotal !== serieResult.calculatedTotal ?
+                            <InputAdornment position="start">
+                              <Tooltip title={`Somme automatique: ${serieResult.calculatedTotal}`} placement="top" arrow>
+                                <PriorityHighIcon color="secondary" />
+                              </Tooltip>
+                            </InputAdornment> : null
                           }
                         />
                       </TableCell>
