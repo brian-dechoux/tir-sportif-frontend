@@ -102,6 +102,8 @@ export interface GetParticipationResultsResponse {
   participationReference: GetParticipationResultReferenceResponse;
 
   serieResults: GetParticipationSerieResultsResponse[];
+
+  participationTotal: number;
 }
 
 export interface GetParticipationSerieResultsResponse {

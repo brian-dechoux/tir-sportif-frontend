@@ -36,7 +36,7 @@
     "typescript": "3.7.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start --no-cache",
     "build": "react-scripts build",
     "build:svg": "svgr -d src/assets src/",
     "test": "react-scripts test",

@@ -4,13 +4,15 @@ import {
   Button,
   Divider,
   Grid,
-  Input, InputAdornment,
+  Input,
+  InputAdornment,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TableRow, Tooltip,
+  TableRow,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
@@ -20,7 +22,10 @@ import { GetShooterResponse } from 'services/models/shooter.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import DisciplineService from 'services/discipline.service';
 import ChallengeService from 'services/challenge.service';
-import { GetParticipationResultsResponse, GetParticipationSerieResultsResponse } from 'services/models/challenge.model';
+import {
+  GetParticipationResultsResponse,
+  GetParticipationSerieResultsResponse,
+} from 'services/models/challenge.model';
 import ShooterService from 'services/shooter.service';
 import debounce from '../../../utils/debounce.utils';
 import EditIcon from '@material-ui/icons/Edit';
@@ -48,7 +53,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
   const [participationDeleted, setParticipationDeleted] = useState(false);
   const [shooter, setShooter] = useState<GetShooterResponse>();
   const [discipline, setDiscipline] = useState<GetDisciplineResponse>();
-  const [shotResults, setShotResults] = useState<GetParticipationResultsResponse>();
+  const [participationResults, setParticipationResults] = useState<GetParticipationResultsResponse>();
 
   useEffect(() => {
     if (participationDeleted) {
@@ -73,7 +78,6 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
 
   useEffect(() => {
     let unmounted = false;
-    // TODO it might be done in one call only
     Promise.all([
       ShooterService.getShooter(props.shooterId),
       DisciplineService.getDiscipline(props.disciplineId),
@@ -82,7 +86,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
         if (!unmounted) {
           setShooter(shooterResponse.data);
           setDiscipline(disciplineResponse.data);
-          setShotResults(shotResultsResponse.data);
+          setParticipationResults(shotResultsResponse.data);
         }
       })
       .catch(() => {
@@ -100,11 +104,14 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
   const addShotResult = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number | null) => {
     event.persist();
     if (!debounceFn) {
-      debounceFn = debounce((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number) => {
+      debounceFn = debounce((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number | null) => {
         let target = event.target;
         if (target.value) {
           const points: number = parseFloat(target.value);
           ChallengeService.addShotResult(props.challengeId, props.participationId, serieNb, shotNb, points)
+            .then((shotResultsResponse) => {
+              setParticipationResults(shotResultsResponse.data);
+            })
             .catch(errorResponse => {
               props.actions.error(errorResponse.response.data.message);
               target.value = '';
@@ -141,26 +148,27 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                     <TableRow key={participationResultSerieIndex}>
                       {serieResult.points.map((participationResultSerieShotPoints: number, participationResultShotIndex: number) => {
                         return (
-                          <TableCell align="center">
+                          <TableCell align="center" key={`result${participationResultSerieIndex}${participationResultShotIndex}`}>
                             <Input
                               type="number"
                               inputProps = {{ step: discipline.useDecimalResults ? 0.1 : 1 }}
                               onChange={(e) => addShotResult(
                                 e,
-                                participationResultSerieIndex + 1,
-                                participationResultShotIndex + 1 === serieResult.points.length ? -1 : participationResultShotIndex
+                                participationResultSerieIndex,
+                                participationResultShotIndex === serieResult.points.length ? -1 : participationResultShotIndex
                               )}
                               defaultValue={participationResultSerieShotPoints}
                             />
                           </TableCell>
                         )})}
-                      <TableCell align="center">
+                      {/*https://github.com/mui-org/material-ui/issues/1328#issuecomment-198087347*/}
+                      <TableCell align="center" key={`serieTotal${participationResultSerieIndex}${serieResult.manualTotal ? serieResult.manualTotal : serieResult.calculatedTotal}`}>
                         <Input
                           type="number"
                           inputProps = {{ step: discipline.useDecimalResults ? 0.1 : 1 }}
                           onChange={(e) => addShotResult(
                             e,
-                            participationResultSerieIndex + 1,
+                            participationResultSerieIndex,
                             null
                           )}
                           defaultValue={serieResult.manualTotal ? serieResult.manualTotal : serieResult.calculatedTotal}
@@ -182,9 +190,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                   <TableCell align="center">
                     <Typography variant="h6">
                       {
-                        participationResults.serieResults
-                          .map(serieResult => serieResult.manualTotal ? serieResult.manualTotal : serieResult.calculatedTotal)
-                          .reduce((sum, x) => sum + x)
+                        participationResults.participationTotal
                       }
                     </Typography>
                   </TableCell>
@@ -209,10 +215,10 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
       callbackCloseFn={() => setDialogOpen(false)}
     /> : null;
 
-  if (!(shooter && discipline && shotResults)) {
+  if (!(shooter && discipline && participationResults)) {
     return null;
   } else {
-    const resultsBlock = displayTable(shotResults, discipline)
+    const resultsBlock = displayTable(participationResults, discipline)
     return (
       <>
         <Box display="flex" width={1}>
@@ -260,7 +266,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body2">
-                  {discipline.label}, {shotResults.participationReference.useElectronicTarget ? 'sur cible électronique' : 'sur cible traditionnelle'}
+                  {discipline.label}, {participationResults.participationReference.useElectronicTarget ? 'sur cible électronique' : 'sur cible traditionnelle'}
                 </Typography>
               </Grid>
             </Grid>

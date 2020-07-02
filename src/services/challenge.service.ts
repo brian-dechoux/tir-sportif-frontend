@@ -4,7 +4,7 @@ import {
   GetChallengeListElementResponse,
   GetChallengeResponse,
   GetParticipantResponse,
-  GetParticipationResultsResponse,
+  GetParticipationResultsResponse, GetParticipationSerieResultsResponse,
   GetShooterParticipationsResponse,
 } from './models/challenge.model';
 import { Page } from './models/page.model';
@@ -112,7 +112,7 @@ export class ChallengeService {
     serieNb: number,
     shotNb: number | null,
     points: number
-  ): Promise<AxiosResponse<null>> {
+  ): Promise<AxiosResponse<GetParticipationResultsResponse>> {
     const payload = {
       serieNumber: serieNb,
       shotNumber: shotNb,
