@@ -29,6 +29,7 @@ import ChallengeService from 'services/challenge.service';
 import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import { REGEXES } from '../../../App.constants';
 
 type ChallengeAddShooterProps = {
   challengeId: number;
@@ -51,14 +52,10 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
 
   const [inputLastname, setLastname] = useState('');
   const [inputFirstname, setFirstname] = useState('');
+  const [inputEmail, setEmail] = useState('');
   const [selectedClub, setSelectedClub] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [birthdate, setBirthdate] = useState<Date | null>(null);
-  const [inputAddressNumber, setAddressNumber] = useState('');
-  const [inputAddressStreet, setAddressStreet] = useState('');
-  const [inputAddressZip, setAddressZip] = useState('');
-  const [inputAddressCity, setAddressCity] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState('');
 
   // TODO Use properly Select to handle JSON, instead of direct string
   //  It will avoid useless array checks afterwards
@@ -97,21 +94,14 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
     // FIXME -1 or 0 stuff -> Select properly
     const categoryIdPayload = categories.find(category => category.label === selectedCategory)?.id ?? -1;
     const clubIdPayload = clubs.find(club => club.name === selectedClub)?.id ?? undefined;
-    const addressPayload = (inputAddressStreet && inputAddressCity && selectedCountry) ? {
-        number: inputAddressNumber,
-        street: inputAddressStreet,
-        zip: inputAddressZip,
-        city: inputAddressCity,
-        countryId: props.countries.find(club => club.name === selectedClub)?.id ?? -1,
-      }
-      : undefined;
+
     const shooterCreationPayload: CreateShooterRequest = {
       lastname: inputLastname,
       firstname: inputFirstname,
       clubId: clubIdPayload,
       categoryId: categoryIdPayload,
       birthdate: datePayload,
-      address: addressPayload,
+      email: inputEmail
     };
     return ShooterService.createShooter(shooterCreationPayload).then(response => {
       if (response.status === 201) {
@@ -124,8 +114,9 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
 
   const [lastnameValid, setLastnameValid] = useState(true);
   const [firsnameValid, setFirsnameValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
   const [categoryValid, setCategoryValid] = useState(true);
-  const informationFormValid = ![!!inputLastname, !!inputFirstname, !!selectedCategory].some(
+  const informationFormValid = ![!!inputLastname, !!inputFirstname, emailValid, !!selectedCategory].some(
     validation => !validation
   );
 
@@ -141,19 +132,10 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
     setFirstname(newValue);
   };
 
-  const handleStreetChange = (event: any) => {
+  const handleEmailChange = (event: any) => {
     const newValue = event.target.value;
-    setAddressStreet(newValue);
-  };
-
-  const handleCityChange = (event: any) => {
-    const newValue = event.target.value;
-    setAddressCity(newValue);
-  };
-
-  const handleCountryChange = (event: any) => {
-    const newValue = event.target.value;
-    setSelectedCountry(newValue);
+    setEmailValid(RegExp(REGEXES.EMAIL).test(newValue));
+    setEmail(newValue);
   };
 
   const handleClubChange = (event: any) => {
@@ -249,41 +231,19 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
                       />
                     </FormControl>
                   </Grid>
+
                   <Grid item xs={12}>
-                    <Typography variant="subtitle2">Addresse</Typography>
+                    <Typography variant="subtitle2">Informations de contact</Typography>
                   </Grid>
-                  <Grid item md={3}>
+                  <Grid item xs={6}>
                     <TextField
+                      error={!emailValid}
                       fullWidth
-                      label="Numéro"
-                      onChange={(event: any) => setAddressNumber(event.target.value)}
+                      label="Email"
+                      onChange={handleEmailChange}
                     />
                   </Grid>
-                  <Grid item md={9}>
-                    <TextField fullWidth label="Rue" onChange={handleStreetChange} />
-                  </Grid>
-                  <Grid item md={3}>
-                    <TextField
-                      fullWidth
-                      label="Code postal"
-                      onChange={(event: any) => setAddressZip(event.target.value)}
-                    />
-                  </Grid>
-                  <Grid item md={6}>
-                    <TextField fullWidth label="Ville" onChange={handleCityChange} />
-                  </Grid>
-                  <Grid item md={3}>
-                    <FormControl fullWidth>
-                      <InputLabel>Pays</InputLabel>
-                      <Select value={selectedCountry} onChange={handleCountryChange}>
-                        {props.countries.map(country => (
-                          <MenuItem key={country.id} value={country.name}>
-                            {country.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
+
                   <Grid item container spacing={2} justify="flex-end" alignItems="center">
                     <Grid item>
                       <Button
@@ -347,3 +307,71 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
 
 
 export default ChallengeAddShooter;
+
+/* FIXME will be used by Licensee creation form
+const [inputAddressNumber, setAddressNumber] = useState('');
+const [inputAddressStreet, setAddressStreet] = useState('');
+const [inputAddressZip, setAddressZip] = useState('');
+const [inputAddressCity, setAddressCity] = useState('');
+const [selectedCountry, setSelectedCountry] = useState('');
+
+const handleStreetChange = (event: any) => {
+  const newValue = event.target.value;
+  setAddressStreet(newValue);
+};
+
+const handleCityChange = (event: any) => {
+  const newValue = event.target.value;
+  setAddressCity(newValue);
+};
+
+const handleCountryChange = (event: any) => {
+  const newValue = event.target.value;
+  setSelectedCountry(newValue);
+};
+
+const addressPayload = (inputAddressStreet && inputAddressCity && selectedCountry) ? {
+        number: inputAddressNumber,
+        street: inputAddressStreet,
+        zip: inputAddressZip,
+        city: inputAddressCity,
+        countryId: props.countries.find(club => club.name === selectedClub)?.id ?? -1,
+      }
+      : undefined;
+
+<Grid item xs={12}>
+  <Typography variant="subtitle2">Addresse</Typography>
+</Grid>
+<Grid item md={3}>
+  <TextField
+    fullWidth
+    label="Numéro"
+    onChange={(event: any) => setAddressNumber(event.target.value)}
+  />
+</Grid>
+<Grid item md={9}>
+  <TextField fullWidth label="Rue" onChange={handleStreetChange} />
+</Grid>
+<Grid item md={3}>
+  <TextField
+    fullWidth
+    label="Code postal"
+    onChange={(event: any) => setAddressZip(event.target.value)}
+  />
+</Grid>
+<Grid item md={6}>
+  <TextField fullWidth label="Ville" onChange={handleCityChange} />
+</Grid>
+<Grid item md={3}>
+  <FormControl fullWidth>
+    <InputLabel>Pays</InputLabel>
+    <Select value={selectedCountry} onChange={handleCountryChange}>
+      {props.countries.map(country => (
+        <MenuItem key={country.id} value={country.name}>
+          {country.name}
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
+</Grid>
+ */

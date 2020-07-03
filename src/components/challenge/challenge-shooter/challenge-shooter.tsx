@@ -32,6 +32,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { booleanToIcons } from 'configurations/theme.configuration';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
+import EmailIcon from '@material-ui/icons/Email';
 
 type ChallengeShooterProps = {
   challengeId: number;
@@ -233,6 +234,18 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
             </Button>
           </Box>
           <Box display="flex">
+            {shooterParticipations.shooter.email ?
+              <Box pr={1}>
+                <Button
+                  variant="outlined"
+                  startIcon={<EmailIcon color="secondary"/>}
+                  component="a"
+                  href={`mailto:${shooterParticipations.shooter.email}`}
+                >
+                  CONTACTER
+                </Button>
+              </Box> : null
+            }
             <Box pr={1}>
               <Button
                 variant="contained"

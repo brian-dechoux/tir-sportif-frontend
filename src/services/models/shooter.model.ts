@@ -1,4 +1,3 @@
-import { CreateAddressRequest, GetAddressResponse } from './address.model';
 import { GetClubResponse } from './club.model';
 import { GetCategoryResponse } from './category.model';
 
@@ -11,11 +10,11 @@ export interface GetShooterResponse {
 
   birthdate: string;
 
-  address?: GetAddressResponse;
-
   club?: GetClubResponse;
 
   category: GetCategoryResponse;
+
+  email?: string;
 }
 
 export interface CreateShooterRequest {
@@ -25,11 +24,11 @@ export interface CreateShooterRequest {
 
   birthdate?: string;
 
-  address?: CreateAddressRequest;
-
   clubId?: number;
 
   categoryId: number;
+
+  email?: string;
 }
 
 export interface CreateShooterResponse {
@@ -41,9 +40,9 @@ export interface CreateShooterResponse {
 
   birthdate?: string;
 
-  address?: CreateAddressRequest;
-
   clubId?: number;
 
   categoryId: number;
+
+  email?: string;
 }
