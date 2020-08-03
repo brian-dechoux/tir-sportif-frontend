@@ -18,7 +18,7 @@ import {
   Grid,
   List,
   ListItem,
-  ListItemAvatar,
+  ListItemAvatar, ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   Paper,
@@ -32,6 +32,7 @@ import { Link } from 'react-router-dom';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import DoneAllIcon from '@material-ui/icons/DoneAll';
 import { Option, OptionsList } from 'models/options-list.model';
 
 type ResultsChallengeProps = {
@@ -50,6 +51,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
   const [resultsInformation, setResultsInformation] = useState<ChallengeResultResponse[]>([]);
   const [optionCategories, setOptionCategories] = useState<OptionsList>(OptionsList.fromLabels([], true));
   const [optionDisciplines, setOptionDisciplines] = useState<OptionsList>(OptionsList.fromLabels([], true));
+  const [selectDeselectToggle, setSelectDeselectToggle] = useState(true);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [disciplinesOpen, setDisciplinesOpen] = useState(false);
   const [fullResultsDialogOpen, setFullResultsDialogOpen] = useState<string>();
@@ -78,6 +80,11 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
   const handleDisciplineChecked = (discipline: Option) => {
     const updatedDisciplines = optionDisciplines.toggleOptionWithLabel(discipline.optionLabel);
     setOptionDisciplines(updatedDisciplines);
+  }
+
+  const handleSelectDeselect = () => {
+    setOptionCategories(optionCategories.toggleAll(!selectDeselectToggle));
+    setSelectDeselectToggle(!selectDeselectToggle);
   }
 
   useEffect(() => {
@@ -143,6 +150,16 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                     </ListItem>
                     <Collapse in={categoriesOpen} timeout="auto">
                       <List component="div" dense>
+                        <ListItem
+                          button
+                          key='TOGGLE.ALL.CATEGORIES'
+                          onClick={handleSelectDeselect}
+                        >
+                          <ListItemIcon>
+                            <DoneAllIcon color={selectDeselectToggle ? 'primary' : 'secondary'}/>
+                          </ListItemIcon>
+                          <ListItemText primary={selectDeselectToggle ? 'TOUT DESÉLECTIONNER' : 'TOUT SÉLECTIONNER'}/>
+                        </ListItem>
                         {
                           optionCategories.elements.map(optionCategory =>
                             <ListItem key={optionCategory.optionLabel}>

@@ -20,6 +20,12 @@ export class OptionsList {
     }));
   }
 
+  toggleAll(state: boolean) {
+    return new OptionsList(this.elements.map(element => {
+      return {...element, optionSelected: state};
+    }));
+  }
+
   active(filteredElementLabel: string) {
     return this.elements.some(element => element.optionLabel === filteredElementLabel && element.optionSelected)
   }
