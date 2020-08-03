@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Box,
-  Button, Divider,
+  Button,
   Grid,
   Paper,
   Table,
@@ -10,7 +10,8 @@ import {
   TableFooter,
   TableHead,
   TablePagination,
-  TableRow, Typography,
+  TableRow,
+  Typography,
 } from '@material-ui/core';
 import TableContainer from '@material-ui/core/TableContainer';
 import AddIcon from '@material-ui/icons/Add';
@@ -20,10 +21,7 @@ import { formatString } from 'utils/date.utils';
 import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import ChallengeService from 'services/challenge.service';
 import { makeStyles } from '@material-ui/core/styles';
-import { paginationTheme } from '../../../configurations/theme.configuration';
-import { Link } from 'react-router-dom';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import { paginationTheme } from 'configurations/theme.configuration';
 
 type ChallengeListProps = {
   actions: {
@@ -79,7 +77,7 @@ const ChallengeList = (props: ChallengeListProps) => {
   return (
     <>
       <Box display="flex" width={1}>
-        <Box flexGrow={1}></Box>
+        <Box flexGrow={1}/>
         <Box>
           <Button
             variant="contained"

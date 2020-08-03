@@ -11,7 +11,7 @@ type AuthenticatedRedirectContainerProps = {
 class AuthenticatedRedirectContainer extends React.Component<ReturnType<typeof mapStateToProps>> {
   render() {
     const { isAuthenticated, children } = this.props;
-    return isAuthenticated ? children : <Redirect to={ROUTES.RESULTS} />;
+    return isAuthenticated ? children : <Redirect to={ROUTES.RESULTS.LIST} />;
   }
 }
 

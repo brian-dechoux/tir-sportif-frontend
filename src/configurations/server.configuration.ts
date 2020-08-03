@@ -1,6 +1,8 @@
 export const ROUTES = {
   DASHBOARD: '/',
-  RESULTS: '/results',
+  RESULTS: {
+    LIST: '/results',
+  },
   CHALLENGE: {
     LIST: '/challenges',
     CREATION: '/challenge/create',

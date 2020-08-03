@@ -5,7 +5,7 @@ import './App.css';
 import clsx from 'clsx';
 import { history, store } from './store';
 import 'typeface-roboto';
-import ResultsContainer from './components/results/results.container';
+import ResultsContainer from './components/results/results-list/results-list.container';
 import { ConnectedRouter } from 'connected-react-router';
 import { ROUTES } from './configurations/server.configuration';
 import HeaderContainer from './components/header/header.container';
@@ -21,6 +21,7 @@ import ChallengeDetailContainer from './components/challenge/challenge-detail/ch
 import ChallengeAddShooterContainer from './components/challenge/challenge-add-shooter/challenge-add-shooter.container';
 import ChallengeShooterContainer from './components/challenge/challenge-shooter/challenge-shooter.container';
 import ChallengeShotResultsContainer from './components/challenge/challenge-participation-shot-results/challenge-participation-shot-results.container';
+import ResultsChallengeContainer from './components/results/results-challenge/results-challenge.container';
 
 // TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
@@ -54,8 +55,12 @@ const App = () => {
               <Grid item className={clsx(classes.main, classes.flexGrow)}>
                 <Container className={classes.container}>
                   <Box pt={2} pb={2} width={1}>
-                    <Route exact path={ROUTES.RESULTS}>
+                    <Route exact path={ROUTES.RESULTS.LIST}>
                       <ResultsContainer />
+                    </Route>
+
+                    <Route exact path={`${ROUTES.RESULTS.LIST}/:challengeId`}>
+                      <ResultsChallengeContainer />
                     </Route>
 
                     <Route exact path={ROUTES.CHALLENGE.LIST}>

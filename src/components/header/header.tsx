@@ -70,7 +70,7 @@ const Header = (props: HeaderProps) => {
         <Button component={Link} to={ROUTES.CHALLENGE.LIST}>
           CHALLENGES
         </Button>
-        <Button component={Link} to={ROUTES.RESULTS}>
+        <Button component={Link} to={ROUTES.RESULTS.LIST}>
           RESULTATS
         </Button>
         <Button component={Link} to={ROUTES.CLUBS}>

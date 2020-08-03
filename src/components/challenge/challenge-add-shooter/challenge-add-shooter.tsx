@@ -101,7 +101,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
       clubId: clubIdPayload,
       categoryId: categoryIdPayload,
       birthdate: datePayload,
-      email: inputEmail
+      email: inputEmail ? inputEmail : undefined
     };
     return ShooterService.createShooter(shooterCreationPayload).then(response => {
       if (response.status === 201) {
