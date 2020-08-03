@@ -2,7 +2,7 @@ import {
   CreateChallengeResponse,
   CreateParticipationsRequest,
   GetChallengeListElementResponse,
-  GetChallengeResponse,
+  GetChallengeResponse, GetChallengeResultsResponse,
   GetParticipantResponse,
   GetParticipationResultsResponse, GetParticipationSerieResultsResponse,
   GetShooterParticipationsResponse,
@@ -119,6 +119,10 @@ export class ChallengeService {
       points: points,
     };
     return cli.post(`/challenges/${challengeId}/participations/${participationId}/shot-result`, payload, {});
+  }
+
+  getChallengeResults(challengeId: number): Promise<AxiosResponse<GetChallengeResultsResponse>> {
+    return cli.get(`/challenges/${challengeId}/results`);
   }
 }
 

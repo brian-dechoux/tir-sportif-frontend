@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Button, Card, CardActions, CardContent, CardHeader, Checkbox, Collapse, Divider,
-  Grid, List, ListItem, ListItemText, ListSubheader,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardHeader,
+  Checkbox,
+  Collapse, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle,
+  Divider,
+  Grid,
+  List,
+  ListItem, ListItemAvatar, ListItemSecondaryAction,
+  ListItemText,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TablePagination,
-  TableRow,
   Typography,
 } from '@material-ui/core';
 import { formatString } from '../../../utils/date.utils';
 import { ROUTES } from '../../../configurations/server.configuration';
-import TableContainer from '@material-ui/core/TableContainer';
-import { paginationTheme } from '../../../configurations/theme.configuration';
-import { makeStyles } from '@material-ui/core/styles';
-import { EMPTY_PAGE, Page } from '../../../services/models/page.model';
-import { GetChallengeListElementResponse, GetChallengeResponse } from '../../../services/models/challenge.model';
+import { ChallengeResultResponse, GetChallengeResponse } from '../../../services/models/challenge.model';
 import ChallengeService from 'services/challenge.service';
 import { Link } from 'react-router-dom';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 type ResultsChallengeProps = {
@@ -35,11 +33,15 @@ type ResultsChallengeProps = {
   };
 };
 
+const getDialogIdForChallengeResultInformation = (resultInformation: ChallengeResultResponse) => `${resultInformation.categoryId}.${resultInformation.disciplineId}`;
+
 const ResultsChallenge = (props: ResultsChallengeProps) => {
 
   const [challengeInformation, setChallengeInformation] = useState<GetChallengeResponse>();
+  const [resultsInformation, setResultsInformation] = useState<ChallengeResultResponse[]>([]);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [disciplinesOpen, setDisciplinesOpen] = useState(false);
+  const [fullResultsDialogOpen, setFullResultsDialogOpen] = useState<string>();
 
   const handleCategoriesListFilterClick = () => {
     setCategoriesOpen(!categoriesOpen)
@@ -49,12 +51,21 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
     setDisciplinesOpen(!disciplinesOpen)
   }
 
+  const handleResultsDialogOpen = (id: string) => {
+    setFullResultsDialogOpen(id)
+  }
+
+  const handleResultsDialogClose = () => {
+    setFullResultsDialogOpen(undefined)
+  }
+
   useEffect(() => {
     let unmounted = false;
-    ChallengeService.getChallenge(props.challengeId)
+    ChallengeService.getChallengeResults(props.challengeId)
       .then(response => {
         if (!unmounted) {
-          setChallengeInformation(response.data);
+          setChallengeInformation(response.data.challenge);
+          setResultsInformation(response.data.challengeResults);
         }
       })
       .catch(() => {
@@ -97,7 +108,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
           </Box>
         </Box>
         <Divider/>
-        <Box pt={2}>
+        <Box pt={3}>
           <Grid container spacing={3}>
             <Grid item xs={3}>
               <Box height="100%">
@@ -108,13 +119,18 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                       {categoriesOpen ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
                     <Collapse in={categoriesOpen} timeout="auto" unmountOnExit>
-                      <List component="div" disablePadding>
-                        <ListItem>
-                          <Checkbox
-                            checked={true}
-                          />
-                          <ListItemText primary="Minime G"/>
-                        </ListItem>
+                      <List component="div" dense>
+                        {
+                          challengeInformation.categories.map(category =>
+                            <ListItem>
+                              <Checkbox
+                                size='small'
+                                checked={false}
+                              />
+                              <ListItemText primary={category.label}/>
+                            </ListItem>
+                          )
+                        }
                       </List>
                     </Collapse>
                     <ListItem button onClick={handleDisciplinesListFilterClick}>
@@ -122,13 +138,18 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                       {disciplinesOpen ? <ExpandLess /> : <ExpandMore />}
                     </ListItem>
                     <Collapse in={disciplinesOpen} timeout="auto" unmountOnExit>
-                      <List component="div" disablePadding>
-                        <ListItem>
-                          <Checkbox
-                            checked={false}
-                          />
-                          <ListItemText primary="Pistolet"/>
-                        </ListItem>
+                      <List component="div" dense>
+                        {
+                          challengeInformation.disciplines.map(discipline =>
+                            <ListItem>
+                              <Checkbox
+                                size='small'
+                                checked={false}
+                              />
+                              <ListItemText primary={discipline.label}/>
+                            </ListItem>
+                          )
+                        }
                       </List>
                     </Collapse>
                   </List>
@@ -136,111 +157,78 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
               </Box>
             </Grid>
             <Grid item container xs={9} spacing={2}>
-              {/* for each card information from backend*/}
-              <Grid item xs={4}>
-                <Card>
-                  <CardHeader title={
-                    <Typography variant="h6">
-                      Minime G Pistolet
-                    </Typography>
-                  }/>
-                  <CardContent>
-                    <Typography variant="body2">
-                      1. Maurice Cuny
-                    </Typography>
-                    <Typography variant="body2">
-                      2. Lisa Cuny
-                    </Typography>
-                    <Typography variant="body2">
-                      3. Brian Dechoux
-                    </Typography>
-                    <Typography variant="body2">
-                      ...
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">CLASSEMENT COMPLET</Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card>
-                  <CardHeader title={
-                    <Typography variant="h6">
-                      Minime G Pistolet
-                    </Typography>
-                  }/>
-                  <CardContent>
-                    <Typography variant="body2">
-                      1. Maurice Cuny
-                    </Typography>
-                    <Typography variant="body2">
-                      2. Lisa Cuny
-                    </Typography>
-                    <Typography variant="body2">
-                      3. Brian Dechoux
-                    </Typography>
-                    <Typography variant="body2">
-                      ...
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">CLASSEMENT COMPLET</Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card>
-                  <CardHeader title={
-                    <Typography variant="h6">
-                      Minime G Pistolet
-                    </Typography>
-                  }/>
-                  <CardContent>
-                    <Typography variant="body2">
-                      1. Maurice Cuny
-                    </Typography>
-                    <Typography variant="body2">
-                      2. Lisa Cuny
-                    </Typography>
-                    <Typography variant="body2">
-                      3. Brian Dechoux
-                    </Typography>
-                    <Typography variant="body2">
-                      ...
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">CLASSEMENT COMPLET</Button>
-                  </CardActions>
-                </Card>
-              </Grid>
-              <Grid item xs={4}>
-                <Card>
-                  <CardHeader title={
-                    <Typography variant="h6">
-                      Minime G Pistolet
-                    </Typography>
-                  }/>
-                  <CardContent>
-                    <Typography variant="body2">
-                      1. Maurice Cuny
-                    </Typography>
-                    <Typography variant="body2">
-                      2. Lisa Cuny
-                    </Typography>
-                    <Typography variant="body2">
-                      3. Brian Dechoux
-                    </Typography>
-                    <Typography variant="body2">
-                      ...
-                    </Typography>
-                  </CardContent>
-                  <CardActions>
-                    <Button size="small">CLASSEMENT COMPLET</Button>
-                  </CardActions>
-                </Card>
-              </Grid>
+              {
+                resultsInformation.map(resultInformation =>
+                  <Grid item xs={4}>
+                    <Card>
+                      <CardHeader title={
+                        <Typography variant="h6">
+                          {`${resultInformation.categoryLabel} ${resultInformation.disciplineLabel}`}
+                        </Typography>
+                      }/>
+                      <CardContent>
+                        <List component="div" dense>
+                          {
+                            resultInformation.results.slice(0,3).map((singleResult, index) =>
+                              <ListItem>
+                                <ListItemText primary={
+                                  <Typography variant="body2" noWrap>
+                                    {index + 1}. {singleResult.firstname} {singleResult.lastname}
+                                  </Typography>
+                                }/>
+                                <ListItemSecondaryAction>{singleResult.participationTotalPoints}</ListItemSecondaryAction>
+                              </ListItem>
+                            )
+                          }
+                        </List>
+                      </CardContent>
+                      {
+                        resultInformation.results.length > 3 ?
+                          <CardActions>
+                            <Button
+                              size="small"
+                              startIcon={<FormatListNumberedIcon/>}
+                              onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
+                            >
+                              CLASSEMENT COMPLET
+                            </Button>
+                          </CardActions>
+                          : null
+                      }
+                      {
+                        fullResultsDialogOpen === getDialogIdForChallengeResultInformation(resultInformation) ?
+                          <Dialog
+                          maxWidth='sm'
+                          fullWidth
+                          open={true}
+                          onClose={handleResultsDialogClose}
+                          >
+                            <DialogTitle>Classement complet</DialogTitle>
+                            <DialogContent>
+                            <List component="div" dense>
+                            {
+                              resultInformation.results.map((singleResult, index) =>
+                                <ListItem>
+                                  <ListItemAvatar>{index + 1}.</ListItemAvatar>
+                                  <ListItemText primary={`${singleResult.firstname} ${singleResult.lastname}`}/>
+                                  <ListItemSecondaryAction>{singleResult.participationTotalPoints}</ListItemSecondaryAction>
+                                </ListItem>
+                              )
+                            }
+                            </List>
+                            </DialogContent>
+                            <DialogActions>
+                            <Button onClick={handleResultsDialogClose} color="primary">
+                            FERMER
+                            </Button>
+                            </DialogActions>
+                          </Dialog>
+                          : null
+                      }
+                    </Card>
+                  </Grid>
+                )
+              }
             </Grid>
           </Grid>
         </Box>
