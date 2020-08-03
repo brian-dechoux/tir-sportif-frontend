@@ -7,6 +7,7 @@ import { BaseAction } from './base.action';
 import { error } from './error.actions';
 import AppState from 'redux/states/app.state.type';
 import { Actions } from '../../store';
+import { openToast } from './toast.actions';
 
 export interface LoginAction extends BaseAction {
   type: ActionTypes.LOGIN;
@@ -36,7 +37,8 @@ export function login(
             type: ActionTypes.LOGIN,
             token: response.data.jwtToken,
           });
-          dispatch(push(ROUTES.RESULTS));
+          dispatch(openToast('Vous êtes maintenant connecté', 'success'));
+          dispatch(push(ROUTES.RESULTS.LIST));
         }
       })
       .catch(errorResponse => {
@@ -58,6 +60,8 @@ export function logout(): ThunkAction<void, AppState, undefined, Actions> {
         dispatch({
           type: ActionTypes.LOGOUT,
         });
+        dispatch(openToast('Vous êtes déconnecté', 'success'));
+        dispatch(push(ROUTES.RESULTS.LIST));
       })
       .catch(() => {
         dispatch({
@@ -82,7 +86,7 @@ export function loadTokenIfAvailable(): ThunkAction<void, AppState, undefined, A
 export function expireToken(): ThunkAction<void, AppState, undefined, Actions> {
   return (dispatch: ThunkDispatch<AppState, undefined, Actions>) => {
     dispatch(error('Session expirée, veuillez vous connecter à nouveau'));
-    dispatch(push(ROUTES.RESULTS));
+    dispatch(push(ROUTES.RESULTS.LIST));
     localStorage.removeItem('token');
     dispatch({
       type: ActionTypes.EXPIRE_TOKEN,
