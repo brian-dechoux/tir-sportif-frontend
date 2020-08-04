@@ -7,7 +7,7 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
-  Toolbar,
+  Toolbar, Typography,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -41,7 +41,7 @@ const Header = (props: HeaderProps) => {
   }));
   const classes = useStyles();
 
-  let authButtons, menuButtons;
+  let authButtons, menu;
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [open, setOpen] = useState(false);
@@ -65,23 +65,20 @@ const Header = (props: HeaderProps) => {
       SE DÉCONNECTER
     </Button>;
 
-    menuButtons = (
+    menu = (
       <>
         <Button component={Link} to={ROUTES.CHALLENGE.LIST}>
           CHALLENGES
         </Button>
         <Button component={Link} to={ROUTES.RESULTS.LIST}>
-          RESULTATS
-        </Button>
-        <Button component={Link} to={ROUTES.CLUBS}>
-          CLUBS ET TIREURS
-        </Button>
-        <Button component={Link} to={ROUTES.MYCLUB}>
-          MON CLUB
+          RÉSULTATS
         </Button>
       </>
     );
   } else {
+    menu = (
+      <Typography variant='h6'>PLATEFORME DE CONSULTATION DE RÉSULTATS DE TIR</Typography>
+    );
     authButtons = (
       <Button
         onClick={handleDialogOpen}
@@ -99,7 +96,7 @@ const Header = (props: HeaderProps) => {
           <LogoIcon height="3rem" width="3rem" />
           <LogoText height="3rem" width="9rem" />
         </div>
-        <div className={classes.withFlexGrow}>{menuButtons}</div>
+        <div className={classes.withFlexGrow}>{menu}</div>
         <div>{authButtons}</div>
       </Toolbar>
 
