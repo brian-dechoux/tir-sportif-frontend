@@ -38,7 +38,6 @@ export function login(
             token: response.data.jwtToken,
           });
           dispatch(openToast('Vous êtes maintenant connecté', 'success'));
-          dispatch(push(ROUTES.RESULTS.LIST));
         }
       })
       .catch(errorResponse => {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Provider } from 'react-redux';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import clsx from 'clsx';
 import { history, store } from './store';
@@ -38,10 +38,6 @@ const App = () => {
   }));
   const classes = useStyles();
 
-  useEffect(() => {
-    store.dispatch(loadTokenIfAvailable());
-  }, []);
-
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
@@ -55,49 +51,51 @@ const App = () => {
               <Grid item className={clsx(classes.main, classes.flexGrow)}>
                 <Container className={classes.container}>
                   <Box pt={2} pb={2} width={1}>
-                    <Route exact path={ROUTES.RESULTS.LIST}>
-                      <ResultsContainer />
-                    </Route>
+                    <Switch>
+                      <Route exact path={ROUTES.RESULTS.LIST}>
+                        <ResultsContainer />
+                      </Route>
 
-                    <Route exact path={`${ROUTES.RESULTS.LIST}/:challengeId`}>
-                      <ResultsChallengeContainer />
-                    </Route>
+                      <Route exact path={`${ROUTES.RESULTS.LIST}/:challengeId`}>
+                        <ResultsChallengeContainer />
+                      </Route>
 
-                    <Route exact path={ROUTES.CHALLENGE.LIST}>
-                      <AuthenticatedRedirectContainer>
-                        <ChallengeListContainer />
-                      </AuthenticatedRedirectContainer>
-                    </Route>
+                      <Route exact path={ROUTES.CHALLENGE.LIST}>
+                        <AuthenticatedRedirectContainer>
+                          <ChallengeListContainer />
+                        </AuthenticatedRedirectContainer>
+                      </Route>
 
-                    <Route exact path={ROUTES.CHALLENGE.CREATION}>
-                      <ChallengeCreationContainer />
-                    </Route>
+                      <Route exact path={ROUTES.CHALLENGE.CREATION}>
+                        <ChallengeCreationContainer />
+                      </Route>
 
-                    <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId`}>
-                      <ChallengeDetailContainer />
-                    </Route>
+                      <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId`}>
+                        <ChallengeDetailContainer />
+                      </Route>
 
-                    <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
-                      <ChallengeAddShooterContainer />
-                    </Route>
+                      <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
+                        <ChallengeAddShooterContainer />
+                      </Route>
 
-                    <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId`}>
-                      <ChallengeShooterContainer />
-                    </Route>
+                      <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId`}>
+                        <ChallengeShooterContainer />
+                      </Route>
 
-                    <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/:disciplineId/:participationId`}>
-                      <ChallengeShotResultsContainer />
-                    </Route>
+                      <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/:disciplineId/:participationId`}>
+                        <ChallengeShotResultsContainer />
+                      </Route>
 
-                    <Route exact path={ROUTES.CLUBS}>
-                      <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
-                    </Route>
+                      <Route exact path={ROUTES.CLUBS}>
+                        <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
+                      </Route>
 
-                    <Route exact path={ROUTES.MYCLUB}>
-                      <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
-                    </Route>
+                      <Route exact path={ROUTES.MYCLUB}>
+                        <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
+                      </Route>
 
-                    <Redirect exact from="/" to={ROUTES.CHALLENGE.LIST} />
+                      <Redirect to={ROUTES.RESULTS.LIST} />
+                    </Switch>
                   </Box>
                 </Container>
               </Grid>
