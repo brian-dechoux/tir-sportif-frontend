@@ -69,7 +69,7 @@ const ResultsList = (props: ResultsProps) => {
         <Box width={0.6}>
           <Grid container direction="column" alignItems="center">
             <Grid item xs={12}>
-              <Typography variant="h6">Résultats</Typography>
+              <Typography variant="h6">Résultats: Liste des challenges</Typography>
             </Grid>
           </Grid>
         </Box>

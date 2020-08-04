@@ -32,6 +32,7 @@ import { Link } from 'react-router-dom';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
+import FilterListIcon from '@material-ui/icons/FilterList';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import { Option, OptionsList } from 'models/options-list.model';
 
@@ -130,7 +131,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
             <Grid container direction="column" alignItems="center">
               <Grid item xs={12}>
                 <Typography variant="h6">
-                  {challengeInformation.name}, à {challengeInformation.address.city}, le{' '}
+                  Résultats: {challengeInformation.name}, à {challengeInformation.address.city}, le{' '}
                   {formatString(challengeInformation.startDate, "dd MMMM yyyy")}
                 </Typography>
               </Grid>
@@ -144,6 +145,13 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
               <Box height="100%">
                 <Paper elevation={1} style={{height: '100%'}}>
                   <List>
+                    <ListItem key='title'>
+                      <ListItemIcon>
+                        <FilterListIcon color='primary'/>
+                      </ListItemIcon>
+                      <ListItemText primary="FILTRER" />
+                    </ListItem>
+                    <Divider />
                     <ListItem button key='categories' onClick={handleCategoriesListFilterClick}>
                       <ListItemText primary="CATEGORIES" />
                       {categoriesOpen ? <ExpandLess /> : <ExpandMore />}
