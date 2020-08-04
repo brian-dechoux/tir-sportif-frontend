@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
@@ -7,7 +6,8 @@ import {
   DialogContentText,
   DialogTitle,
   TextField,
-  Toolbar, Typography,
+  Toolbar,
+  Typography,
 } from '@material-ui/core';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,7 @@ import LogoIcon from 'components/svg/logo-icon';
 import LogoText from 'components/svg/logo-text';
 import { makeStyles } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import Desktop from '../media/desktop';
 
 type HeaderProps = {
   isAuthenticated: boolean;
@@ -58,34 +59,40 @@ const Header = (props: HeaderProps) => {
   };
 
   if (props.isAuthenticated) {
-    authButtons = <Button
-      onClick={() => props.actions.logout()}
-      startIcon={<ExitToAppIcon />}
-    >
-      SE DÉCONNECTER
-    </Button>;
+    authButtons = (
+      <Desktop>
+        <Button
+          onClick={() => props.actions.logout()}
+          startIcon={<ExitToAppIcon />}
+        >
+          SE DÉCONNECTER
+        </Button>
+      </Desktop>
+    );
 
     menu = (
-      <>
+      <Desktop>
         <Button component={Link} to={ROUTES.CHALLENGE.LIST}>
           CHALLENGES
         </Button>
         <Button component={Link} to={ROUTES.RESULTS.LIST}>
           RÉSULTATS
         </Button>
-      </>
+      </Desktop>
     );
   } else {
     menu = (
       <Typography variant='h6'>PLATEFORME DE CONSULTATION DE RÉSULTATS DE TIR</Typography>
     );
     authButtons = (
-      <Button
-        onClick={handleDialogOpen}
-        startIcon={<PersonIcon />}
-      >
-        SE CONNECTER
-      </Button>
+      <Desktop>
+        <Button
+          onClick={handleDialogOpen}
+          startIcon={<PersonIcon />}
+        >
+          SE CONNECTER
+        </Button>
+      </Desktop>
     );
   }
 

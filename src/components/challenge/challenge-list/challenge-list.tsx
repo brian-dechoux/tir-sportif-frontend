@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -47,27 +47,37 @@ const ChallengeList = (props: ChallengeListProps) => {
   const [pagedChallenges, setPagedChallenges] = useState<Page<GetChallengeListElementResponse>>(
     EMPTY_PAGE()
   );
+  const [pageNumber, setPageNumber] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const handleChangePage = (pageSize: number, pageNumber: number) => {
-    ChallengeService.getChallenges(pageSize, pageNumber)
+  useEffect(() => {
+    let unmounted = false;
+    ChallengeService.getChallenges(rowsPerPage, pageNumber)
       .then(response => {
-        if (response.status === 200) {
-          setPagedChallenges(response.data);
+        if (!unmounted) {
+          if (response.status === 200) {
+            setPagedChallenges(response.data);
+          }
         }
       })
       .catch(() => {
-        props.actions.error('Impossible de récupérer la liste des challenges');
+        if (!unmounted) {
+          props.actions.error('Impossible de récupérer la liste des challenges');
+        }
       });
-  };
-
-  // TODO useEffect ?
-  if (pagedChallenges.pageable?.pageNumber === -1) {
-    handleChangePage(pagedChallenges.pageable.pageSize, 0);
-  }
+    return () => {
+      unmounted = true;
+    };
+  }, [rowsPerPage, pageNumber]);
 
   const handleClickOnCreateChallengeButton = () => {
     props.actions.push(ROUTES.CHALLENGE.CREATION);
   };
+
+  const handleChangePage = (newRowsPerPageValue: number, newPageNumber: number) => {
+    setRowsPerPage(newRowsPerPageValue);
+    setPageNumber(newPageNumber);
+  }
 
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newRowsPerPageValue: number = parseInt(event.target.value, 10);
@@ -137,12 +147,8 @@ const ChallengeList = (props: ChallengeListProps) => {
                   <TablePagination
                     colSpan={4}
                     count={pagedChallenges.totalElements}
-                    rowsPerPage={pagedChallenges.pageable.pageSize}
-                    page={
-                      pagedChallenges.pageable.pageNumber === -1
-                        ? 0
-                        : pagedChallenges.pageable.pageNumber
-                    }
+                    rowsPerPage={rowsPerPage}
+                    page={pageNumber}
                     labelRowsPerPage={paginationTheme.rowsPerPage}
                     labelDisplayedRows={paginationTheme.displayedRowsArgs}
                     onChangePage={(event, pageNumber: number) =>
