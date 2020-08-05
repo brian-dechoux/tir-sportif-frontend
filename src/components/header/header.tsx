@@ -82,7 +82,9 @@ const Header = (props: HeaderProps) => {
     );
   } else {
     menu = (
-      <Typography variant='h6'>PLATEFORME DE CONSULTATION DE RÉSULTATS DE TIR</Typography>
+      <Desktop>
+        <Typography variant='h6'>PLATEFORME DE CONSULTATION DE RÉSULTATS DE TIR</Typography>
+      </Desktop>
     );
     authButtons = (
       <Desktop>
