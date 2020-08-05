@@ -56,6 +56,11 @@ type ResultsChallengeProps = {
   };
 };
 
+enum FilterType {
+  CATEGORIES = "Categories",
+  DISCIPLINES = "Disciplines"
+}
+
 const getDialogIdForChallengeResultInformation = (resultInformation: ChallengeResultResponse) => `${resultInformation.categoryId}.${resultInformation.disciplineId}`;
 
 const ResultsChallenge = (props: ResultsChallengeProps) => {
@@ -82,6 +87,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [disciplinesOpen, setDisciplinesOpen] = useState(false);
   const [fullResultsDialogOpen, setFullResultsDialogOpen] = useState<string>();
+  const [filterDialogOpen, setFilterDialogOpen] = useState<FilterType>();
 
   const handleCategoriesListFilterClick = () => {
     setCategoriesOpen(!categoriesOpen)
@@ -97,6 +103,14 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
 
   const handleResultsDialogClose = () => {
     setFullResultsDialogOpen(undefined)
+  }
+
+  const handleFilterDialogOpen = (filterType: FilterType) => {
+    setFilterDialogOpen(filterType)
+  }
+
+  const handleFilterDialogClose = () => {
+    setFilterDialogOpen(undefined)
   }
 
   const handleCategoryChecked = (category: Option) => {
@@ -136,18 +150,23 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
   }, []);
 
   const fullResultsDialog = (resultInformation: ChallengeResultResponse, mobileDisplay: boolean) => {
-    const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
-      return <Slide direction="down" ref={ref} {...props} />;
-    });
     const dialogContent =
       <>
         <List component="div" dense>
           {
             resultInformation.results.map((singleResult, index) =>
               <ListItem key={`dialog.${singleResult.firstname}.${singleResult.lastname}`}>
-                <ListItemAvatar>{index + 1}.</ListItemAvatar>
-                <ListItemText primary={`${singleResult.firstname} ${singleResult.lastname}`}/>
-                <ListItemSecondaryAction>{singleResult.participationTotalPoints}</ListItemSecondaryAction>
+                <ListItemAvatar>
+                    <Typography variant="body1">
+                      {index + 1}.
+                    </Typography>
+                  </ListItemAvatar>
+                <ListItemText
+                  primary={`${singleResult.firstname} ${singleResult.lastname}`}
+                />
+                <ListItemSecondaryAction>
+                  {singleResult.participationTotalPoints}
+                </ListItemSecondaryAction>
               </ListItem>
             )
           }
@@ -166,7 +185,6 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
       <Dialog
         fullScreen={mobileDisplay}
         scroll={mobileDisplay ? "paper" : "body"}
-        TransitionComponent={mobileDisplay ? Transition : undefined}
         maxWidth="sm"
         fullWidth
         open={true}
@@ -176,7 +194,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
           mobileDisplay ?
             <>
               <Box display="flex">
-                <Box display="flex" width={1} flexGrow pl={1}>
+                <Box display="flex" width={1} pl={1}>
                   <Box display="flex" flexDirection="column">
                     <Typography variant="h6">
                       Classement complet
@@ -202,6 +220,85 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
       </Dialog>
       : null
   }
+
+  const categoriesFilterList = <List component="div" dense>
+    <ListItem
+      button
+      key='TOGGLE.ALL.CATEGORIES'
+      onClick={handleSelectDeselect}
+    >
+      <ListItemIcon>
+        <DoneAllIcon color={selectDeselectToggle ? 'primary' : 'secondary'}/>
+      </ListItemIcon>
+      <ListItemText primary={selectDeselectToggle ? 'TOUT DESÉLECTIONNER' : 'TOUT SÉLECTIONNER'}/>
+    </ListItem>
+    {
+      optionCategories.elements.map(optionCategory =>
+        <ListItem key={optionCategory.optionLabel}>
+          <Checkbox
+            size='small'
+            checked={optionCategory.optionSelected}
+            onChange={() => handleCategoryChecked(optionCategory)}
+          />
+          <ListItemText primary={optionCategory.optionLabel}/>
+        </ListItem>
+      )
+    }
+  </List>;
+
+  const disciplinesFilterList = <List component="div" dense>
+    {
+      optionDisciplines.elements.map(optionDiscipline =>
+        <ListItem key={optionDiscipline.optionLabel}>
+          <FormGroup>
+            <FormControl>
+              <Checkbox
+                size='small'
+                checked={optionDiscipline.optionSelected}
+                onChange={() => handleDisciplineChecked(optionDiscipline)}
+              />
+            </FormControl>
+          </FormGroup>
+          <ListItemText primary={optionDiscipline.optionLabel}/>
+        </ListItem>
+      )
+    }
+  </List>;
+
+  const filterDialog = filterDialogOpen ?
+      <Dialog
+        fullScreen
+        scroll={"paper"}
+        maxWidth="sm"
+        fullWidth
+        open={true}
+        onClose={handleFilterDialogClose}
+      >
+        <Box display="flex">
+          <Box display="flex" width={1} pl={1}>
+            <Box display="flex" flexDirection="column">
+              <Typography variant="h6">
+                Filtrer par
+              </Typography>
+              <Typography variant="subtitle1">
+                {filterDialogOpen}
+              </Typography>
+            </Box>
+          </Box>
+          <Box display="flex" pr={1}>
+            <Button
+              onClick={handleFilterDialogClose}
+              startIcon={<CloseIcon />}
+            >
+              FERMER
+            </Button>
+          </Box>
+        </Box>
+        <DialogContent className={classes.main}>
+          {filterDialogOpen === FilterType.CATEGORIES ? categoriesFilterList : disciplinesFilterList}
+        </DialogContent>
+      </Dialog>
+      : null;
 
   if (!challengeInformation) {
     // TODO spinner (with message?)
@@ -252,54 +349,14 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                         {categoriesOpen ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
                       <Collapse in={categoriesOpen} timeout="auto">
-                        <List component="div" dense>
-                          <ListItem
-                            button
-                            key='TOGGLE.ALL.CATEGORIES'
-                            onClick={handleSelectDeselect}
-                          >
-                            <ListItemIcon>
-                              <DoneAllIcon color={selectDeselectToggle ? 'primary' : 'secondary'}/>
-                            </ListItemIcon>
-                            <ListItemText primary={selectDeselectToggle ? 'TOUT DESÉLECTIONNER' : 'TOUT SÉLECTIONNER'}/>
-                          </ListItem>
-                          {
-                            optionCategories.elements.map(optionCategory =>
-                              <ListItem key={optionCategory.optionLabel}>
-                                <Checkbox
-                                  size='small'
-                                  checked={optionCategory.optionSelected}
-                                  onChange={() => handleCategoryChecked(optionCategory)}
-                                />
-                                <ListItemText primary={optionCategory.optionLabel}/>
-                              </ListItem>
-                            )
-                          }
-                        </List>
+                        {categoriesFilterList}
                       </Collapse>
                       <ListItem button key='disciplines' onClick={handleDisciplinesListFilterClick}>
                         <ListItemText primary="DISCIPLINES" />
                         {disciplinesOpen ? <ExpandLess /> : <ExpandMore />}
                       </ListItem>
                       <Collapse in={disciplinesOpen} timeout="auto">
-                        <List component="div" dense>
-                          {
-                            optionDisciplines.elements.map(optionDiscipline =>
-                              <ListItem key={optionDiscipline.optionLabel}>
-                                <FormGroup>
-                                  <FormControl>
-                                    <Checkbox
-                                      size='small'
-                                      checked={optionDiscipline.optionSelected}
-                                      onChange={() => handleDisciplineChecked(optionDiscipline)}
-                                    />
-                                  </FormControl>
-                                </FormGroup>
-                                <ListItemText primary={optionDiscipline.optionLabel}/>
-                              </ListItem>
-                            )
-                          }
-                        </List>
+                        {disciplinesFilterList}
                       </Collapse>
                     </List>
                   </Paper>
@@ -358,7 +415,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
           </Box>
         </Desktop>
         <Mobile>
-          <Box height="90%" display="flex" flexDirection="column" width={1} flexGrow>
+          <Box height="90%" display="flex" flexDirection="column" width={1}>
             <Box display="flex" justifyContent="space-evenly" width={1} pb={2}>
                 <Button
                   variant="outlined"
@@ -387,6 +444,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                       className={index % 2 === 0 ?  classes.alternateColor : ""}
                     >
                       <ListItemText
+                        disableTypography
                         primary={`${resultInformation.categoryLabel} ${resultInformation.disciplineLabel}`}
                         secondary={
                           <Box display="flex">
@@ -399,17 +457,19 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                       />
                       {
                         resultInformation.results.length > 3 ?
-                          <ListItemSecondaryAction>
-                            <IconButton
-                              edge="end"
-                              onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
-                            >
-                              <FormatListNumberedIcon fontSize="large"/>
-                            </IconButton>
-                          </ListItemSecondaryAction>
+                          <>
+                            {fullResultsDialog(resultInformation, true)}
+                            <ListItemSecondaryAction>
+                              <IconButton
+                                edge="end"
+                                onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
+                              >
+                                <FormatListNumberedIcon fontSize="large"/>
+                              </IconButton>
+                            </ListItemSecondaryAction>
+                          </>
                           : null
                       }
-                      {fullResultsDialog(resultInformation, true)}
                     </ListItem>
                 )
               }
@@ -418,9 +478,18 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
           <BottomNavigation
             showLabels
           >
-            <BottomNavigationAction label="CATÉGORIES" icon={<FilterListIcon />} />
-            <BottomNavigationAction label="DISCIPLINES" icon={<FilterListIcon />} />
+            <BottomNavigationAction
+              label="CATÉGORIES"
+              icon={<FilterListIcon />}
+              onClick={() => handleFilterDialogOpen(FilterType.CATEGORIES)}
+            />
+            <BottomNavigationAction
+              label="DISCIPLINES"
+              icon={<FilterListIcon />}
+              onClick={() => handleFilterDialogOpen(FilterType.DISCIPLINES)}
+            />
           </BottomNavigation>
+          {filterDialog}
         </Mobile>
       </>
     );
