@@ -16,6 +16,7 @@ import useInfiniteScroll from '@closeio/use-infinite-scroll';
 import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import { formatString } from '../../../utils/date.utils';
 import { makeStyles } from '@material-ui/core/styles';
+import { ROUTES } from '../../../configurations/server.configuration';
 
 type ResultsProps = {
   actions: {
@@ -60,34 +61,37 @@ const ResultsListMobile = (props: ResultsProps) => {
         <Box display="flex" justifyContent="center">
           <Typography variant="h6">Résultats: Liste des challenges</Typography>
         </Box>
-          <List ref={scrollerRef} className={classes.scroller}>
-            {infiniteItems.map(infiniteItemChallenge => (
-              <ListItem key={infiniteItemChallenge.id} className={infiniteItemChallenge.id % 2 === 0 ?  classes.alternateColor : ""}>
-                <ListItemText
-                  primary={
-                    <Typography variant="body1" noWrap>
-                      {infiniteItemChallenge.name}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="body2">
-                      {formatString(infiniteItemChallenge.startDate, "dd MMMM yyyy")}
-                    </Typography>
-                  }
-                />
-                <ListItemSecondaryAction>
-                  <IconButton edge="end">
-                    <FormatListNumberedIcon fontSize="large" />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            ))}
-            {hasMore && <div ref={loaderRef}>
-              <Box display="flex" justifyContent="center">
-                <CircularProgress color="secondary"/>
-              </Box>
-            </div>}
-          </List>
+        <List ref={scrollerRef} className={classes.scroller}>
+          {infiniteItems.map(infiniteItemChallenge => (
+            <ListItem key={infiniteItemChallenge.id} className={infiniteItemChallenge.id % 2 === 0 ?  classes.alternateColor : ""}>
+              <ListItemText
+                primary={
+                  <Typography variant="body1" noWrap>
+                    {infiniteItemChallenge.name}
+                  </Typography>
+                }
+                secondary={
+                  <Typography variant="body2">
+                    {formatString(infiniteItemChallenge.startDate, "dd MMMM yyyy")}
+                  </Typography>
+                }
+              />
+              <ListItemSecondaryAction>
+                <IconButton
+                  edge="end"
+                  onClick={() => props.actions.push(`${ROUTES.RESULTS.LIST}/${infiniteItemChallenge.id}`)}
+                >
+                  <FormatListNumberedIcon fontSize="large" />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          ))}
+          {hasMore && <div ref={loaderRef}>
+            <Box display="flex" justifyContent="center">
+              <CircularProgress color="secondary"/>
+            </Box>
+          </div>}
+        </List>
       </Box>
     </>
   );

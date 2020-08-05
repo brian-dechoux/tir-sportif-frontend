@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
+  BottomNavigation,
+  BottomNavigationAction,
   Box,
   Button,
   Card,
@@ -16,12 +18,15 @@ import {
   FormControl,
   FormGroup,
   Grid,
+  IconButton,
   List,
   ListItem,
-  ListItemAvatar, ListItemIcon,
+  ListItemAvatar,
+  ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
   Paper,
+  Slide,
   Typography,
 } from '@material-ui/core';
 import { formatString } from 'utils/date.utils';
@@ -35,6 +40,13 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import { Option, OptionsList } from 'models/options-list.model';
+import Desktop from '../../media/desktop';
+import Mobile from '../../media/mobile';
+import { makeStyles } from '@material-ui/core/styles';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
+import CloseIcon from '@material-ui/icons/Close';
+import { customTheme } from '../../../configurations/theme.configuration';
+import { TransitionProps } from '@material-ui/core/transitions';
 
 type ResultsChallengeProps = {
   challengeId: number,
@@ -47,6 +59,20 @@ type ResultsChallengeProps = {
 const getDialogIdForChallengeResultInformation = (resultInformation: ChallengeResultResponse) => `${resultInformation.categoryId}.${resultInformation.disciplineId}`;
 
 const ResultsChallenge = (props: ResultsChallengeProps) => {
+  const useStyles = makeStyles(theme => ({
+    alternateColor: {
+      "background": "white"
+    },
+    main: {
+      background: customTheme.mainBackground,
+    },
+    customizeToolbar: {
+      margin: 0,
+      minHeight: 24,
+      backgroundColor: 'orange'
+    },
+  }));
+  const classes = useStyles();
 
   const [challengeInformation, setChallengeInformation] = useState<GetChallengeResponse>();
   const [resultsInformation, setResultsInformation] = useState<ChallengeResultResponse[]>([]);
@@ -109,187 +135,293 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
     };
   }, []);
 
+  const fullResultsDialog = (resultInformation: ChallengeResultResponse, mobileDisplay: boolean) => {
+    const Transition = React.forwardRef<unknown, TransitionProps>(function Transition(props, ref) {
+      return <Slide direction="down" ref={ref} {...props} />;
+    });
+    const dialogContent =
+      <>
+        <List component="div" dense>
+          {
+            resultInformation.results.map((singleResult, index) =>
+              <ListItem key={`dialog.${singleResult.firstname}.${singleResult.lastname}`}>
+                <ListItemAvatar>{index + 1}.</ListItemAvatar>
+                <ListItemText primary={`${singleResult.firstname} ${singleResult.lastname}`}/>
+                <ListItemSecondaryAction>{singleResult.participationTotalPoints}</ListItemSecondaryAction>
+              </ListItem>
+            )
+          }
+        </List>
+        {
+          !mobileDisplay ?
+            <DialogActions>
+              <Button onClick={handleResultsDialogClose} color="primary">
+                FERMER
+              </Button>
+            </DialogActions>
+            : null
+        }
+      </>
+    return fullResultsDialogOpen === getDialogIdForChallengeResultInformation(resultInformation) ?
+      <Dialog
+        fullScreen={mobileDisplay}
+        scroll={mobileDisplay ? "paper" : "body"}
+        TransitionComponent={mobileDisplay ? Transition : undefined}
+        maxWidth="sm"
+        fullWidth
+        open={true}
+        onClose={handleResultsDialogClose}
+      >
+        {
+          mobileDisplay ?
+            <>
+              <Box display="flex">
+                <Box display="flex" width={1} flexGrow pl={1}>
+                  <Box display="flex" flexDirection="column">
+                    <Typography variant="h6">
+                      Classement complet
+                    </Typography>
+                    <Typography variant="subtitle1">
+                      {resultInformation.categoryLabel} {resultInformation.disciplineLabel}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Box display="flex" pr={1}>
+                  <Button
+                    onClick={handleResultsDialogClose}
+                    startIcon={<CloseIcon />}
+                  >
+                    FERMER
+                  </Button>
+                </Box>
+              </Box>
+            </>
+            : <DialogTitle>Classement complet</DialogTitle>
+        }
+        <DialogContent className={mobileDisplay ? classes.main : ""}>{dialogContent}</DialogContent>
+      </Dialog>
+      : null
+  }
+
   if (!challengeInformation) {
     // TODO spinner (with message?)
     return null;
   } else {
     return (
       <>
-        <Box display="flex" width={1}>
-          <Box>
-            <Button
-              variant="outlined"
-              component={Link} to={ROUTES.RESULTS.LIST}
-              startIcon={<KeyboardBackspaceIcon/>}
-            >
-              RETOUR
-            </Button>
+        <Desktop>
+          <Box display="flex" width={1}>
+            <Box>
+              <Button
+                variant="outlined"
+                component={Link} to={ROUTES.RESULTS.LIST}
+                startIcon={<KeyboardBackspaceIcon/>}
+              >
+                RETOUR
+              </Button>
+            </Box>
           </Box>
-        </Box>
-        <Box display="flex" justifyContent="center" pb={1}>
-          <Box width={0.6}>
-            <Grid container direction="column" alignItems="center">
-              <Grid item xs={12}>
-                <Typography variant="h6">
-                  Résultats: {challengeInformation.name}, à {challengeInformation.address.city}, le{' '}
-                  {formatString(challengeInformation.startDate, "dd MMMM yyyy")}
-                </Typography>
+          <Box display="flex" justifyContent="center" pb={1}>
+            <Box width={0.6}>
+              <Grid container direction="column" alignItems="center">
+                <Grid item xs={12}>
+                  <Typography variant="h6">
+                    Résultats: {challengeInformation.name}, à {challengeInformation.address.city}, le{' '}
+                    {formatString(challengeInformation.startDate, "dd MMMM yyyy")}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Box>
+          </Box>
+          <Divider/>
+          <Box pt={3}>
+            <Grid container spacing={3}>
+              <Grid item xs={3}>
+                <Box height="100%">
+                  <Paper elevation={1} style={{height: '100%'}}>
+                    <List>
+                      <ListItem key='title'>
+                        <ListItemIcon>
+                          <FilterListIcon color='primary'/>
+                        </ListItemIcon>
+                        <ListItemText primary="FILTRER" />
+                      </ListItem>
+                      <Divider />
+                      <ListItem button key='categories' onClick={handleCategoriesListFilterClick}>
+                        <ListItemText primary="CATEGORIES" />
+                        {categoriesOpen ? <ExpandLess /> : <ExpandMore />}
+                      </ListItem>
+                      <Collapse in={categoriesOpen} timeout="auto">
+                        <List component="div" dense>
+                          <ListItem
+                            button
+                            key='TOGGLE.ALL.CATEGORIES'
+                            onClick={handleSelectDeselect}
+                          >
+                            <ListItemIcon>
+                              <DoneAllIcon color={selectDeselectToggle ? 'primary' : 'secondary'}/>
+                            </ListItemIcon>
+                            <ListItemText primary={selectDeselectToggle ? 'TOUT DESÉLECTIONNER' : 'TOUT SÉLECTIONNER'}/>
+                          </ListItem>
+                          {
+                            optionCategories.elements.map(optionCategory =>
+                              <ListItem key={optionCategory.optionLabel}>
+                                <Checkbox
+                                  size='small'
+                                  checked={optionCategory.optionSelected}
+                                  onChange={() => handleCategoryChecked(optionCategory)}
+                                />
+                                <ListItemText primary={optionCategory.optionLabel}/>
+                              </ListItem>
+                            )
+                          }
+                        </List>
+                      </Collapse>
+                      <ListItem button key='disciplines' onClick={handleDisciplinesListFilterClick}>
+                        <ListItemText primary="DISCIPLINES" />
+                        {disciplinesOpen ? <ExpandLess /> : <ExpandMore />}
+                      </ListItem>
+                      <Collapse in={disciplinesOpen} timeout="auto">
+                        <List component="div" dense>
+                          {
+                            optionDisciplines.elements.map(optionDiscipline =>
+                              <ListItem key={optionDiscipline.optionLabel}>
+                                <FormGroup>
+                                  <FormControl>
+                                    <Checkbox
+                                      size='small'
+                                      checked={optionDiscipline.optionSelected}
+                                      onChange={() => handleDisciplineChecked(optionDiscipline)}
+                                    />
+                                  </FormControl>
+                                </FormGroup>
+                                <ListItemText primary={optionDiscipline.optionLabel}/>
+                              </ListItem>
+                            )
+                          }
+                        </List>
+                      </Collapse>
+                    </List>
+                  </Paper>
+                </Box>
+              </Grid>
+              <Grid item container xs={9} spacing={2}>
+                {
+                  resultsInformation
+                    .filter(resultInformation => {
+                      return optionCategories.active(resultInformation.categoryLabel) &&
+                        optionDisciplines.active(resultInformation.disciplineLabel)
+                    }).map(resultInformation =>
+                      <Grid item key={`${resultInformation.categoryId}.${resultInformation.disciplineId}`} xs={4}>
+                        <Card>
+                          <CardHeader title={
+                            <Typography variant="h6">
+                              {`${resultInformation.categoryLabel} ${resultInformation.disciplineLabel}`}
+                            </Typography>
+                          }/>
+                          <CardContent>
+                            <List component="div" dense>
+                              {
+                                resultInformation.results.slice(0,3).map((singleResult, index) =>
+                                  <ListItem key={`${singleResult.firstname}.${singleResult.lastname}`}>
+                                    <ListItemText primary={
+                                      <Typography variant="body2" noWrap>
+                                        {index + 1}. {singleResult.firstname} {singleResult.lastname}
+                                      </Typography>
+                                    }/>
+                                    <ListItemSecondaryAction>{singleResult.participationTotalPoints}</ListItemSecondaryAction>
+                                  </ListItem>
+                                )
+                              }
+                            </List>
+                          </CardContent>
+                          {
+                            resultInformation.results.length > 3 ?
+                              <CardActions>
+                                <Button
+                                  size="small"
+                                  startIcon={<FormatListNumberedIcon/>}
+                                  onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
+                                >
+                                  CLASSEMENT COMPLET
+                                </Button>
+                              </CardActions>
+                              : null
+                          }
+                          {fullResultsDialog(resultInformation, false)}
+                        </Card>
+                      </Grid>
+                    )
+                }
               </Grid>
             </Grid>
           </Box>
-        </Box>
-        <Divider/>
-        <Box pt={3}>
-          <Grid container spacing={3}>
-            <Grid item xs={3}>
-              <Box height="100%">
-                <Paper elevation={1} style={{height: '100%'}}>
-                  <List>
-                    <ListItem key='title'>
-                      <ListItemIcon>
-                        <FilterListIcon color='primary'/>
-                      </ListItemIcon>
-                      <ListItemText primary="FILTRER" />
-                    </ListItem>
-                    <Divider />
-                    <ListItem button key='categories' onClick={handleCategoriesListFilterClick}>
-                      <ListItemText primary="CATEGORIES" />
-                      {categoriesOpen ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
-                    <Collapse in={categoriesOpen} timeout="auto">
-                      <List component="div" dense>
-                        <ListItem
-                          button
-                          key='TOGGLE.ALL.CATEGORIES'
-                          onClick={handleSelectDeselect}
-                        >
-                          <ListItemIcon>
-                            <DoneAllIcon color={selectDeselectToggle ? 'primary' : 'secondary'}/>
-                          </ListItemIcon>
-                          <ListItemText primary={selectDeselectToggle ? 'TOUT DESÉLECTIONNER' : 'TOUT SÉLECTIONNER'}/>
-                        </ListItem>
-                        {
-                          optionCategories.elements.map(optionCategory =>
-                            <ListItem key={optionCategory.optionLabel}>
-                              <Checkbox
-                                size='small'
-                                checked={optionCategory.optionSelected}
-                                onChange={() => handleCategoryChecked(optionCategory)}
-                              />
-                              <ListItemText primary={optionCategory.optionLabel}/>
-                            </ListItem>
-                          )
-                        }
-                      </List>
-                    </Collapse>
-                    <ListItem button key='disciplines' onClick={handleDisciplinesListFilterClick}>
-                      <ListItemText primary="DISCIPLINES" />
-                      {disciplinesOpen ? <ExpandLess /> : <ExpandMore />}
-                    </ListItem>
-                    <Collapse in={disciplinesOpen} timeout="auto">
-                      <List component="div" dense>
-                        {
-                          optionDisciplines.elements.map(optionDiscipline =>
-                            <ListItem key={optionDiscipline.optionLabel}>
-                              <FormGroup>
-                                <FormControl>
-                                  <Checkbox
-                                    size='small'
-                                    checked={optionDiscipline.optionSelected}
-                                    onChange={() => handleDisciplineChecked(optionDiscipline)}
-                                  />
-                                </FormControl>
-                              </FormGroup>
-                              <ListItemText primary={optionDiscipline.optionLabel}/>
-                            </ListItem>
-                          )
-                        }
-                      </List>
-                    </Collapse>
-                  </List>
-                </Paper>
-              </Box>
-            </Grid>
-            <Grid item container xs={9} spacing={2}>
+        </Desktop>
+        <Mobile>
+          <Box height="90%" display="flex" flexDirection="column" width={1} flexGrow>
+            <Box display="flex" justifyContent="space-evenly" width={1} pb={2}>
+                <Button
+                  variant="outlined"
+                  component={Link} to={ROUTES.RESULTS.LIST}
+                >
+                  <KeyboardBackspaceIcon/>
+                </Button>
+                <Box display="flex" flexDirection="column">
+                  <Typography variant="subtitle1" noWrap>
+                    {challengeInformation.name}
+                  </Typography>
+                  <Typography variant="body2">
+                    {challengeInformation.address.city}, le {formatString(challengeInformation.startDate, "dd MMMM yyyy")}
+                  </Typography>
+                </Box>
+            </Box>
+            <List>
               {
                 resultsInformation
                   .filter(resultInformation => {
                     return optionCategories.active(resultInformation.categoryLabel) &&
                       optionDisciplines.active(resultInformation.disciplineLabel)
-                  }).map(resultInformation =>
-                    <Grid item key={`${resultInformation.categoryId}.${resultInformation.disciplineId}`} xs={4}>
-                      <Card>
-                        <CardHeader title={
-                          <Typography variant="h6">
-                            {`${resultInformation.categoryLabel} ${resultInformation.disciplineLabel}`}
-                          </Typography>
-                        }/>
-                        <CardContent>
-                          <List component="div" dense>
-                            {
-                              resultInformation.results.slice(0,3).map((singleResult, index) =>
-                                <ListItem key={`${singleResult.firstname}.${singleResult.lastname}`}>
-                                  <ListItemText primary={
-                                    <Typography variant="body2" noWrap>
-                                      {index + 1}. {singleResult.firstname} {singleResult.lastname}
-                                    </Typography>
-                                  }/>
-                                  <ListItemSecondaryAction>{singleResult.participationTotalPoints}</ListItemSecondaryAction>
-                                </ListItem>
-                              )
-                            }
-                          </List>
-                        </CardContent>
-                        {
-                          resultInformation.results.length > 3 ?
-                            <CardActions>
-                              <Button
-                                size="small"
-                                startIcon={<FormatListNumberedIcon/>}
-                                onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
-                              >
-                                CLASSEMENT COMPLET
-                              </Button>
-                            </CardActions>
-                            : null
+                  }).map((resultInformation, index) =>
+                    <ListItem
+                      key={`${resultInformation.categoryId}.${resultInformation.disciplineId}`}
+                      className={index % 2 === 0 ?  classes.alternateColor : ""}
+                    >
+                      <ListItemText
+                        primary={`${resultInformation.categoryLabel} ${resultInformation.disciplineLabel}`}
+                        secondary={
+                          <Box display="flex">
+                            <EmojiEventsIcon color="secondary" />
+                            <Typography variant="body1" noWrap>
+                              {resultInformation.results[0].firstname} {resultInformation.results[0].lastname}
+                            </Typography>
+                          </Box>
                         }
-                        {
-                          fullResultsDialogOpen === getDialogIdForChallengeResultInformation(resultInformation) ?
-                            <Dialog
-                            maxWidth='sm'
-                            fullWidth
-                            open={true}
-                            onClose={handleResultsDialogClose}
+                      />
+                      {
+                        resultInformation.results.length > 3 ?
+                          <ListItemSecondaryAction>
+                            <IconButton
+                              edge="end"
+                              onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
                             >
-                              <DialogTitle>Classement complet</DialogTitle>
-                              <DialogContent>
-                              <List component="div" dense>
-                              {
-                                resultInformation.results.map((singleResult, index) =>
-                                  <ListItem key={`dialog.${singleResult.firstname}.${singleResult.lastname}`}>
-                                    <ListItemAvatar>{index + 1}.</ListItemAvatar>
-                                    <ListItemText primary={`${singleResult.firstname} ${singleResult.lastname}`}/>
-                                    <ListItemSecondaryAction>{singleResult.participationTotalPoints}</ListItemSecondaryAction>
-                                  </ListItem>
-                                )
-                              }
-                              </List>
-                              </DialogContent>
-                              <DialogActions>
-                              <Button onClick={handleResultsDialogClose} color="primary">
-                              FERMER
-                              </Button>
-                              </DialogActions>
-                            </Dialog>
-                            : null
-                        }
-                      </Card>
-                    </Grid>
-                  )
+                              <FormatListNumberedIcon fontSize="large"/>
+                            </IconButton>
+                          </ListItemSecondaryAction>
+                          : null
+                      }
+                      {fullResultsDialog(resultInformation, true)}
+                    </ListItem>
+                )
               }
-            </Grid>
-          </Grid>
-        </Box>
+            </List>
+          </Box>
+          <BottomNavigation
+            showLabels
+          >
+            <BottomNavigationAction label="CATÉGORIES" icon={<FilterListIcon />} />
+            <BottomNavigationAction label="DISCIPLINES" icon={<FilterListIcon />} />
+          </BottomNavigation>
+        </Mobile>
       </>
     );
   }
