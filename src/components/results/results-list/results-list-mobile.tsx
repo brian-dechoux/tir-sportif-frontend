@@ -28,7 +28,7 @@ type ResultsProps = {
 const ResultsListMobile = (props: ResultsProps) => {
   const useStyles = makeStyles(theme => ({
     scroller: {
-      "max-height": "80vh",
+      "max-height": "90vh",
       "overflow-y": "auto"
     },
     alternateColor: {
@@ -62,8 +62,8 @@ const ResultsListMobile = (props: ResultsProps) => {
           <Typography variant="h6">Résultats: Liste des challenges</Typography>
         </Box>
         <List ref={scrollerRef} className={classes.scroller}>
-          {infiniteItems.map(infiniteItemChallenge => (
-            <ListItem key={infiniteItemChallenge.id} className={infiniteItemChallenge.id % 2 === 0 ?  classes.alternateColor : ""}>
+          {infiniteItems.map((infiniteItemChallenge, index) => (
+            <ListItem key={infiniteItemChallenge.id} className={index % 2 === 0 ?  classes.alternateColor : ""}>
               <ListItemText
                 primary={
                   <Typography variant="body1" noWrap>
