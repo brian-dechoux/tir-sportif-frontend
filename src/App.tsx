@@ -109,7 +109,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <Box height="calc(100vh - 0.5em)" display="flex" flexDirection="column">
+        <Box height="100%" display="flex" flexDirection="column">
           <MuiThemeProvider theme={customTheme.mui}>
             <Grid container direction="column" spacing={2} className={clsx(classes.flexGrow)}>
               <Grid item>
