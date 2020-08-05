@@ -40,54 +40,70 @@ const App = () => {
   }));
   const classes = useStyles();
 
-  const content = (
+  const desktopContent = (
     <Box pt={2} pb={2} width={1}>
-    <Switch>
-      <Route exact path={ROUTES.RESULTS.LIST}>
-        <ResultsContainer />
-      </Route>
+      <Switch>
+        <Route exact path={ROUTES.RESULTS.LIST}>
+          <ResultsContainer />
+        </Route>
 
-      <Route exact path={`${ROUTES.RESULTS.LIST}/:challengeId`}>
-        <ResultsChallengeContainer />
-      </Route>
+        <Route exact path={`${ROUTES.RESULTS.LIST}/:challengeId`}>
+          <ResultsChallengeContainer />
+        </Route>
 
-      <Route exact path={ROUTES.CHALLENGE.LIST}>
-        <AuthenticatedRedirectContainer>
-          <ChallengeListContainer />
-        </AuthenticatedRedirectContainer>
-      </Route>
+        <Route exact path={ROUTES.CHALLENGE.LIST}>
+          <AuthenticatedRedirectContainer>
+            <ChallengeListContainer />
+          </AuthenticatedRedirectContainer>
+        </Route>
 
-      <Route exact path={ROUTES.CHALLENGE.CREATION}>
-        <ChallengeCreationContainer />
-      </Route>
+        <Route exact path={ROUTES.CHALLENGE.CREATION}>
+          <ChallengeCreationContainer />
+        </Route>
 
-      <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId`}>
-        <ChallengeDetailContainer />
-      </Route>
+        <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId`}>
+          <ChallengeDetailContainer />
+        </Route>
 
-      <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
-        <ChallengeAddShooterContainer />
-      </Route>
+        <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
+          <ChallengeAddShooterContainer />
+        </Route>
 
-      <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId`}>
-        <ChallengeShooterContainer />
-      </Route>
+        <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId`}>
+          <ChallengeShooterContainer />
+        </Route>
 
-      <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/:disciplineId/:participationId`}>
-        <ChallengeShotResultsContainer />
-      </Route>
+        <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/:disciplineId/:participationId`}>
+          <ChallengeShotResultsContainer />
+        </Route>
 
-      <Route exact path={ROUTES.CLUBS}>
-        <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
-      </Route>
+        <Route exact path={ROUTES.CLUBS}>
+          <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
+        </Route>
 
-      <Route exact path={ROUTES.MYCLUB}>
-        <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
-      </Route>
+        <Route exact path={ROUTES.MYCLUB}>
+          <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
+        </Route>
 
-      <Redirect to={ROUTES.RESULTS.LIST} />
-    </Switch>
-  </Box>
+        <Redirect to={ROUTES.RESULTS.LIST} />
+      </Switch>
+    </Box>
+  );
+
+  const mobileContent = (
+    <Box pt={2} width={1} height="100%">
+      <Switch>
+        <Route exact path={ROUTES.RESULTS.LIST}>
+          <ResultsContainer />
+        </Route>
+
+        <Route exact path={`${ROUTES.RESULTS.LIST}/:challengeId`}>
+          <ResultsChallengeContainer />
+        </Route>
+
+        <Redirect to={ROUTES.RESULTS.LIST} />
+      </Switch>
+    </Box>
   );
 
   return (
@@ -103,11 +119,11 @@ const App = () => {
               <Grid item className={clsx(classes.main, classes.flexGrow)}>
                 <Desktop>
                   <Container className={classes.container}>
-                    {content}
+                    {desktopContent}
                   </Container>
                 </Desktop>
                 <Mobile>
-                  {content}
+                  {mobileContent}
                 </Mobile>
               </Grid>
             </Grid>
