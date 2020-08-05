@@ -111,7 +111,7 @@ const App = () => {
       <ConnectedRouter history={history}>
         <Box height="100%" display="flex" flexDirection="column">
           <MuiThemeProvider theme={customTheme.mui}>
-            <Grid container direction="column" spacing={2} className={clsx(classes.flexGrow)}>
+            <Grid container direction="column" className={clsx(classes.flexGrow)}>
               <Grid item>
                 <HeaderContainer />
                 <ToastContainer />
