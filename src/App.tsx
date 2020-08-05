@@ -111,12 +111,12 @@ const App = () => {
       <ConnectedRouter history={history}>
         <Box height="100%" display="flex" flexDirection="column">
           <MuiThemeProvider theme={customTheme.mui}>
-            <Grid container direction="column" className={clsx(classes.flexGrow)}>
-              <Grid item>
+            <Box height="100%" display="flex" flexDirection="column">
+              <Box>
                 <HeaderContainer />
                 <ToastContainer />
-              </Grid>
-              <Grid item className={clsx(classes.main, classes.flexGrow)}>
+              </Box>
+              <Box pt={2} height="100%" className={classes.main}>
                 <Desktop>
                   <Container className={classes.container}>
                     {desktopContent}
@@ -125,8 +125,8 @@ const App = () => {
                 <Mobile>
                   {mobileContent}
                 </Mobile>
-              </Grid>
-            </Grid>
+              </Box>
+            </Box>
           </MuiThemeProvider>
         </Box>
       </ConnectedRouter>
