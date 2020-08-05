@@ -1,13 +1,13 @@
 import { useMediaQuery } from 'react-responsive';
+import { customTheme } from '../../configurations/theme.configuration';
 
 type MobileProps = {
   children: any;
 };
 
-// FIXME Deprecated as there's a warning using useMediaQuery
 const Mobile = (props: MobileProps) => {
   const { children } = props;
-  const isMobile = useMediaQuery({ maxWidth: 991 })
+  const isMobile = useMediaQuery({maxWidth: customTheme.mediaBreakpoint - 1})
   return isMobile ? children : null
 }
 

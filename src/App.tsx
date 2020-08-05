@@ -24,6 +24,7 @@ import ChallengeShotResultsContainer
 import ResultsChallengeContainer from './components/results/results-challenge/results-challenge.container';
 import Desktop from './components/media/desktop';
 import Mobile from './components/media/mobile';
+import { useMediaQuery } from 'react-responsive';
 
 // TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
@@ -106,6 +107,8 @@ const App = () => {
     </Box>
   );
 
+  const isMobile = useMediaQuery({maxWidth: customTheme.mediaBreakpoint - 1})
+
   return (
     <Provider store={store}>
       <ConnectedRouter history={history}>
@@ -113,10 +116,12 @@ const App = () => {
           <MuiThemeProvider theme={customTheme.mui}>
             <Box height="100%" display="flex" flexDirection="column">
               <Box>
-                <HeaderContainer />
+                <Desktop>
+                  <HeaderContainer />
+                </Desktop>
                 <ToastContainer />
               </Box>
-              <Box pt={2} height="100%" className={classes.main}>
+              <Box pt={isMobile ? 0 : 2} height="100%" className={classes.main}>
                 <Desktop>
                   <Container className={classes.container}>
                     {desktopContent}

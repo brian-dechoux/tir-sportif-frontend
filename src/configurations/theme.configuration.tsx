@@ -35,6 +35,7 @@ export const customTheme = {
   mainBackground: customColors.lightGrey,
   selectMultipleRender: (selected: any) => (selected as string[]).join(', '),
   selectSimpleRender: (selected: any) => (selected as string),
+  mediaBreakpoint: 992
 };
 
 export const dateTheme = {
