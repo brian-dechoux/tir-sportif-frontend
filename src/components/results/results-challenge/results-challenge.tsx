@@ -280,6 +280,18 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
     }
   </List>;
 
+  const filtered = (resultsInformation: ChallengeResultResponse[]) => {
+    return resultsInformation
+      .filter(resultInformation =>
+        searchShooter ?
+          resultInformation.results.some(result => `${result.lastname}${result.firstname}`.toLowerCase().includes(searchShooter.toLowerCase()))
+          : true
+      ).filter(resultInformation => {
+        return optionCategories.active(resultInformation.categoryLabel) &&
+          optionDisciplines.active(resultInformation.disciplineLabel)
+      })
+  }
+
   const filterDialog = filterDialogOpen ?
       <Dialog
         fullScreen
@@ -393,15 +405,8 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
               </Grid>
               <Grid item container xs={9} spacing={2}>
                 {
-                  resultsInformation
-                    .filter(resultInformation =>
-                      searchShooter ?
-                        resultInformation.results.some(result => `${result.lastname}${result.firstname}`.toLowerCase().includes(searchShooter.toLowerCase()))
-                        : true
-                    ).filter(resultInformation =>
-                      optionCategories.active(resultInformation.categoryLabel) &&
-                        optionDisciplines.active(resultInformation.disciplineLabel)
-                    ).map(resultInformation =>
+                  filtered(resultsInformation)
+                    .map(resultInformation =>
                       <Grid item key={`${resultInformation.categoryId}.${resultInformation.disciplineId}`} xs={4}>
                         <Card>
                           <CardHeader title={
@@ -448,7 +453,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
           </Box>
         </Desktop>
         <Mobile>
-          <Box height="90%" display="flex" flexDirection="column" width={1}>
+          <Box height="80%" display="flex" flexDirection="column" width={1}>
             <Box display="flex" justifyContent="space-evenly" width={1} pb={2}>
                 <Button
                   variant="outlined"
@@ -467,11 +472,8 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
             </Box>
             <List>
               {
-                resultsInformation
-                  .filter(resultInformation => {
-                    return optionCategories.active(resultInformation.categoryLabel) &&
-                      optionDisciplines.active(resultInformation.disciplineLabel)
-                  }).map((resultInformation, index) =>
+                filtered(resultsInformation)
+                  .map((resultInformation, index) =>
                     <ListItem
                       key={`${resultInformation.categoryId}.${resultInformation.disciplineId}`}
                       className={index % 2 === 0 ?  classes.alternateColor : ""}
@@ -508,6 +510,18 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
               }
             </List>
           </Box>
+          <FormControl className={classes.alternateColor} variant="outlined" color="secondary" fullWidth>
+            <OutlinedInput
+              labelWidth={0}
+              placeholder="RECHERCHE DE TIREUR"
+              onChange={handleSearchShooter}
+              startAdornment={
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              }
+            />
+          </FormControl>
           <BottomNavigation showLabels>
             <BottomNavigationAction
               label="CATÉGORIES"
