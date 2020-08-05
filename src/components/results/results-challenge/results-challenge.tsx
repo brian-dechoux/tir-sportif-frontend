@@ -17,16 +17,16 @@ import {
   Divider,
   FormControl,
   FormGroup,
-  Grid,
-  IconButton,
+  Grid, IconButton,
+  InputAdornment,
   List,
   ListItem,
   ListItemAvatar,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
+  OutlinedInput,
   Paper,
-  Slide,
   Typography,
 } from '@material-ui/core';
 import { formatString } from 'utils/date.utils';
@@ -41,12 +41,13 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import DoneAllIcon from '@material-ui/icons/DoneAll';
 import { Option, OptionsList } from 'models/options-list.model';
 import Desktop from '../../media/desktop';
-import Mobile from '../../media/mobile';
 import { makeStyles } from '@material-ui/core/styles';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import CloseIcon from '@material-ui/icons/Close';
+import SearchIcon from '@material-ui/icons/Search';
 import { customTheme } from '../../../configurations/theme.configuration';
-import { TransitionProps } from '@material-ui/core/transitions';
+import debounce from '../../../utils/debounce.utils';
+import Mobile from '../../media/mobile';
 
 type ResultsChallengeProps = {
   challengeId: number,
@@ -83,6 +84,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
   const [resultsInformation, setResultsInformation] = useState<ChallengeResultResponse[]>([]);
   const [optionCategories, setOptionCategories] = useState<OptionsList>(OptionsList.fromLabels([], true));
   const [optionDisciplines, setOptionDisciplines] = useState<OptionsList>(OptionsList.fromLabels([], true));
+  const [searchShooter, setSearchShooter] = useState<string>('');
   const [selectDeselectToggle, setSelectDeselectToggle] = useState(true);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [disciplinesOpen, setDisciplinesOpen] = useState(false);
@@ -121,6 +123,19 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
   const handleDisciplineChecked = (discipline: Option) => {
     const updatedDisciplines = optionDisciplines.toggleOptionWithLabel(discipline.optionLabel);
     setOptionDisciplines(updatedDisciplines);
+  }
+
+  let debounceFn: any;
+  const handleSearchShooter = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    event.persist();
+    if (!debounceFn) {
+      debounceFn = debounce((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        let target = event.target;
+        const sanitizedShooterNamePart = event.target.value?.trim() ?? '';
+        setSearchShooter(sanitizedShooterNamePart);
+      }, 300);
+    }
+    debounceFn(event);
   }
 
   const handleSelectDeselect = () => {
@@ -337,13 +352,27 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                 <Box height="100%">
                   <Paper elevation={1} style={{height: '100%'}}>
                     <List>
+                      <ListItem key='search'>
+                        <FormControl variant="outlined" color="secondary" fullWidth>
+                          <OutlinedInput
+                            labelWidth={0}
+                            placeholder="Rechercher un tireur"
+                            onChange={handleSearchShooter}
+                            startAdornment={
+                              <InputAdornment position="start">
+                                <SearchIcon />
+                              </InputAdornment>
+                            }
+                          />
+                        </FormControl>
+                      </ListItem>
+                      <Divider />
                       <ListItem key='title'>
                         <ListItemIcon>
                           <FilterListIcon color='primary'/>
                         </ListItemIcon>
                         <ListItemText primary="FILTRER" />
                       </ListItem>
-                      <Divider />
                       <ListItem button key='categories' onClick={handleCategoriesListFilterClick}>
                         <ListItemText primary="CATEGORIES" />
                         {categoriesOpen ? <ExpandLess /> : <ExpandMore />}
@@ -365,10 +394,14 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
               <Grid item container xs={9} spacing={2}>
                 {
                   resultsInformation
-                    .filter(resultInformation => {
-                      return optionCategories.active(resultInformation.categoryLabel) &&
+                    .filter(resultInformation =>
+                      searchShooter ?
+                        resultInformation.results.some(result => `${result.lastname}${result.firstname}`.toLowerCase().includes(searchShooter.toLowerCase()))
+                        : true
+                    ).filter(resultInformation =>
+                      optionCategories.active(resultInformation.categoryLabel) &&
                         optionDisciplines.active(resultInformation.disciplineLabel)
-                    }).map(resultInformation =>
+                    ).map(resultInformation =>
                       <Grid item key={`${resultInformation.categoryId}.${resultInformation.disciplineId}`} xs={4}>
                         <Card>
                           <CardHeader title={
@@ -475,9 +508,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
               }
             </List>
           </Box>
-          <BottomNavigation
-            showLabels
-          >
+          <BottomNavigation showLabels>
             <BottomNavigationAction
               label="CATÉGORIES"
               icon={<FilterListIcon />}

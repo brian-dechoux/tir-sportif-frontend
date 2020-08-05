@@ -105,7 +105,6 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     };
   }, []);
 
-  // FIXME is this supposed to be state managed ?
   let debounceFn: any;
   const addShotResult = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number | null) => {
     event.persist();
