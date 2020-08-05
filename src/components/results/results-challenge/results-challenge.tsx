@@ -77,6 +77,14 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
       minHeight: 24,
       backgroundColor: 'orange'
     },
+    fixedFooter: {
+      width: '100%',
+      position: 'fixed',
+      bottom: 0,
+    },
+    overflowedContent: {
+      "overflow-y": "auto"
+    }
   }));
   const classes = useStyles();
 
@@ -453,7 +461,8 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
           </Box>
         </Desktop>
         <Mobile>
-          <Box height="80%" display="flex" flexDirection="column" width={1}>
+          {/*FIXME this implementation using height is wrong as it will not work properly on all devices... to be reworked*/}
+          <Box height="80%" display="flex" flexDirection="column" width={1} >
             <Box display="flex" justifyContent="space-evenly" width={1} pb={2}>
                 <Button
                   variant="outlined"
@@ -470,7 +479,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                   </Typography>
                 </Box>
             </Box>
-            <List>
+            <List className={classes.overflowedContent}>
               {
                 filtered(resultsInformation)
                   .map((resultInformation, index) =>
@@ -510,30 +519,32 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
               }
             </List>
           </Box>
-          <FormControl className={classes.alternateColor} variant="outlined" color="secondary" fullWidth>
-            <OutlinedInput
-              labelWidth={0}
-              placeholder="RECHERCHE DE TIREUR"
-              onChange={handleSearchShooter}
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <BottomNavigation showLabels>
-            <BottomNavigationAction
-              label="CATÉGORIES"
-              icon={<FilterListIcon />}
-              onClick={() => handleFilterDialogOpen(FilterType.CATEGORIES)}
-            />
-            <BottomNavigationAction
-              label="DISCIPLINES"
-              icon={<FilterListIcon />}
-              onClick={() => handleFilterDialogOpen(FilterType.DISCIPLINES)}
-            />
-          </BottomNavigation>
+          <div className={classes.fixedFooter}>
+            <FormControl className={classes.alternateColor} variant="outlined" color="secondary" fullWidth>
+              <OutlinedInput
+                labelWidth={0}
+                placeholder="RECHERCHE DE TIREUR"
+                onChange={handleSearchShooter}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                }
+              />
+            </FormControl>
+            <BottomNavigation showLabels>
+              <BottomNavigationAction
+                label="CATÉGORIES"
+                icon={<FilterListIcon />}
+                onClick={() => handleFilterDialogOpen(FilterType.CATEGORIES)}
+              />
+              <BottomNavigationAction
+                label="DISCIPLINES"
+                icon={<FilterListIcon />}
+                onClick={() => handleFilterDialogOpen(FilterType.DISCIPLINES)}
+              />
+            </BottomNavigation>
+          </div>
           {filterDialog}
         </Mobile>
       </>
