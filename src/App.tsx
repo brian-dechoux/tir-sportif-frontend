@@ -10,7 +10,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { ROUTES } from './configurations/server.configuration';
 import HeaderContainer from './components/header/header.container';
 import AuthenticatedRedirectContainer from './components/authenticated-route/authenticated.container';
-import { Box, Container, Grid, MuiThemeProvider } from '@material-ui/core';
+import { Box, Container, Grid, MuiThemeProvider, Paper } from '@material-ui/core';
 import ChallengeCreationContainer from './components/challenge/challenge-creation/challenge-creation.container';
 import { makeStyles } from '@material-ui/core/styles';
 import ToastContainer from './components/toast/toast.container';
@@ -34,6 +34,7 @@ const App = () => {
     },
     container: {
       background: customTheme.containerBackground,
+      padding: 0
     },
     flexGrow: {
       "flex-grow": 1
@@ -42,52 +43,54 @@ const App = () => {
   const classes = useStyles();
 
   const desktopContent = (
-    <Box pt={2} pb={2} width={1}>
-      <Switch>
-        <Route exact path={ROUTES.RESULTS.LIST}>
-          <ResultsContainer />
-        </Route>
+    <Box pl={2} pr={2} >
+      <Box pt={2} pb={2} width={1}>
+        <Switch>
+          <Route exact path={ROUTES.RESULTS.LIST}>
+            <ResultsContainer />
+          </Route>
 
-        <Route exact path={`${ROUTES.RESULTS.LIST}/:challengeId`}>
-          <ResultsChallengeContainer />
-        </Route>
+          <Route exact path={`${ROUTES.RESULTS.LIST}/:challengeId`}>
+            <ResultsChallengeContainer />
+          </Route>
 
-        <Route exact path={ROUTES.CHALLENGE.LIST}>
-          <AuthenticatedRedirectContainer>
-            <ChallengeListContainer />
-          </AuthenticatedRedirectContainer>
-        </Route>
+          <Route exact path={ROUTES.CHALLENGE.LIST}>
+            <AuthenticatedRedirectContainer>
+              <ChallengeListContainer />
+            </AuthenticatedRedirectContainer>
+          </Route>
 
-        <Route exact path={ROUTES.CHALLENGE.CREATION}>
-          <ChallengeCreationContainer />
-        </Route>
+          <Route exact path={ROUTES.CHALLENGE.CREATION}>
+            <ChallengeCreationContainer />
+          </Route>
 
-        <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId`}>
-          <ChallengeDetailContainer />
-        </Route>
+          <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId`}>
+            <ChallengeDetailContainer />
+          </Route>
 
-        <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
-          <ChallengeAddShooterContainer />
-        </Route>
+          <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.CREATION}`}>
+            <ChallengeAddShooterContainer />
+          </Route>
 
-        <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId`}>
-          <ChallengeShooterContainer />
-        </Route>
+          <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId`}>
+            <ChallengeShooterContainer />
+          </Route>
 
-        <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/:disciplineId/:participationId`}>
-          <ChallengeShotResultsContainer />
-        </Route>
+          <Route exact path={`${ROUTES.CHALLENGE.LIST}/:challengeId${ROUTES.CHALLENGE.SHOOTER.LIST}/:shooterId${ROUTES.CHALLENGE.SHOOTER.SHOT_RESULTS.LIST}/:disciplineId/:participationId`}>
+            <ChallengeShotResultsContainer />
+          </Route>
 
-        <Route exact path={ROUTES.CLUBS}>
-          <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
-        </Route>
+          <Route exact path={ROUTES.CLUBS}>
+            <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
+          </Route>
 
-        <Route exact path={ROUTES.MYCLUB}>
-          <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
-        </Route>
+          <Route exact path={ROUTES.MYCLUB}>
+            <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
+          </Route>
 
-        <Redirect to={ROUTES.RESULTS.LIST} />
-      </Switch>
+          <Redirect to={ROUTES.RESULTS.LIST} />
+        </Switch>
+      </Box>
     </Box>
   );
 
@@ -123,7 +126,7 @@ const App = () => {
               </Box>
               <Box pt={isMobile ? 0 : 2} height="100%" className={classes.main}>
                 <Desktop>
-                  <Container className={classes.container}>
+                  <Container component={Paper} className={classes.container}>
                     {desktopContent}
                   </Container>
                 </Desktop>

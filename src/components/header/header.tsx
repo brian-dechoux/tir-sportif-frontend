@@ -4,7 +4,7 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
+  DialogTitle, Paper,
   TextField,
   Toolbar,
   Typography,
@@ -100,7 +100,7 @@ const Header = (props: HeaderProps) => {
 
   return (
     <>
-      <Toolbar className={classes.customizeToolbar}>
+      <Toolbar component={Paper} className={classes.customizeToolbar}>
         <div className={classes.withPaddingTop}>
           <LogoIcon height="3rem" width="3rem" />
           <LogoText height="3rem" width="9rem" />
