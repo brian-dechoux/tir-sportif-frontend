@@ -82,8 +82,32 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
       position: 'fixed',
       bottom: 0,
     },
-    overflowedContent: {
-      "overflow-y": "auto"
+    overflow: {
+      "overflow": "auto"
+    },
+
+    app: {
+      "text-align": "center",
+      display: "flex",
+      "flex-direction": "column",
+      height: "100%",
+      "flex-wrap": "nowrap",
+    },
+
+    header: {
+      "flex-shrink": 0,
+      background: "blue",
+    },
+
+    content: {
+      overflow: "auto",
+      "flex-grow": 1,
+      background: "red",
+    },
+
+    footer: {
+      "flex-shrink": 0,
+      background:"green",
     }
   }));
   const classes = useStyles();
@@ -215,28 +239,25 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
       >
         {
           mobileDisplay ?
-            <>
-              <Box display="flex">
-                <Box display="flex" width={1} pl={1}>
-                  <Box display="flex" flexDirection="column">
-                    <Typography variant="h6">
-                      Classement complet
-                    </Typography>
-                    <Typography variant="subtitle1">
-                      {resultInformation.categoryLabel} {resultInformation.disciplineLabel}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box display="flex" pr={1}>
-                  <Button
-                    onClick={handleResultsDialogClose}
-                    startIcon={<CloseIcon />}
-                  >
-                    FERMER
-                  </Button>
-                </Box>
+            <Box display="flex" justifyContent="space-around">
+              <Box display="flex" flexDirection="column">
+                <Typography variant="h6">
+                  Classement complet
+                </Typography>
+                <Typography variant="subtitle1">
+                  {resultInformation.categoryLabel} {resultInformation.disciplineLabel}
+                </Typography>
               </Box>
-            </>
+              <Box display="flex" alignItems="center">
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={handleResultsDialogClose}
+                >
+                  <CloseIcon />
+                </Button>
+              </Box>
+            </Box>
             : <DialogTitle>Classement complet</DialogTitle>
         }
         <DialogContent className={mobileDisplay ? classes.main : ""}>{dialogContent}</DialogContent>
@@ -309,23 +330,22 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
         open={true}
         onClose={handleFilterDialogClose}
       >
-        <Box display="flex">
-          <Box display="flex" width={1} pl={1}>
-            <Box display="flex" flexDirection="column">
-              <Typography variant="h6">
-                Filtrer par
-              </Typography>
-              <Typography variant="subtitle1">
-                {filterDialogOpen}
-              </Typography>
-            </Box>
+        <Box display="flex" justifyContent="space-around">
+          <Box display="flex" flexDirection="column">
+            <Typography variant="h6">
+              Filtrer par
+            </Typography>
+            <Typography variant="subtitle1">
+              {filterDialogOpen}
+            </Typography>
           </Box>
-          <Box display="flex" pr={1}>
+          <Box display="flex" alignItems="center">
             <Button
+              variant="outlined"
+              size="small"
               onClick={handleFilterDialogClose}
-              startIcon={<CloseIcon />}
             >
-              FERMER
+              <CloseIcon />
             </Button>
           </Box>
         </Box>
@@ -461,90 +481,100 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
           </Box>
         </Desktop>
         <Mobile>
-          {/*FIXME this implementation using height is wrong as it will not work properly on all devices... to be reworked*/}
-          <Box height="80%" display="flex" flexDirection="column" width={1} >
-            <Box display="flex" justifyContent="space-evenly" width={1} pb={2}>
-                <Button
-                  variant="outlined"
-                  component={Link} to={ROUTES.RESULTS.LIST}
-                >
-                  <KeyboardBackspaceIcon/>
-                </Button>
-                <Box display="flex" flexDirection="column">
-                  <Typography variant="subtitle1" noWrap>
-                    {challengeInformation.name}
-                  </Typography>
-                  <Typography variant="body2">
-                    {challengeInformation.address.city}, le {formatString(challengeInformation.startDate, "dd MMMM yyyy")}
-                  </Typography>
-                </Box>
-            </Box>
-            <List className={classes.overflowedContent}>
-              {
-                filtered(resultsInformation)
-                  .map((resultInformation, index) =>
-                    <ListItem
-                      key={`${resultInformation.categoryId}.${resultInformation.disciplineId}`}
-                      className={index % 2 === 0 ?  classes.alternateColor : ""}
+          <Box height="100%" display="flex" flexDirection="column" flexWrap="none">
+            <Paper elevation={2}>
+              <Box flexShrink={0} pt={1} pb={1}>
+                <Box display="flex" justifyContent="space-around" width={1}>
+                  <Box display="flex" flexDirection="column">
+                    <Typography variant="subtitle1" noWrap>
+                      {challengeInformation.name}
+                    </Typography>
+                    <Typography variant="body2">
+                      {challengeInformation.address.city}, le {formatString(challengeInformation.startDate, "dd MMMM yyyy")}
+                    </Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center">
+                    <Button
+                      variant="outlined"
+                      size="small"
+                      component={Link} to={ROUTES.RESULTS.LIST}
                     >
-                      <ListItemText
-                        disableTypography
-                        primary={`${resultInformation.categoryLabel} ${resultInformation.disciplineLabel}`}
-                        secondary={
-                          <Box display="flex">
-                            <EmojiEventsIcon color="secondary" />
-                            <Typography variant="body1" noWrap>
-                              {resultInformation.results[0].firstname} {resultInformation.results[0].lastname}
-                            </Typography>
-                          </Box>
+                      <KeyboardBackspaceIcon/>
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+            </Paper>
+            <Box className={classes.overflow} flexGrow={1}>
+              <List>
+                {
+                  filtered(resultsInformation)
+                    .map((resultInformation, index) =>
+                      <ListItem
+                        key={`${resultInformation.categoryId}.${resultInformation.disciplineId}`}
+                        className={index % 2 === 0 ?  classes.alternateColor : ""}
+                      >
+                        <ListItemText
+                          disableTypography
+                          primary={`${resultInformation.categoryLabel} ${resultInformation.disciplineLabel}`}
+                          secondary={
+                            <Box display="flex">
+                              <EmojiEventsIcon color="secondary" />
+                              <Typography variant="body1" noWrap>
+                                {resultInformation.results[0].firstname} {resultInformation.results[0].lastname}
+                              </Typography>
+                            </Box>
+                          }
+                        />
+                        {
+                          resultInformation.results.length > 3 ?
+                            <>
+                              {fullResultsDialog(resultInformation, true)}
+                              <ListItemSecondaryAction>
+                                <IconButton
+                                  edge="end"
+                                  onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
+                                >
+                                  <FormatListNumberedIcon fontSize="large"/>
+                                </IconButton>
+                              </ListItemSecondaryAction>
+                            </>
+                            : null
                         }
-                      />
-                      {
-                        resultInformation.results.length > 3 ?
-                          <>
-                            {fullResultsDialog(resultInformation, true)}
-                            <ListItemSecondaryAction>
-                              <IconButton
-                                edge="end"
-                                onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
-                              >
-                                <FormatListNumberedIcon fontSize="large"/>
-                              </IconButton>
-                            </ListItemSecondaryAction>
-                          </>
-                          : null
-                      }
-                    </ListItem>
-                )
-              }
-            </List>
-          </Box>
-          <div className={classes.fixedFooter}>
-            <FormControl className={classes.alternateColor} variant="outlined" color="secondary" fullWidth>
-              <OutlinedInput
-                labelWidth={0}
-                placeholder="RECHERCHE DE TIREUR"
-                onChange={handleSearchShooter}
-                startAdornment={
-                  <InputAdornment position="start">
-                    <SearchIcon />
-                  </InputAdornment>
+                      </ListItem>
+                    )
                 }
-              />
-            </FormControl>
-            <BottomNavigation showLabels>
-              <BottomNavigationAction
-                label="CATÉGORIES"
-                icon={<FilterListIcon />}
-                onClick={() => handleFilterDialogOpen(FilterType.CATEGORIES)}
-              />
-              <BottomNavigationAction
-                label="DISCIPLINES"
-                icon={<FilterListIcon />}
-                onClick={() => handleFilterDialogOpen(FilterType.DISCIPLINES)}
-              />
-            </BottomNavigation>
-          </div>
+              </List>
+            </Box>
+            <Paper elevation={2}>
+              <Box flexShrink={0}>
+              <FormControl className={classes.alternateColor} variant="outlined" color="secondary" fullWidth>
+                <OutlinedInput
+                  labelWidth={0}
+                  placeholder="RECHERCHE DE TIREUR"
+                  onChange={handleSearchShooter}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <SearchIcon />
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+              <BottomNavigation showLabels>
+                <BottomNavigationAction
+                  label="CATÉGORIES"
+                  icon={<FilterListIcon />}
+                  onClick={() => handleFilterDialogOpen(FilterType.CATEGORIES)}
+                />
+                <BottomNavigationAction
+                  label="DISCIPLINES"
+                  icon={<FilterListIcon />}
+                  onClick={() => handleFilterDialogOpen(FilterType.DISCIPLINES)}
+                />
+              </BottomNavigation>
+            </Box>
+            </Paper>
+          </Box>
           {filterDialog}
         </Mobile>
       </>

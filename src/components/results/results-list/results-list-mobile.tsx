@@ -6,7 +6,7 @@ import {
   List,
   ListItem,
   ListItemSecondaryAction,
-  ListItemText,
+  ListItemText, Paper,
   Typography,
 } from '@material-ui/core';
 import { GetChallengeListElementResponse } from 'services/models/challenge.model';
@@ -17,6 +17,7 @@ import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import { formatString } from '../../../utils/date.utils';
 import { makeStyles } from '@material-ui/core/styles';
 import { ROUTES } from '../../../configurations/server.configuration';
+import LogoIcon from '../../svg/logo-icon';
 
 type ResultsProps = {
   actions: {
@@ -58,9 +59,21 @@ const ResultsListMobile = (props: ResultsProps) => {
   return (
     <>
       <Box display="flex" flexDirection="column" width={1}>
-        <Box display="flex" justifyContent="center">
-          <Typography variant="h6">Résultats: Liste des challenges</Typography>
-        </Box>
+        <Paper elevation={2}>
+          <Box display="flex" pt={1} pb={1}>
+            <Box display="flex" flexShrink={1} pl={1}>
+              <LogoIcon height="3rem" width="3rem" />
+            </Box>
+            <Box display="flex" width={1} justifyContent="center" alignItems="center" flexDirection="column">
+              <Typography variant="subtitle1">
+                Résultats
+              </Typography>
+              <Typography variant="body2">
+                Liste des challenges
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
         <List ref={scrollerRef} className={classes.scroller}>
           {infiniteItems.map((infiniteItemChallenge, index) => (
             <ListItem key={infiniteItemChallenge.id} className={index % 2 === 0 ?  classes.alternateColor : ""}>

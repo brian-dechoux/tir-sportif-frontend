@@ -92,7 +92,7 @@ const App = () => {
   );
 
   const mobileContent = (
-    <Box pt={2} width={1} height="100%">
+    <Box width={1} height="100%">
       <Switch>
         <Route exact path={ROUTES.RESULTS.LIST}>
           <ResultsContainer />
