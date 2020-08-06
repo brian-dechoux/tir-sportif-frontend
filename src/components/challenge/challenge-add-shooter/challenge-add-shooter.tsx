@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
-  Button,
+  Button, CircularProgress,
   FormControl,
   Grid,
   InputLabel,
@@ -18,7 +18,7 @@ import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { GetCategoryResponse } from 'services/models/category.model';
 import { ToastVariant } from 'components/toast/toast';
 import { GetCountryResponse } from 'services/models/country.model';
-import { CreateShooterRequest } from 'services/models/shooter.model';
+import { CreateShooterRequest, getFullName, GetSearchShooterResponse } from 'services/models/shooter.model';
 import DateFnsUtils from '@date-io/date-fns';
 import { fr } from 'date-fns/locale';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
@@ -30,6 +30,7 @@ import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import { REGEXES } from '../../../App.constants';
+import { Autocomplete } from '@material-ui/lab';
 
 type ChallengeAddShooterProps = {
   challengeId: number;
@@ -43,6 +44,11 @@ type ChallengeAddShooterProps = {
 
 // FIXME use challenge categories ?
 const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
+  const [searchName, setSearchName] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [searchOptions, setSearchOptions] = useState<GetSearchShooterResponse[]>([]);
+
   const [displayInformationForm, setDisplayInformationForm] = useState(true);
   const [displayDisciplinesForm, setDisplayDisciplinesForm] = useState(false);
 
@@ -57,8 +63,23 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [birthdate, setBirthdate] = useState<Date | null>(null);
 
-  // TODO Use properly Select to handle JSON, instead of direct string
-  //  It will avoid useless array checks afterwards
+  useEffect(() => {
+    if (searchName) {
+      setSearchLoading(true);
+      ShooterService.searchShooter(searchName)
+        .then((searchResponse) => {
+          setSearchLoading(false);
+          setSearchOptions(searchResponse.data);
+        })
+        .catch(() => {
+          setSearchLoading(false);
+          props.actions.error(
+            "Impossible de rechercher les tireurs"
+          );
+        });
+    }
+  }, [searchName]);
+
   useEffect(() => {
     let unmounted = false;
     if (clubs.length === 0 && categories.length === 0 && disciplines.length === 0) {
@@ -91,7 +112,6 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
     const datePayload = birthdate
       ? formatDate(birthdate, dateTheme.format.dateTimeServer)
       : undefined;
-    // FIXME -1 or 0 stuff -> Select properly
     const categoryIdPayload = categories.find(category => category.label === selectedCategory)?.id ?? -1;
     const clubIdPayload = clubs.find(club => club.name === selectedClub)?.id ?? undefined;
 
@@ -119,6 +139,11 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
   const informationFormValid = ![!!inputLastname, !!inputFirstname, emailValid, !!selectedCategory].some(
     validation => !validation
   );
+
+  const handleSearchNameChange = (event: any) => {
+    const newValue = event.target.value;
+    setSearchName(newValue);
+  };
 
   const handleLastnameChange = (event: any) => {
     const newValue = event.target.value;
@@ -150,7 +175,6 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
   };
 
   if (clubs.length === 0 || categories.length === 0 || disciplines.length === 0) {
-    // TODO spinner (with message ?)
     return null;
   } else {
     if (displayInformationForm) {
@@ -158,10 +182,49 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
         <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
           <form noValidate>
             <Box display="flex" justifyContent="center">
-              <Box display="flex" width={0.6}>
+              <Box display="flex" flexDirection="column" width={0.8}>
+                <Box pb={2}>
+                  <Typography variant="h6">RECHERCHER UN TIREUR</Typography>
+                </Box>
+                <Box pb={4}>
+                  <Autocomplete
+                    style={{ width: "50%" }}
+                    loadingText="Recherche en cours..."
+                    noOptionsText="Aucun tireur trouvé"
+                    open={searchOpen}
+                    onOpen={() => {
+                      setSearchOpen(true);
+                    }}
+                    onClose={() => {
+                      setSearchOpen(false);
+                    }}
+                    onInputChange={handleSearchNameChange}
+                    getOptionSelected={(option: GetSearchShooterResponse, value: GetSearchShooterResponse) => getFullName(option) === getFullName(value)}
+                    getOptionLabel={(option: GetSearchShooterResponse) => getFullName(option)}
+                    options={searchOptions}
+                    loading={searchLoading}
+                    renderInput={params => (
+                      <TextField
+                        {...params}
+                        label="Rechercher par nom et prénom"
+                        fullWidth
+                        variant="outlined"
+                        InputProps={{
+                          ...params.InputProps,
+                          endAdornment: (
+                            <React.Fragment>
+                              {searchLoading ? <CircularProgress color="secondary" size={20} /> : null}
+                              {params.InputProps.endAdornment}
+                            </React.Fragment>
+                          ),
+                        }}
+                      />
+                    )}
+                  />
+                </Box>
                 <Grid container spacing={3} alignItems="center">
                   <Grid item xs={12}>
-                    <Typography variant="h6">INSCRIRE UN TIREUR</Typography>
+                    <Typography variant="h6">INSCRIRE UN NOUVEAU TIREUR</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2">Informations générales</Typography>

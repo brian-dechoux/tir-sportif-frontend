@@ -178,7 +178,11 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
         </Table>
       </TableContainer>
     ) : (
-      <Typography variant="body1">Aucun tireur pour le moment</Typography>
+      <Box display="flex" justifyContent="center" width={1}>
+        <Typography variant="subtitle1">
+          Aucun tireur n'est inscrit pour le moment
+        </Typography>
+      </Box>
     );
 
   // TODO
