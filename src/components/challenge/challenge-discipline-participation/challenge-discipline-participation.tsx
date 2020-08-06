@@ -28,6 +28,8 @@ import ChallengeDisciplineParticipationDialog from './challenge-discipline-parti
 type ChallengeDisciplineParticipationProps = {
   challengeId: number;
   disciplines: GetDisciplineResponse[];
+  shooterFirstname: string,
+  shooterLastname: string,
   callbackShooterFn: () => Promise<number>
   actions: {
     error: (message: string) => any;
@@ -53,7 +55,6 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
     if (formSent) {
       const participationsPayload: CreateDisciplineParticipationRequest[] = participations.map(
         participation => ({
-          // FIXME -1 -> Select properly
           disciplineId: props.disciplines.find(discipline => discipline.label === participation.discipline)?.id ?? -1,
           useElectronicTarget: participation.useElectronicTarget,
           paid: participation.paid,
@@ -108,7 +109,6 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
     /> : null;
 
   if (props.disciplines.length === 0) {
-    // TODO spinner (with message ?)
     return null;
   } else {
     return (<>
@@ -118,7 +118,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
           <Grid container spacing={3} alignItems="center">
             <Grid item xs={12}>
               <Typography variant="h6">
-                AJOUTER LES DISCIPLINES À L'INSCRIPTION DU TIREUR
+                {`${props.shooterFirstname} ${props.shooterLastname}`.toUpperCase()}: INSCRIPTION AUX DISCIPLINES
               </Typography>
             </Grid>
             <Grid item xs={2}>

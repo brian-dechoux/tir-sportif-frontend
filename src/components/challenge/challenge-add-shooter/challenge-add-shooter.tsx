@@ -29,7 +29,7 @@ import ChallengeService from 'services/challenge.service';
 import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-import { REGEXES } from '../../../App.constants';
+import { NA, REGEXES } from '../../../App.constants';
 import { Autocomplete } from '@material-ui/lab';
 
 type ChallengeAddShooterProps = {
@@ -48,6 +48,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchOptions, setSearchOptions] = useState<GetSearchShooterResponse[]>([]);
+  const [selectedShooter, setSelectedShooter] = useState<GetSearchShooterResponse>();
 
   const [displayInformationForm, setDisplayInformationForm] = useState(true);
   const [displayDisciplinesForm, setDisplayDisciplinesForm] = useState(false);
@@ -108,28 +109,27 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
     };
   }, [clubs, categories, disciplines]);
 
+  // FIXME Do backend side (1 call instead of 2 with logic in frontend)
   const callbackFn = () => {
-    const datePayload = birthdate
-      ? formatDate(birthdate, dateTheme.format.dateTimeServer)
-      : undefined;
-    const categoryIdPayload = categories.find(category => category.label === selectedCategory)?.id ?? -1;
-    const clubIdPayload = clubs.find(club => club.name === selectedClub)?.id ?? undefined;
+    if (selectedShooter) {
+      return Promise.resolve(selectedShooter.id);
+    } else {
+      const datePayload = birthdate
+        ? formatDate(birthdate, dateTheme.format.dateTimeServer)
+        : undefined;
+      const categoryIdPayload = categories.find(category => category.label === selectedCategory)?.id ?? -1;
+      const clubIdPayload = clubs.find(club => club.name === selectedClub)?.id ?? undefined;
 
-    const shooterCreationPayload: CreateShooterRequest = {
-      lastname: inputLastname,
-      firstname: inputFirstname,
-      clubId: clubIdPayload,
-      categoryId: categoryIdPayload,
-      birthdate: datePayload,
-      email: inputEmail ? inputEmail : undefined
-    };
-    return ShooterService.createShooter(shooterCreationPayload).then(response => {
-      if (response.status === 201) {
-        return response.data.id;
-      } else {
-        throw new Error();
-      }
-    });
+      const shooterCreationPayload: CreateShooterRequest = {
+        lastname: inputLastname,
+        firstname: inputFirstname,
+        clubId: clubIdPayload,
+        categoryId: categoryIdPayload,
+        birthdate: datePayload,
+        email: inputEmail ? inputEmail : undefined
+      };
+      return ShooterService.createShooter(shooterCreationPayload).then(response => response.data.id);
+    }
   }
 
   const [lastnameValid, setLastnameValid] = useState(true);
@@ -174,6 +174,16 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
     setSelectedCategory(newValue);
   };
 
+  const handleSearchedShooterSelection = (event: any, value: GetSearchShooterResponse) => {
+    setSelectedShooter(value);
+    handleGoingNextStep();
+  }
+
+  const handleGoingNextStep = () => {
+    setDisplayInformationForm(false);
+    setDisplayDisciplinesForm(true);
+  }
+
   if (clubs.length === 0 || categories.length === 0 || disciplines.length === 0) {
     return null;
   } else {
@@ -184,7 +194,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
             <Box display="flex" justifyContent="center">
               <Box display="flex" flexDirection="column" width={0.8}>
                 <Box pb={2}>
-                  <Typography variant="h6">RECHERCHER UN TIREUR</Typography>
+                  <Typography variant="h6">RECHERCHER UN TIREUR EXISTANT</Typography>
                 </Box>
                 <Box pb={4}>
                   <Autocomplete
@@ -198,9 +208,10 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
                     onClose={() => {
                       setSearchOpen(false);
                     }}
+                    onChange={handleSearchedShooterSelection}
                     onInputChange={handleSearchNameChange}
                     getOptionSelected={(option: GetSearchShooterResponse, value: GetSearchShooterResponse) => getFullName(option) === getFullName(value)}
-                    getOptionLabel={(option: GetSearchShooterResponse) => getFullName(option)}
+                    getOptionLabel={(option: GetSearchShooterResponse) => `${getFullName(option)}${option.clubName ? ', Tireur pour le club: ' + option.clubName : ''}`}
                     options={searchOptions}
                     loading={searchLoading}
                     renderInput={params => (
@@ -208,7 +219,6 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
                         {...params}
                         label="Rechercher par nom et prénom"
                         fullWidth
-                        variant="outlined"
                         InputProps={{
                           ...params.InputProps,
                           endAdornment: (
@@ -224,7 +234,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
                 </Box>
                 <Grid container spacing={3} alignItems="center">
                   <Grid item xs={12}>
-                    <Typography variant="h6">INSCRIRE UN NOUVEAU TIREUR</Typography>
+                    <Typography variant="h6">OU INSCRIRE UN NOUVEAU TIREUR</Typography>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="subtitle2">Informations générales</Typography>
@@ -323,10 +333,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
                         variant="contained"
                         color="secondary"
                         type="button"
-                        onClick={() => {
-                          setDisplayInformationForm(false);
-                          setDisplayDisciplinesForm(true);
-                        }}
+                        onClick={handleGoingNextStep}
                       >
                         SUIVANT
                       </Button>
@@ -356,6 +363,8 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
           <ChallengeDisciplineParticipation
             challengeId={props.challengeId}
             disciplines={disciplines}
+            shooterFirstname={selectedShooter ? selectedShooter.firstname : inputFirstname}
+            shooterLastname={selectedShooter ? selectedShooter.lastname : inputLastname}
             callbackShooterFn={callbackFn}
             actions={props.actions}
           />
