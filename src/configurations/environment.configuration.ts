@@ -2,7 +2,8 @@ export class EnvironmentConfiguration {
   public readonly backendUrl: string;
 
   constructor() {
-    const backendUrl = process.env.BACKEND_URL;
+    const backendUrl = process.env.REACT_APP_BACKEND_URL;
+    console.log(process.env)
     this.backendUrl = backendUrl === undefined ? 'http://localhost:8080' : backendUrl;
   }
 }
