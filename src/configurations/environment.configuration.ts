@@ -3,7 +3,7 @@ export class EnvironmentConfiguration {
 
   constructor() {
     const backendUrl = process.env.BACKEND_URL;
-    this.backendUrl = backendUrl === undefined ? 'https://localhost:8443' : backendUrl;
+    this.backendUrl = backendUrl === undefined ? 'http://localhost:8080' : backendUrl;
   }
 }
 
