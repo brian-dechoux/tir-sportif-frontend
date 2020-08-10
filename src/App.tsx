@@ -36,6 +36,9 @@ const App = () => {
       background: customTheme.containerBackground,
       padding: 0
     },
+    overflow: {
+      "overflow": "auto"
+    },
     flexGrow: {
       "flex-grow": 1
     }
@@ -124,9 +127,9 @@ const App = () => {
                 </Desktop>
                 <ToastContainer />
               </Box>
-              <Box pt={isMobile ? 0 : 2} height="100%" className={classes.main}>
+              <Box pt={isMobile ? 0 : 2} pb={isMobile ? 0 : 2} height="100%" className={clsx(classes.main, classes.overflow)}>
                 <Desktop>
-                  <Container component={Paper} className={classes.container}>
+                  <Container component={Paper} className={clsx(classes.container, classes.overflow)}>
                     {desktopContent}
                   </Container>
                 </Desktop>
