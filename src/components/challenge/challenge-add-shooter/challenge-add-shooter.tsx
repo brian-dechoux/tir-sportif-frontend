@@ -43,7 +43,6 @@ type ChallengeAddShooterProps = {
   };
 };
 
-// FIXME use challenge categories ?
 const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
   const [searchName, setSearchName] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
@@ -90,10 +89,10 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
         ClubService.getClubs(),
         CategoryService.getCategories(),
       ])
-        .then(([challengeResponse, clubsResponse, categoriesResponse]) => {
+        .then(([challengeResponse, clubsResponse]) => {
           if (!unmounted) {
             setClubs(clubsResponse.data);
-            setCategories(categoriesResponse.data);
+            setCategories(challengeResponse.data.categories);
             setDisciplines(challengeResponse.data.disciplines);
           }
         })
