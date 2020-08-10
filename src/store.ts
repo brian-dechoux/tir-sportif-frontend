@@ -14,14 +14,18 @@ export const history = createBrowserHistory();
 
 export type Actions = CallHistoryMethodAction | AuthActions | GeneralActions | ToastActions;
 
+let composeEnhancers;
 const middleware = [
-  reduxLogger,
   thunk as ThunkMiddleware<AppState, Actions>,
   routerMiddleware(history),
 ];
 
-// @ts-ignore
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+if (process.env.NODE_ENV !== 'production') {
+  middleware.push(reduxLogger);
+  composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+} else {
+  composeEnhancers = compose;
+}
 
 const initialAuthState: AuthState = {
   token: localStorage.getItem('token'),

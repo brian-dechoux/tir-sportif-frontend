@@ -3,7 +3,6 @@ export class EnvironmentConfiguration {
 
   constructor() {
     const backendUrl = process.env.REACT_APP_BACKEND_URL;
-    console.log(process.env)
     this.backendUrl = backendUrl === undefined ? 'http://localhost:8080' : backendUrl;
   }
 }
