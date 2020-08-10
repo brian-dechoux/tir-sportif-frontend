@@ -24,6 +24,7 @@ import {
 } from 'services/models/challenge.model';
 import ChallengeService from 'services/challenge.service';
 import ChallengeDisciplineParticipationDialog from './challenge-discipline-participation-dialog';
+import AddIcon from '@material-ui/icons/Add';
 
 type ChallengeDisciplineParticipationProps = {
   challengeId: number;
@@ -127,6 +128,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
                 variant="contained"
                 color="secondary"
                 onClick={() => setDialogOpen(true)}
+                startIcon={<AddIcon />}
               >
                 AJOUTER
               </Button>
