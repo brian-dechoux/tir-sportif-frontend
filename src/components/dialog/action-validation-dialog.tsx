@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@material-ui/core';
 import InfoIcon from '@material-ui/icons/Info';
 import ErrorIcon from '@material-ui/icons/Error';
 

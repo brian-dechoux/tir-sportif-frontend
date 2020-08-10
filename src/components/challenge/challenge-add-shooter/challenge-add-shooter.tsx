@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
-  Button, CircularProgress,
+  Button,
+  CircularProgress,
   FormControl,
   Grid,
   InputLabel,
@@ -29,7 +30,7 @@ import ChallengeService from 'services/challenge.service';
 import ClubService from 'services/club.service';
 import CategoryService from 'services/category.service';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-import { NA, REGEXES } from '../../../App.constants';
+import { REGEXES } from '../../../App.constants';
 import { Autocomplete } from '@material-ui/lab';
 
 type ChallengeAddShooterProps = {

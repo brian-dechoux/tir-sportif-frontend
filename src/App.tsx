@@ -10,7 +10,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { ROUTES } from './configurations/server.configuration';
 import HeaderContainer from './components/header/header.container';
 import AuthenticatedRedirectContainer from './components/authenticated-route/authenticated.container';
-import { Box, Container, Grid, MuiThemeProvider, Paper } from '@material-ui/core';
+import { Box, Container, MuiThemeProvider, Paper } from '@material-ui/core';
 import ChallengeCreationContainer from './components/challenge/challenge-creation/challenge-creation.container';
 import { makeStyles } from '@material-ui/core/styles';
 import ToastContainer from './components/toast/toast.container';

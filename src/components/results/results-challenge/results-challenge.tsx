@@ -17,7 +17,8 @@ import {
   Divider,
   FormControl,
   FormGroup,
-  Grid, IconButton,
+  Grid,
+  IconButton,
   InputAdornment,
   List,
   ListItem,
@@ -162,7 +163,6 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
     event.persist();
     if (!debounceFn) {
       debounceFn = debounce((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        let target = event.target;
         const sanitizedShooterNamePart = event.target.value?.trim() ?? '';
         setSearchShooter(sanitizedShooterNamePart);
       }, 300);
