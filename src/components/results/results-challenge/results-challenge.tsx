@@ -308,13 +308,14 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
       )
     }
   </List>;
-
+  
   const filtered = (resultsInformation: ChallengeResultResponse[]) => {
     return resultsInformation
       .filter(resultInformation =>
         searchShooter ?
-          resultInformation.results.some(result => `${result.lastname}${result.firstname}`.toLowerCase().includes(searchShooter.toLowerCase()))
-          : true
+          resultInformation.results.some(result =>
+            [`${result.lastname} ${result.firstname}`, `${result.firstname} ${result.lastname}`].some(fullName => fullName.toLowerCase().includes(searchShooter.toLowerCase()))
+          ) : true
       ).filter(resultInformation => {
         return optionCategories.active(resultInformation.categoryLabel) &&
           optionDisciplines.active(resultInformation.disciplineLabel)
