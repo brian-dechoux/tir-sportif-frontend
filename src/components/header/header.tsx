@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Dialog,
   DialogActions,
@@ -18,9 +19,11 @@ import LogoText from 'components/svg/logo-text';
 import { makeStyles } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Desktop from '../media/desktop';
+import { url } from 'inspector';
 
 type HeaderProps = {
   isAuthenticated: boolean;
+  urlFirstPart: string;
   actions: {
     login: (username: string, password: string) => any;
     logout: () => any;
@@ -70,13 +73,19 @@ const Header = (props: HeaderProps) => {
       </Desktop>
     );
 
+    const headerMenuSelected = (selection: string) => props.urlFirstPart === selection ? 'secondary' : 'primary';
+
     menu = (
       <Desktop>
         <Button component={Link} to={ROUTES.CHALLENGE.LIST}>
-          CHALLENGES
+          <Typography variant="button" color={headerMenuSelected('challenges')}>
+            CHALLENGES
+          </Typography>
         </Button>
         <Button component={Link} to={ROUTES.RESULTS.LIST}>
-          RÉSULTATS
+          <Typography variant="button" color={headerMenuSelected('results')}>
+            RÉSULTATS
+          </Typography>
         </Button>
       </Desktop>
     );
