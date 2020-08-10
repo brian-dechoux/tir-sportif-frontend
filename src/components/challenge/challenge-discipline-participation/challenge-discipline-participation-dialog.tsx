@@ -126,6 +126,7 @@ const ChallengeDisciplineParticipationDialog = (props: ChallengeDisciplinePartic
                   control={
                     <Checkbox
                       checked={outrankLocked ? true : newParticipationOutrank}
+                      disabled={outrankLocked}
                       onChange={() =>
                         setNewParticipationOutrank(!newParticipationOutrank)
                       }
