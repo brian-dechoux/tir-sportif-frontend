@@ -28,6 +28,7 @@ import { useMediaQuery } from 'react-responsive';
 import MyClub from './components/my-club/my-club';
 import MyClubContainer from './components/my-club/my-club.container';
 import MyClubResumeContainer from './components/my-club/resume/my-club-resume.container';
+import MyClubLicenseesContainer from './components/my-club/licensees/my-club-licensees.container';
 
 // TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
@@ -101,7 +102,7 @@ const App = () => {
           <Route exact path={ROUTES.MYCLUB.LICENSEES}>
             <AuthenticatedRedirectContainer>
               <MyClubContainer>
-
+                <MyClubLicenseesContainer />
               </MyClubContainer>
             </AuthenticatedRedirectContainer>
           </Route>
