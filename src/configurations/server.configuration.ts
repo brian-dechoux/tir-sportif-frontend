@@ -15,7 +15,11 @@ export const ROUTES = {
     },
   },
   CLUBS: '/clubs',
-  MYCLUB: '/myclub',
+  MYCLUB: {
+    RESUME: '/myclub/resume',
+    LICENSEES: '/myclub/licensees',
+    BILLS: '/myclub/bills'
+  }
 };
 
 export const ERRORS = {

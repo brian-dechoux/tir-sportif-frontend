@@ -1,11 +1,11 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle, Paper,
+  DialogTitle,
+  Paper,
   TextField,
   Toolbar,
   Typography,
@@ -19,7 +19,6 @@ import LogoText from 'components/svg/logo-text';
 import { makeStyles } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Desktop from '../media/desktop';
-import { url } from 'inspector';
 
 type HeaderProps = {
   isAuthenticated: boolean;
@@ -85,6 +84,11 @@ const Header = (props: HeaderProps) => {
         <Button component={Link} to={ROUTES.RESULTS.LIST}>
           <Typography variant="button" color={headerMenuSelected('results')}>
             RÉSULTATS
+          </Typography>
+        </Button>
+        <Button component={Link} to={ROUTES.MYCLUB.RESUME}>
+          <Typography variant="button" color={headerMenuSelected('myclub')}>
+            MYCLUB
           </Typography>
         </Button>
       </Desktop>

@@ -6,7 +6,7 @@ import {
   GetShooterResponse,
 } from './models/shooter.model';
 
-export class ShooterService {
+class ShooterService {
   getShooter(id: number): Promise<AxiosResponse<GetShooterResponse>> {
     return cli.get(`/shooters/${id}`);
   }

@@ -25,6 +25,9 @@ import ResultsChallengeContainer from './components/results/results-challenge/re
 import Desktop from './components/media/desktop';
 import Mobile from './components/media/mobile';
 import { useMediaQuery } from 'react-responsive';
+import MyClub from './components/my-club/my-club';
+import MyClubContainer from './components/my-club/my-club.container';
+import MyClubResumeContainer from './components/my-club/resume/my-club-resume.container';
 
 // TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
@@ -87,8 +90,28 @@ const App = () => {
             <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
           </Route>
 
-          <Route exact path={ROUTES.MYCLUB}>
-            <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
+          <Route exact path={ROUTES.MYCLUB.RESUME}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+                <MyClubResumeContainer />
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={ROUTES.MYCLUB.LICENSEES}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={ROUTES.MYCLUB.BILLS}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
           </Route>
 
           <Redirect to={ROUTES.RESULTS.LIST} />

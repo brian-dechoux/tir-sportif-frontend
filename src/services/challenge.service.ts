@@ -2,9 +2,10 @@ import {
   CreateChallengeResponse,
   CreateParticipationsRequest,
   GetChallengeListElementResponse,
-  GetChallengeResponse, GetChallengeResultsResponse,
+  GetChallengeResponse,
+  GetChallengeResultsResponse,
   GetParticipantResponse,
-  GetParticipationResultsResponse, GetParticipationSerieResultsResponse,
+  GetParticipationResultsResponse,
   GetShooterParticipationsResponse,
 } from './models/challenge.model';
 import { Page } from './models/page.model';
@@ -14,7 +15,7 @@ import { CreateAddressRequest } from './models/address.model';
 import { formatDate } from 'utils/date.utils';
 import { dateTheme } from 'configurations/theme.configuration';
 
-export class ChallengeService {
+class ChallengeService {
   getChallenges(
     rowsPerPage: number,
     page: number
