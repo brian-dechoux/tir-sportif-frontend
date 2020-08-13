@@ -17,8 +17,12 @@ class LicenseeService {
     return cli.get('/licensees', params);
   }
 
-  getChallenge(id: number): Promise<AxiosResponse<GetLicenseeResponse>> {
+  getLicensee(id: number): Promise<AxiosResponse<GetLicenseeResponse>> {
     return cli.get(`/licensees/${id}`);
+  }
+
+  renewLicensee(id: number): Promise<AxiosResponse<GetLicenseeResponse>> {
+    return cli.post(`/licensees/${id}/renew`);
   }
 }
 

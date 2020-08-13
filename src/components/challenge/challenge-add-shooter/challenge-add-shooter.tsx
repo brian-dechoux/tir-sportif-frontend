@@ -115,7 +115,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
       return Promise.resolve(selectedShooter.id);
     } else {
       const datePayload = birthdate
-        ? formatDate(birthdate, dateTheme.format.dateTimeServer)
+        ? formatDate(birthdate, dateTheme.format.dateServer)
         : undefined;
       const categoryIdPayload = categories.find(category => category.label === selectedCategory)?.id ?? -1;
       const clubIdPayload = clubs.find(club => club.name === selectedClub)?.id ?? undefined;

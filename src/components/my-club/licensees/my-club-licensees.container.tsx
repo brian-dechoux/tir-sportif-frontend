@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
 import MyClubLicensees from './my-club-licensees';
 import { Actions } from '../../../store';
-import { error } from '../../../redux/actions/error.actions';
-import { openToast } from '../../../redux/actions/toast.actions';
+import { error } from 'redux/actions/error.actions';
+import { openToast } from 'redux/actions/toast.actions';
 import { push } from 'connected-react-router';
 
 class MyClubLicenseesContainer extends React.PureComponent<
