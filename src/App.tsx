@@ -25,7 +25,6 @@ import ResultsChallengeContainer from './components/results/results-challenge/re
 import Desktop from './components/media/desktop';
 import Mobile from './components/media/mobile';
 import { useMediaQuery } from 'react-responsive';
-import MyClub from './components/my-club/my-club';
 import MyClubContainer from './components/my-club/my-club.container';
 import MyClubResumeContainer from './components/my-club/resume/my-club-resume.container';
 import MyClubLicenseesContainer from './components/my-club/licensees/my-club-licensees.container';

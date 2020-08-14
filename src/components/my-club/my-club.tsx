@@ -13,6 +13,7 @@ type MyClubProps = {
 // fixme specify types
 const MyClub = (props: PropsWithChildren<MyClubProps>) => {
   const menuSelected = (selection: string) => props.menuSelectedPart === selection ? 'secondary' : 'primary';
+  const menuSelectedMultipleOptions = (selections: string[]) => selections.some(selection => props.menuSelectedPart === selection) ? 'secondary' : 'primary';
   return (
     <Box pt={3}>
       <Box display="flex" justifyContent="center" pb={1}>
@@ -46,9 +47,9 @@ const MyClub = (props: PropsWithChildren<MyClubProps>) => {
                   <ListItem key='licensees'>
                     <Button
                       component={Link} to={ROUTES.MYCLUB.LICENSEES.LIST}
-                      startIcon={<GroupIcon color={menuSelected('licensees')} />}
+                      startIcon={<GroupIcon color={menuSelectedMultipleOptions(['licensees', 'licensee'])} />}
                     >
-                      <Typography variant="button" color={menuSelected('licensees')}>
+                      <Typography variant="button" color={menuSelectedMultipleOptions(['licensees', 'licensee'])}>
                         Licenciés
                       </Typography>
                     </Button>

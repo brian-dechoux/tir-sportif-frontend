@@ -6,10 +6,8 @@ import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { GetCategoryResponse } from 'services/models/category.model';
 import { ToastVariant } from 'components/toast/toast';
 import { GetCountryResponse } from 'services/models/country.model';
-import ChallengeDisciplineParticipation from '../challenge-discipline-participation/challenge-discipline-participation';
 import ChallengeService from 'services/challenge.service';
 import ClubService from 'services/club.service';
-import CategoryService from 'services/category.service';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import AddShooterContainer from '../../shooter/add-shooter.container';
 import ChallengeDisciplineParticipationContainer
@@ -41,7 +39,6 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
       Promise.all([
         ChallengeService.getChallenge(props.challengeId),
         ClubService.getClubs(),
-        CategoryService.getCategories(),
       ])
         .then(([challengeResponse, clubsResponse]) => {
           if (!unmounted) {
@@ -100,71 +97,3 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
 
 
 export default ChallengeAddShooter;
-
-/* FIXME will be used by Licensee creation form
-const [inputAddressNumber, setAddressNumber] = useState('');
-const [inputAddressStreet, setAddressStreet] = useState('');
-const [inputAddressZip, setAddressZip] = useState('');
-const [inputAddressCity, setAddressCity] = useState('');
-const [selectedCountry, setSelectedCountry] = useState('');
-
-const handleStreetChange = (event: any) => {
-  const newValue = event.target.value;
-  setAddressStreet(newValue);
-};
-
-const handleCityChange = (event: any) => {
-  const newValue = event.target.value;
-  setAddressCity(newValue);
-};
-
-const handleCountryChange = (event: any) => {
-  const newValue = event.target.value;
-  setSelectedCountry(newValue);
-};
-
-const addressPayload = (inputAddressStreet && inputAddressCity && selectedCountry) ? {
-        number: inputAddressNumber,
-        street: inputAddressStreet,
-        zip: inputAddressZip,
-        city: inputAddressCity,
-        countryId: props.countries.find(club => club.name === selectedClub)?.id ?? -1,
-      }
-      : undefined;
-
-<Grid item xs={12}>
-  <Typography variant="subtitle2">Addresse</Typography>
-</Grid>
-<Grid item md={3}>
-  <TextField
-    fullWidth
-    label="Numéro"
-    onChange={(event: any) => setAddressNumber(event.target.value)}
-  />
-</Grid>
-<Grid item md={9}>
-  <TextField fullWidth label="Rue" onChange={handleStreetChange} />
-</Grid>
-<Grid item md={3}>
-  <TextField
-    fullWidth
-    label="Code postal"
-    onChange={(event: any) => setAddressZip(event.target.value)}
-  />
-</Grid>
-<Grid item md={6}>
-  <TextField fullWidth label="Ville" onChange={handleCityChange} />
-</Grid>
-<Grid item md={3}>
-  <FormControl fullWidth>
-    <InputLabel>Pays</InputLabel>
-    <Select value={selectedCountry} onChange={handleCountryChange}>
-      {props.countries.map(country => (
-        <MenuItem key={country.id} value={country.name}>
-          {country.name}
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
-</Grid>
- */

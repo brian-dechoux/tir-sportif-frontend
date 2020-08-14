@@ -16,3 +16,10 @@ export interface GetLicenseeListElementResponse {
   firstname: string;
   subscriptionDate: string;
 }
+
+export interface CreateLicenseeRequest {
+  badgeNumber: number;
+  lockerNumber?: number;
+  shooterId: number;
+  address: GetAddressResponse;
+}

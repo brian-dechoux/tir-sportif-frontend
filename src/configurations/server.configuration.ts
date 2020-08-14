@@ -19,7 +19,7 @@ export const ROUTES = {
     RESUME: '/myclub/resume',
     LICENSEES: {
       LIST: '/myclub/licensees',
-      CREATION: '/myclub/licensees/create',
+      CREATION: '/myclub/licensee/create',
     },
     BILLS: '/myclub/bills'
   }

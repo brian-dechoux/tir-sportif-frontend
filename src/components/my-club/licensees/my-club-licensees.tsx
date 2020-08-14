@@ -98,15 +98,6 @@ const MyClubLicensees = (props: MyClubResumeProps) => {
           </Button>
         </Box>
       </Box>
-      <Box display="flex" justifyContent="center" pb={1}>
-        <Box width={0.6}>
-          <Grid container direction="column" alignItems="center">
-            <Grid item xs={12}>
-              <Typography variant="h6">Licenciés</Typography>
-            </Grid>
-          </Grid>
-        </Box>
-      </Box>
       <Box pt={2} display="flex" width={1}>
         <TableContainer component={Paper}>
           <Table stickyHeader>

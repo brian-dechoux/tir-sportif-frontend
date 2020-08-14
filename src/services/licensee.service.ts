@@ -2,6 +2,7 @@ import { Page } from './models/page.model';
 import cli from 'configurations/http-client.configuration';
 import { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { GetLicenseeListElementResponse, GetLicenseeResponse } from './models/licensee.model';
+import { CreateAddressRequest } from './models/address.model';
 
 class LicenseeService {
   getLicensees(
@@ -23,6 +24,16 @@ class LicenseeService {
 
   renewLicensee(id: number): Promise<AxiosResponse<GetLicenseeResponse>> {
     return cli.post(`/licensees/${id}/renew`);
+  }
+
+  createLicence(badgeNumber: number, shooterId: number, address: CreateAddressRequest, lockerNumber?: number): Promise<AxiosResponse<GetLicenseeResponse>> {
+    const payload = {
+      badgeNumber: badgeNumber,
+      lockerNumber: lockerNumber,
+      shooterId: shooterId,
+      address: address
+    }
+    return cli.post(`/licensees`, payload);
   }
 }
 

@@ -60,6 +60,7 @@ const AddShooter = (props: AddShooterProps) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [birthdate, setBirthdate] = useState<Date | null>(null);
 
+  // TODO add debouncer here
   useEffect(() => {
     if (searchName) {
       setSearchLoading(true);
