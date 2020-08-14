@@ -17,7 +17,10 @@ export const ROUTES = {
   CLUBS: '/clubs',
   MYCLUB: {
     RESUME: '/myclub/resume',
-    LICENSEES: '/myclub/licensees',
+    LICENSEES: {
+      LIST: '/myclub/licensees',
+      CREATION: '/myclub/licensees/create',
+    },
     BILLS: '/myclub/bills'
   }
 };

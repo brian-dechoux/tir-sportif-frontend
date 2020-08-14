@@ -11,7 +11,6 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import { booleanToText } from 'configurations/theme.configuration';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
@@ -29,13 +28,14 @@ import AddIcon from '@material-ui/icons/Add';
 type ChallengeDisciplineParticipationProps = {
   challengeId: number;
   disciplines: GetDisciplineResponse[];
+  callbackShooterFn: () => Promise<number>,
   shooterFirstname: string,
   shooterLastname: string,
-  callbackShooterFn: () => Promise<number>
   actions: {
     error: (message: string) => any;
     openToast: (message: string, variant: ToastVariant) => any;
     push: (path: string, state?: any | undefined) => any;
+    resetShooter: () => any
   };
 };
 
@@ -74,6 +74,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
         if (response.status === 201) {
           props.actions.openToast('Le tireur a été inscrit au challenge', 'success');
           props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`);
+          props.actions.resetShooter();
         } else {
           throw new Error();
         }
@@ -99,6 +100,11 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
 
   const handleParticipationDialogClose = () => {
     setDialogOpen(false);
+  }
+
+  const handleCancel = () => {
+    props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`);
+    props.actions.resetShooter();
   }
 
   const dialog = dialogOpen ?
@@ -183,8 +189,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
               <Grid item>
                 <Button
                   variant="outlined"
-                  component={Link}
-                  to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}
+                  onClick={handleCancel}
                 >
                   ANNULER
                 </Button>

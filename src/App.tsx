@@ -30,6 +30,8 @@ import MyClubContainer from './components/my-club/my-club.container';
 import MyClubResumeContainer from './components/my-club/resume/my-club-resume.container';
 import MyClubLicenseesContainer from './components/my-club/licensees/my-club-licensees.container';
 import MyClubLicenseeDetailContainer from './components/my-club/licensee-detail/my-club-licensee-detail.container';
+import MyClubLicenseeCreationContainer
+  from './components/my-club/licensee-creation/my-club-licensee-creation.container';
 
 // TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
@@ -100,7 +102,7 @@ const App = () => {
             </AuthenticatedRedirectContainer>
           </Route>
 
-          <Route exact path={ROUTES.MYCLUB.LICENSEES}>
+          <Route exact path={ROUTES.MYCLUB.LICENSEES.LIST}>
             <AuthenticatedRedirectContainer>
               <MyClubContainer>
                 <MyClubLicenseesContainer />
@@ -108,10 +110,18 @@ const App = () => {
             </AuthenticatedRedirectContainer>
           </Route>
 
-          <Route exact path={`${ROUTES.MYCLUB.LICENSEES}/:licenseeId`}>
+          <Route exact path={`${ROUTES.MYCLUB.LICENSEES.LIST}/:licenseeId`}>
             <AuthenticatedRedirectContainer>
               <MyClubContainer>
                 <MyClubLicenseeDetailContainer />
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={ROUTES.MYCLUB.LICENSEES.CREATION}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+                <MyClubLicenseeCreationContainer />
               </MyClubContainer>
             </AuthenticatedRedirectContainer>
           </Route>

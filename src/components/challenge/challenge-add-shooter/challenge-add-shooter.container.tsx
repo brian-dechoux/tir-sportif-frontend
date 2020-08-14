@@ -10,6 +10,7 @@ import AppState from 'redux/states/app.state.type';
 import { getCountries } from 'redux/actions/general.actions';
 import { ROUTES } from 'configurations/server.configuration';
 import { RouteChildrenProps, withRouter } from 'react-router';
+import { resetShooter } from '../../../redux/actions/add-shooter.actions';
 
 interface ChallengeAddShooterRouterProps {
   challengeId: string;
@@ -43,6 +44,10 @@ class ChallengeAddShooterContainer extends React.PureComponent<
 const mapStateToProps = (state: AppState) => {
   return {
     countries: state.general.countries,
+    callbackShooterFn: state.addShooter.callback,
+    shooterFirstname: state.addShooter.firstname,
+    shooterLastname: state.addShooter.lastname,
+    shooterResolved: state.addShooter.resolved,
   };
 };
 
@@ -53,6 +58,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
       openToast: openToast,
       push: push,
       getCountries: getCountries,
+      resetShooter: resetShooter,
     },
     dispatch
   ),

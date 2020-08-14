@@ -17,8 +17,7 @@ import RefreshIcon from '@material-ui/icons/Refresh';
 import { formatString } from '../../../utils/date.utils';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 
-type MyClubLicenseeDetailProps = {
-  licenseeId: number;
+type MyClubLicenseeCreationProps = {
   actions: {
     error: (message: string) => any;
     openToast: (message: string, variant: ToastVariant) => any;
@@ -27,7 +26,7 @@ type MyClubLicenseeDetailProps = {
 };
 
 
-const MyClubLicenseeDetail = (props: MyClubLicenseeDetailProps) => {
+const MyClubLicenseeCreation = (props: MyClubLicenseeCreationProps) => {
 
   const [licensee, setLicensee] = useState<GetLicenseeResponse>();
   const [licenseeRenewed, setLicenseeRenewed] = useState<boolean>(false);
@@ -35,7 +34,7 @@ const MyClubLicenseeDetail = (props: MyClubLicenseeDetailProps) => {
 
   useEffect(() => {
     let unmounted = false;
-    LicenseeService.getLicensee(props.licenseeId)
+    LicenseeService.getLicensee(1)
       .then((licenseeDetailResponse) => {
         if (!unmounted) {
           setLicensee(licenseeDetailResponse.data);
@@ -53,7 +52,7 @@ const MyClubLicenseeDetail = (props: MyClubLicenseeDetailProps) => {
 
   useEffect(() => {
     if (licenseeRenewed) {
-      LicenseeService.renewLicensee(props.licenseeId)
+      LicenseeService.renewLicensee(1)
         .then((licenseeDetailResponse) => {
           setLicensee(licenseeDetailResponse.data);
           setLicenseeRenewed(false);
@@ -143,7 +142,7 @@ const MyClubLicenseeDetail = (props: MyClubLicenseeDetailProps) => {
             <Box display="flex" justifyContent="center">
               <HomeIcon />
               <Typography variant="subtitle1">
-                {licensee.address.number} {licensee.address.street}, {licensee.address.zip} {licensee.address.city}, {licensee.address.countryName}
+                Réside: {licensee.address.number} {licensee.address.street}, {licensee.address.zip} {licensee.address.city}, {licensee.address.countryName}
               </Typography>
             </Box>
           </Grid>
@@ -181,4 +180,4 @@ const MyClubLicenseeDetail = (props: MyClubLicenseeDetailProps) => {
   ) : null;
 };
 
-export default MyClubLicenseeDetail;
+export default MyClubLicenseeCreation;

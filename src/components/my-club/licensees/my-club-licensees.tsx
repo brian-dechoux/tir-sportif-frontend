@@ -69,9 +69,8 @@ const MyClubLicensees = (props: MyClubResumeProps) => {
     };
   }, [rowsPerPage, pageNumber]);
 
-  // TODO
   const handleClickOnCreateLicenseeButton = () => {
-    props.actions.push(ROUTES.MYCLUB.LICENSEES);
+    props.actions.push(ROUTES.MYCLUB.LICENSEES.CREATION);
   };
 
   const handleChangePage = (newRowsPerPageValue: number, newPageNumber: number) => {
@@ -130,7 +129,7 @@ const MyClubLicensees = (props: MyClubResumeProps) => {
                   className={classes.tableRow}
                   hover
                   key={licensee.id}
-                  onClick={() => props.actions.push(`${ROUTES.MYCLUB.LICENSEES}/${licensee.id}`)}
+                  onClick={() => props.actions.push(`${ROUTES.MYCLUB.LICENSEES.LIST}/${licensee.id}`)}
                 >
                   <TableCell align="center">{licensee.lastname}</TableCell>
                   <TableCell align="center">{licensee.firstname}</TableCell>
