@@ -21,8 +21,6 @@ import { fr } from 'date-fns/locale';
 import { customTheme, dateTheme } from 'configurations/theme.configuration';
 import ChallengeService from 'services/challenge.service';
 import ClubService from 'services/club.service';
-import CategoryService from 'services/category.service';
-import DisciplineService from 'services/discipline.service';
 import { GetClubResponse } from 'services/models/club.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { GetCategoryResponse } from 'services/models/category.model';
@@ -32,6 +30,8 @@ import { DEFAULT_CLUB, DEFAULT_COUNTRY } from '../../../App.constants';
 
 type ChallengeCreationProps = {
   countries: GetCountryResponse[];
+  categories: GetCategoryResponse[];
+  disciplines: GetDisciplineResponse[];
   actions: {
     error: (message: string) => any;
     openToast: (message: string, variant: ToastVariant) => any;
@@ -43,8 +43,6 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   const [formSent, setFormSent] = useState(false);
 
   const [clubs, setClubs] = useState<GetClubResponse[]>([]);
-  const [categories, setCategories] = useState<GetCategoryResponse[]>([]);
-  const [disciplines, setDisciplines] = useState<GetDisciplineResponse[]>([]);
 
   const [inputName, setName] = useState('');
   const [selectedClub, setSelectedClub] = useState(DEFAULT_CLUB.name);
@@ -58,17 +56,11 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
 
   useEffect(() => {
     let unmounted = false;
-    if (clubs.length === 0 && categories.length === 0 && disciplines.length === 0) {
-      Promise.all([
-        ClubService.getClubs(),
-        CategoryService.getCategories(),
-        DisciplineService.getDisciplines(),
-      ])
-        .then(([clubsResponse, categoriesResponse, disciplinesResponse]) => {
+    if (clubs.length === 0) {
+      ClubService.getClubs()
+        .then((clubsResponse) => {
           if (!unmounted) {
             setClubs(clubsResponse.data);
-            setCategories(categoriesResponse.data);
-            setDisciplines(disciplinesResponse.data);
           }
         })
         .catch(() => {
@@ -82,18 +74,18 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
     return () => {
       unmounted = true;
     };
-  }, [clubs, categories, disciplines]);
+  }, [clubs]);
 
   useEffect(() => {
     if (formSent) {
       const clubPayload = clubs.find(club => club.name === selectedClub);
       const datePayload = selectedDateTime ? selectedDateTime : new Date();
-      const categoriesPayload = categories
+      const categoriesPayload = props.categories
         .filter(category =>
           selectedCategories.some(selectedCategory => selectedCategory === category.label)
         )
         .map(category => category.id);
-      const disciplinesPayload = disciplines
+      const disciplinesPayload = props.disciplines
         .filter(discipline =>
           selectedDisciplines.some(selectedDiscipline => selectedDiscipline === discipline.label)
         )
@@ -188,7 +180,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
     setSelectedDisciplines(newValue);
   };
 
-  if (clubs.length === 0 || categories.length === 0 || disciplines.length === 0) {
+  if (clubs.length === 0) {
     // TODO spinner (with message ?)
     return null;
   } else {
@@ -285,7 +277,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       onChange={handleCategoriesChange}
                       renderValue={customTheme.selectMultipleRender}
                     >
-                      {categories.map(category => (
+                      {props.categories.map(category => (
                         <MenuItem key={category.id} value={category.label}>
                           <Checkbox
                             checked={selectedCategories.some(
@@ -307,7 +299,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
                       onChange={handleDisciplinesChange}
                       renderValue={customTheme.selectMultipleRender}
                     >
-                      {disciplines.map(discipline => (
+                      {props.disciplines.map(discipline => (
                         <MenuItem key={discipline.id} value={discipline.label}>
                           <Checkbox
                             checked={selectedDisciplines.some(

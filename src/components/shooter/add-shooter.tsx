@@ -20,10 +20,7 @@ import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { Link } from 'react-router-dom';
 import { GetClubResponse } from 'services/models/club.model';
 import { GetCategoryResponse } from 'services/models/category.model';
-import { GetDisciplineResponse } from 'services/models/discipline.model';
 import ShooterService from 'services/shooter.service';
-import CategoryService from 'services/category.service';
-import DisciplineService from 'services/discipline.service';
 import { REGEXES } from 'App.constants';
 import { GetCountryResponse } from 'services/models/country.model';
 import { ToastVariant } from '../toast/toast';
@@ -33,8 +30,8 @@ import debounce from '../../utils/debounce.utils';
 type AddShooterProps = {
   clubs: GetClubResponse[];
   countries: GetCountryResponse[];
+  categories: GetCategoryResponse[];
   filteredCategories?: GetCategoryResponse[];
-  filteredDisciplines?: GetDisciplineResponse[];
   backRoute: string;
   actions: {
     error: (message: string) => any;
@@ -50,10 +47,7 @@ const AddShooter = (props: AddShooterProps) => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchOptions, setSearchOptions] = useState<GetSearchShooterResponse[]>([]);
-
   const [categories, setCategories] = useState<GetCategoryResponse[]>([]);
-  const [disciplines, setDisciplines] = useState<GetDisciplineResponse[]>([]);
-
   const [inputLastname, setLastname] = useState('');
   const [inputFirstname, setFirstname] = useState('');
   const [inputEmail, setEmail] = useState('');
@@ -79,33 +73,12 @@ const AddShooter = (props: AddShooterProps) => {
   }, [searchName]);
 
   useEffect(() => {
-    let unmounted = false;
-    if (props.filteredCategories && props.filteredDisciplines) {
+    if (props.filteredCategories) {
       setCategories(props.filteredCategories);
-      setDisciplines(props.filteredDisciplines);
     } else {
-      Promise.all([
-        CategoryService.getCategories(),
-        DisciplineService.getDisciplines(),
-      ])
-        .then(([categoriesResponse, disciplinesResponse]) => {
-          if (!unmounted) {
-            setCategories(categoriesResponse.data);
-            setDisciplines(disciplinesResponse.data);
-          }
-        })
-        .catch(() => {
-          if (!unmounted) {
-            props.actions.error(
-              "Impossible de récupérer les listes d'information nécessaires à l'ajout d'un tireur"
-            );
-          }
-        });
+      setCategories(props.categories);
     }
-    return () => {
-      unmounted = true;
-    };
-  }, [categories, disciplines]);
+  }, []);
 
   const [lastnameValid, setLastnameValid] = useState(true);
   const [firsnameValid, setFirsnameValid] = useState(true);

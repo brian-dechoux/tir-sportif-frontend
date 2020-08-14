@@ -20,7 +20,6 @@ import { ERRORS, ROUTES } from 'configurations/server.configuration';
 import TableContainer from '@material-ui/core/TableContainer';
 import { GetShooterResponse } from 'services/models/shooter.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
-import DisciplineService from 'services/discipline.service';
 import ChallengeService from 'services/challenge.service';
 import {
   GetParticipationResultsResponse,
@@ -35,7 +34,7 @@ import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import InfoIcon from '@material-ui/icons/Info';
-import { debounceDefaultValue } from '../../../configurations/theme.configuration';
+import { debounceDefaultValue } from 'configurations/theme.configuration';
 
 type ShotResultAdded = {
   eventTarget: any;
@@ -47,8 +46,8 @@ type ShotResultAdded = {
 type ChallengeParticipationShotResultsProps = {
   challengeId: number;
   shooterId: number;
-  disciplineId: number;
   participationId: number;
+  discipline: GetDisciplineResponse;
   actions: {
     error: (message: string) => any;
     openToast: (message: string, variant: ToastVariant) => any;
@@ -62,7 +61,6 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
   const [participationDeleted, setParticipationDeleted] = useState(false);
   const [shotResultAdded, setShotResultAdded] = useState<ShotResultAdded>();
   const [shooter, setShooter] = useState<GetShooterResponse>();
-  const [discipline, setDiscipline] = useState<GetDisciplineResponse>();
   const [participationResults, setParticipationResults] = useState<GetParticipationResultsResponse>();
   const [lastPointValue, setLastPointValue] = useState<number>();
 
@@ -95,12 +93,10 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     let unmounted = false;
     Promise.all([
       ShooterService.getShooter(props.shooterId),
-      DisciplineService.getDiscipline(props.disciplineId),
       ChallengeService.getParticipationShotResults(props.challengeId, props.participationId)
-    ]).then(([shooterResponse, disciplineResponse, shotResultsResponse]) => {
+    ]).then(([shooterResponse, shotResultsResponse]) => {
         if (!unmounted) {
           setShooter(shooterResponse.data);
-          setDiscipline(disciplineResponse.data);
           setParticipationResults(shotResultsResponse.data);
         }
       })
@@ -251,10 +247,10 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
       callbackCloseFn={() => setDialogOpen(false)}
     /> : null;
 
-  if (!(shooter && discipline && participationResults)) {
+  if (!(shooter && participationResults)) {
     return null;
   } else {
-    const resultsBlock = displayTable(participationResults, discipline)
+    const resultsBlock = displayTable(participationResults, props.discipline)
     return (
       <>
         <Box display="flex" width={1}>
@@ -302,7 +298,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body2">
-                  {discipline.label}, {participationResults.participationReference.useElectronicTarget ? 'sur cible électronique' : 'sur cible traditionnelle'}
+                  {props.discipline.label}, {participationResults.participationReference.useElectronicTarget ? 'sur cible électronique' : 'sur cible traditionnelle'}
                 </Typography>
               </Grid>
             </Grid>

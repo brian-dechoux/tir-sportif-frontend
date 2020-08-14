@@ -22,6 +22,7 @@ class MyClubLicenseeCreationContainer extends React.PureComponent<
 const mapStateToProps = (state: AppState) => {
   return {
     countries: state.general.countries,
+    categories: state.general.categories,
     callbackShooterFn: state.addShooter.callback,
     shooterFirstname: state.addShooter.firstname,
     shooterLastname: state.addShooter.lastname,

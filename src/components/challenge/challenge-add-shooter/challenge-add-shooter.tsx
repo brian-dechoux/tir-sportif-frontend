@@ -68,7 +68,6 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
         <AddShooterContainer
           clubs={clubs}
           filteredCategories={categories}
-          filteredDisciplines={disciplines}
           backRoute={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}
         />
       );

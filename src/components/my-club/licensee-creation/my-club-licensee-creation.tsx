@@ -2,18 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { ToastVariant } from '../../toast/toast';
 import { Box, Button } from '@material-ui/core';
 import ClubService from 'services/club.service';
-import CategoryService from 'services/category.service';
-import DisciplineService from 'services/discipline.service';
 import { ROUTES } from 'configurations/server.configuration';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import { GetClubResponse } from 'services/models/club.model';
-import { GetCategoryResponse } from 'services/models/category.model';
-import { GetDisciplineResponse } from 'services/models/discipline.model';
 import AddShooterContainer from '../../shooter/add-shooter.container';
 import MyClubLicenseeCreationSpecificInfosContainer
   from './licensee-creation-specific-infos/my-club-licensee-creation-specific-infos.container';
+import { GetCategoryResponse } from 'services/models/category.model';
 
 type MyClubLicenseeCreationProps = {
+  categories: GetCategoryResponse[];
   callbackShooterFn: () => Promise<number>;
   shooterFirstname: string;
   shooterLastname: string;
@@ -28,22 +26,14 @@ type MyClubLicenseeCreationProps = {
 
 
 const MyClubLicenseeCreation = (props: MyClubLicenseeCreationProps) => {
-
   const [myclub, setMyClub] = useState<GetClubResponse>();
-  const [categories, setCategories] = useState<GetCategoryResponse[]>([]);
-  const [disciplines, setDisciplines] = useState<GetDisciplineResponse[]>([]);
 
   useEffect(() => {
     let unmounted = false;
-    Promise.all([
-      ClubService.getMyClub(),
-      CategoryService.getCategories(),
-      DisciplineService.getDisciplines()
-    ]).then(([myclubResponse, categoriesResponse, disciplinesResponse]) => {
+    ClubService.getMyClub()
+      .then((myclubResponse) => {
         if (!unmounted) {
           setMyClub(myclubResponse.data);
-          setCategories(categoriesResponse.data);
-          setDisciplines(disciplinesResponse.data);
         }
       })
       .catch(() => {
@@ -56,15 +46,14 @@ const MyClubLicenseeCreation = (props: MyClubLicenseeCreationProps) => {
     };
   }, []);
 
-  if (!myclub || categories.length === 0 || disciplines.length === 0) {
+  if (!myclub) {
     return null;
   } else {
     if (!props.shooterResolved) {
       return (
         <AddShooterContainer
           clubs={[myclub]}
-          filteredCategories={categories}
-          filteredDisciplines={disciplines}
+          filteredCategories={props.categories}
           backRoute={ROUTES.MYCLUB.LICENSEES.LIST}
         />
       );

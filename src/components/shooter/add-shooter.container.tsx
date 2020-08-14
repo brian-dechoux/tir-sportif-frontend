@@ -11,12 +11,10 @@ import { getCountries } from 'redux/actions/general.actions';
 import { addShooter } from 'redux/actions/add-shooter.actions';
 import { GetClubResponse } from 'services/models/club.model';
 import { GetCategoryResponse } from 'services/models/category.model';
-import { GetDisciplineResponse } from 'services/models/discipline.model';
 
 type AddShooterContainerProps = {
   clubs: GetClubResponse[];
   filteredCategories?: GetCategoryResponse[];
-  filteredDisciplines?: GetDisciplineResponse[];
   backRoute: string;
 }
 
@@ -35,6 +33,7 @@ class AddShooterContainer extends React.PureComponent<
 const mapStateToProps = (state: AppState) => {
   return {
     countries: state.general.countries,
+    categories: state.general.categories,
   };
 };
 
