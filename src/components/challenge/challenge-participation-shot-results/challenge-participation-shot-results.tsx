@@ -27,7 +27,7 @@ import {
   GetParticipationSerieResultsResponse,
 } from 'services/models/challenge.model';
 import ShooterService from 'services/shooter.service';
-import debounce from '../../../utils/debounce.utils';
+import debounce from 'utils/debounce.utils';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ToastVariant } from '../../toast/toast';
@@ -35,6 +35,14 @@ import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import InfoIcon from '@material-ui/icons/Info';
+import { debounceDefaultValue } from '../../../configurations/theme.configuration';
+
+type ShotResultAdded = {
+  eventTarget: any;
+  serieNb: number;
+  shotNb: number | null;
+  points: number;
+}
 
 type ChallengeParticipationShotResultsProps = {
   challengeId: number;
@@ -52,6 +60,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [participationDeleted, setParticipationDeleted] = useState(false);
+  const [shotResultAdded, setShotResultAdded] = useState<ShotResultAdded>();
   const [shooter, setShooter] = useState<GetShooterResponse>();
   const [discipline, setDiscipline] = useState<GetDisciplineResponse>();
   const [participationResults, setParticipationResults] = useState<GetParticipationResultsResponse>();
@@ -105,6 +114,25 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     };
   }, []);
 
+  useEffect(() => {
+    if (shotResultAdded) {
+      ChallengeService.addShotResult(
+        props.challengeId,
+        props.participationId,
+        shotResultAdded.serieNb,
+        shotResultAdded.shotNb,
+        shotResultAdded.points
+      ).then((shotResultsResponse) => {
+          setParticipationResults(shotResultsResponse.data);
+        })
+        .catch(errorResponse => {
+          props.actions.error(errorResponse.response.data.message);
+          shotResultAdded.eventTarget.value = lastPointValue ? lastPointValue.toString(10) : '';
+        });
+    }
+  }, [shotResultAdded]);
+
+  // TODO use effect for async action
   let debounceFn: any;
   const addShotResult = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number | null) => {
     event.persist();
@@ -113,16 +141,11 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
         let target = event.target;
         if (target.value) {
           const points: number = parseFloat(target.value);
-          ChallengeService.addShotResult(props.challengeId, props.participationId, serieNb, shotNb, points)
-            .then((shotResultsResponse) => {
-              setParticipationResults(shotResultsResponse.data);
-            })
-            .catch(errorResponse => {
-              props.actions.error(errorResponse.response.data.message);
-              target.value = lastPointValue ? lastPointValue.toString(10) : '';
-            });
+          setShotResultAdded({
+            eventTarget: target, serieNb: serieNb, shotNb: shotNb, points: points
+          })
         }
-      }, 300);
+      }, debounceDefaultValue);
     }
     debounceFn(event, serieNb, shotNb);
   }

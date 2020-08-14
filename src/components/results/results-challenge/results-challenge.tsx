@@ -46,7 +46,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
-import { customTheme } from '../../../configurations/theme.configuration';
+import { customTheme, debounceDefaultValue } from '../../../configurations/theme.configuration';
 import debounce from '../../../utils/debounce.utils';
 import Mobile from '../../media/mobile';
 
@@ -165,7 +165,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
       debounceFn = debounce((event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const sanitizedShooterNamePart = event.target.value?.trim() ?? '';
         setSearchShooter(sanitizedShooterNamePart);
-      }, 300);
+      }, debounceDefaultValue);
     }
     debounceFn(event);
   }

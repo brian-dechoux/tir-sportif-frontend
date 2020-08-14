@@ -15,7 +15,7 @@ import {
 import { Autocomplete } from '@material-ui/lab';
 import { CreateShooterRequest, getFullName, GetSearchShooterResponse } from 'services/models/shooter.model';
 import React, { useEffect, useState } from 'react';
-import { customTheme, dateTheme } from 'configurations/theme.configuration';
+import { customTheme, dateTheme, debounceDefaultValue } from 'configurations/theme.configuration';
 import { DatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { Link } from 'react-router-dom';
 import { GetClubResponse } from 'services/models/club.model';
@@ -28,6 +28,7 @@ import { REGEXES } from 'App.constants';
 import { GetCountryResponse } from 'services/models/country.model';
 import { ToastVariant } from '../toast/toast';
 import { formatDate } from 'utils/date.utils';
+import debounce from '../../utils/debounce.utils';
 
 type AddShooterProps = {
   clubs: GetClubResponse[];
@@ -60,7 +61,6 @@ const AddShooter = (props: AddShooterProps) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [birthdate, setBirthdate] = useState<Date | null>(null);
 
-  // TODO add debouncer here
   useEffect(() => {
     if (searchName) {
       setSearchLoading(true);
@@ -115,9 +115,16 @@ const AddShooter = (props: AddShooterProps) => {
     validation => !validation
   );
 
+  let debounceFn: any;
   const handleSearchNameChange = (event: any) => {
-    const newValue = event.target.value;
-    setSearchName(newValue);
+    event.persist();
+    if (!debounceFn) {
+      debounceFn = debounce(() => {
+        const newValue = event.target.value;
+        setSearchName(newValue);
+      }, debounceDefaultValue)
+    }
+    debounceFn(event);
   };
 
   const handleLastnameChange = (event: any) => {

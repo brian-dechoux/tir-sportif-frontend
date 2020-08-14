@@ -65,3 +65,5 @@ export const paginationTheme = {
   displayedRowsArgs: (paginationInfo: LabelDisplayedRowsArgs) =>
     `Element ${paginationInfo.from} à ${paginationInfo.to}, sur un total de: ${paginationInfo.count}`,
 };
+
+export const debounceDefaultValue = 300;
