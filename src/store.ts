@@ -9,6 +9,7 @@ import { AuthActions } from './redux/actions/auth.actions';
 import { GeneralActions } from './redux/actions/general.actions';
 import { ToastActions } from './redux/actions/toast.actions';
 import AuthState from './redux/states/auth.state.type';
+import GeneralState from './redux/states/general.state.type';
 
 export const history = createBrowserHistory();
 
@@ -31,8 +32,37 @@ const initialAuthState: AuthState = {
   token: localStorage.getItem('token'),
 };
 
+let countries;
+const localStorageCountries = localStorage.getItem('countries');
+if (localStorageCountries) {
+  countries = JSON.parse(localStorageCountries);
+} else {
+  countries = [];
+}
+let categories;
+const localStorageCategories = localStorage.getItem('categories');
+if (localStorageCategories) {
+  categories = JSON.parse(localStorageCategories);
+} else {
+  categories = [];
+}
+let disciplines;
+const localStorageDisciplines = localStorage.getItem('disciplines');
+if (localStorageDisciplines) {
+  disciplines = JSON.parse(localStorageDisciplines);
+} else {
+  disciplines = [];
+}
+
+const initialGeneralState: GeneralState = {
+  countries: countries,
+  categories: categories,
+  disciplines: disciplines,
+};
+
 const initialState = {
-  auth: initialAuthState
+  auth: initialAuthState,
+  general: initialGeneralState
 }
 
 // TODO fix typescript issues (createStore returns any type...)

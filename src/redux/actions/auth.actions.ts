@@ -70,18 +70,6 @@ export function logout(): ThunkAction<void, AppState, undefined, Actions> {
   };
 }
 
-export function loadTokenIfAvailable(): ThunkAction<void, AppState, undefined, Actions> {
-  return (dispatch: ThunkDispatch<AppState, undefined, Actions>) => {
-    const savedToken = localStorage.getItem('token');
-    if (savedToken) {
-      dispatch({
-        type: ActionTypes.LOGIN,
-        token: savedToken,
-      });
-    }
-  };
-}
-
 export function expireToken(): ThunkAction<void, AppState, undefined, Actions> {
   return (dispatch: ThunkDispatch<AppState, undefined, Actions>) => {
     dispatch(error('Session expirée, veuillez vous connecter à nouveau'));
