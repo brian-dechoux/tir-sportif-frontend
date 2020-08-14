@@ -10,7 +10,7 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import PersonIcon from '@material-ui/icons/Person';
@@ -19,13 +19,26 @@ import LogoText from 'components/svg/logo-text';
 import { makeStyles } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Desktop from '../media/desktop';
+import { GetCountryResponse } from '../../services/models/country.model';
+import { GetCategoryResponse } from '../../services/models/category.model';
+import { GetDisciplineResponse } from '../../services/models/discipline.model';
+import CountryService from '../../services/country.service';
+import CategoryService from '../../services/category.service';
+import DisciplineService from '../../services/discipline.service';
+import { getCountries, getDisciplines } from '../../redux/actions/general.actions';
 
 type HeaderProps = {
+  countries: GetCountryResponse[];
+  categories: GetCategoryResponse[];
+  disciplines: GetDisciplineResponse[];
   isAuthenticated: boolean;
   urlFirstPart: string;
   actions: {
     login: (username: string, password: string) => any;
     logout: () => any;
+    getCountries: () => any;
+    getCategories: () => any;
+    getDisciplines: () => any;
   };
 };
 
@@ -48,6 +61,14 @@ const Header = (props: HeaderProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (props.countries.length === 0 && props.categories.length === 0 && props.disciplines.length === 0) {
+      props.actions.getCountries();
+      props.actions.getCategories();
+      props.actions.getDisciplines();
+    }
+  }, []);
 
   const handleDialogOpen = () => {
     setOpen(true);

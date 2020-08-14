@@ -10,6 +10,9 @@ import { GeneralActions } from './redux/actions/general.actions';
 import { ToastActions } from './redux/actions/toast.actions';
 import AuthState from './redux/states/auth.state.type';
 import GeneralState from './redux/states/general.state.type';
+import { GetCountryResponse } from './services/models/country.model';
+import { GetCategoryResponse } from './services/models/category.model';
+import { GetDisciplineResponse } from './services/models/discipline.model';
 
 export const history = createBrowserHistory();
 
@@ -32,21 +35,21 @@ const initialAuthState: AuthState = {
   token: localStorage.getItem('token'),
 };
 
-let countries;
+let countries: GetCountryResponse[];
 const localStorageCountries = localStorage.getItem('countries');
 if (localStorageCountries) {
   countries = JSON.parse(localStorageCountries);
 } else {
   countries = [];
 }
-let categories;
+let categories: GetCategoryResponse[];
 const localStorageCategories = localStorage.getItem('categories');
 if (localStorageCategories) {
   categories = JSON.parse(localStorageCategories);
 } else {
   categories = [];
 }
-let disciplines;
+let disciplines: GetDisciplineResponse[];
 const localStorageDisciplines = localStorage.getItem('disciplines');
 if (localStorageDisciplines) {
   disciplines = JSON.parse(localStorageDisciplines);

@@ -1,9 +1,8 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import clsx from 'clsx';
-import { history, store } from './store';
+import { history } from './store';
 import 'typeface-roboto';
 import ResultsContainer from './components/results/results-list/results-list.container';
 import { ConnectedRouter } from 'connected-react-router';
@@ -158,32 +157,30 @@ const App = () => {
   const isMobile = useMediaQuery({maxWidth: customTheme.mediaBreakpoint - 1})
 
   return (
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <Box height="100%" display="flex" flexDirection="column">
-          <MuiThemeProvider theme={customTheme.mui}>
-            <Box height="100%" display="flex" flexDirection="column">
-              <Box>
-                <Desktop>
-                  <HeaderContainer />
-                </Desktop>
-                <ToastContainer />
-              </Box>
-              <Box pt={isMobile ? 0 : 2} pb={isMobile ? 0 : 2} height="100%" className={clsx(classes.main, classes.overflow)}>
-                <Desktop>
-                  <Container component={Paper} className={clsx(classes.container, classes.overflow)}>
-                    {desktopContent}
-                  </Container>
-                </Desktop>
-                <Mobile>
-                  {mobileContent}
-                </Mobile>
-              </Box>
+    <ConnectedRouter history={history}>
+      <Box height="100%" display="flex" flexDirection="column">
+        <MuiThemeProvider theme={customTheme.mui}>
+          <Box height="100%" display="flex" flexDirection="column">
+            <Box>
+              <Desktop>
+                <HeaderContainer />
+              </Desktop>
+              <ToastContainer />
             </Box>
-          </MuiThemeProvider>
-        </Box>
-      </ConnectedRouter>
-    </Provider>
+            <Box pt={isMobile ? 0 : 2} pb={isMobile ? 0 : 2} height="100%" className={clsx(classes.main, classes.overflow)}>
+              <Desktop>
+                <Container component={Paper} className={clsx(classes.container, classes.overflow)}>
+                  {desktopContent}
+                </Container>
+              </Desktop>
+              <Mobile>
+                {mobileContent}
+              </Mobile>
+            </Box>
+          </Box>
+        </MuiThemeProvider>
+      </Box>
+    </ConnectedRouter>
   );
 };
 
