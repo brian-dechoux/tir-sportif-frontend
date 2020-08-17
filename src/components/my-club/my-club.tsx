@@ -56,7 +56,7 @@ const MyClub = (props: PropsWithChildren<MyClubProps>) => {
                   </ListItem>
                   <ListItem key='bills'>
                     <Button
-                      component={Link} to={ROUTES.MYCLUB.BILLS}
+                      component={Link} to={ROUTES.MYCLUB.BILLS.LIST}
                       startIcon={<ReceiptIcon color={menuSelected('bills')} />}
                     >
                       <Typography variant="button" color={menuSelected('bills')}>

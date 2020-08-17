@@ -21,7 +21,9 @@ export const ROUTES = {
       LIST: '/myclub/licensees',
       CREATION: '/myclub/licensee/create',
     },
-    BILLS: '/myclub/bills'
+    BILLS: {
+      LIST: '/myclub/bills'
+    }
   }
 };
 

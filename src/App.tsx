@@ -30,6 +30,7 @@ import MyClubLicenseesContainer from './components/my-club/licensees/my-club-lic
 import MyClubLicenseeDetailContainer from './components/my-club/licensee-detail/my-club-licensee-detail.container';
 import MyClubLicenseeCreationContainer
   from './components/my-club/licensee-creation/my-club-licensee-creation.container';
+import MyClubBillsShootersContainer from './components/my-club/bills-shooters/my-club-bills-shooters.container';
 
 // TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
@@ -124,10 +125,10 @@ const App = () => {
             </AuthenticatedRedirectContainer>
           </Route>
 
-          <Route exact path={ROUTES.MYCLUB.BILLS}>
+          <Route exact path={ROUTES.MYCLUB.BILLS.LIST}>
             <AuthenticatedRedirectContainer>
               <MyClubContainer>
-
+                <MyClubBillsShootersContainer />
               </MyClubContainer>
             </AuthenticatedRedirectContainer>
           </Route>
