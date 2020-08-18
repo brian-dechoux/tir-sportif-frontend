@@ -26,13 +26,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { ToastVariant } from '../../toast/toast';
 import ChallengeDisciplineParticipationDialog, { DisciplineParticipation } from '../challenge-discipline-participation/challenge-discipline-participation-dialog';
-import EditIcon from '@material-ui/icons/Edit';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import AddIcon from '@material-ui/icons/Add';
 import { booleanToIcons } from 'configurations/theme.configuration';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 import EmailIcon from '@material-ui/icons/Email';
+import { tableHoveredRow } from '../../../configurations/styles.configuration';
 
 type ChallengeShooterProps = {
   challengeId: number;
@@ -58,11 +58,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
     button: {
       margin: theme.spacing(1),
     },
-    tableRow: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
+    tableRow: tableHoveredRow,
   }));
   const classes = useStyles();
 
@@ -246,17 +242,6 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
                 </Button>
               </Box> : null
             }
-            <Box pr={1}>
-              <Button
-                variant="contained"
-                color="secondary"
-                type="button"
-                startIcon={<EditIcon />}
-                disabled
-              >
-                ÉDITER
-              </Button>
-            </Box>
             <Box>
               <Button
                 variant="contained"

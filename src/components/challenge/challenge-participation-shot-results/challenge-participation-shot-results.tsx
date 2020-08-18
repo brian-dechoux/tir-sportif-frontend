@@ -27,7 +27,6 @@ import {
 } from 'services/models/challenge.model';
 import ShooterService from 'services/shooter.service';
 import debounce from 'utils/debounce.utils';
-import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ToastVariant } from '../../toast/toast';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
@@ -265,17 +264,6 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
             </Button>
           </Box>
           <Box display="flex">
-            <Box pr={1}>
-              <Button
-                variant="contained"
-                color="secondary"
-                type="button"
-                startIcon={<EditIcon />}
-                disabled
-              >
-                ÉDITER
-              </Button>
-            </Box>
             <Box>
               <Button
                 variant="contained"
@@ -284,7 +272,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
                 onClick={() => setDialogOpen(true)}
                 startIcon={<DeleteIcon />}
               >
-                SUPPRIMER
+                SUPPRIMER LA PARTICIPATION
               </Button>
               {dialog}
             </Box>

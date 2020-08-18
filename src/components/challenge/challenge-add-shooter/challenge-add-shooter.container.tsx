@@ -5,12 +5,12 @@ import ChallengeAddShooter from './challenge-add-shooter';
 import { error } from 'redux/actions/error.actions';
 import { push } from 'connected-react-router';
 import { openToast } from 'redux/actions/toast.actions';
-import { Actions } from '../../../store';
+import { Actions } from 'store';
 import AppState from 'redux/states/app.state.type';
 import { getCountries } from 'redux/actions/general.actions';
 import { ROUTES } from 'configurations/server.configuration';
 import { RouteChildrenProps, withRouter } from 'react-router';
-import { resetShooter } from '../../../redux/actions/add-shooter.actions';
+import { resetShooter } from 'redux/actions/add-shooter.actions';
 
 interface ChallengeAddShooterRouterProps {
   challengeId: string;

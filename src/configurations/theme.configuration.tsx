@@ -11,6 +11,7 @@ export const customColors = {
   black: '#000000',
   orange: '#EA6F30',
   red: '#bf1c2e',
+  darkRed: '#650d17',
   lightRed: '#ff6376',
 };
 

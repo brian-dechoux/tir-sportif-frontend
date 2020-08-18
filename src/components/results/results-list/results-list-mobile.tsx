@@ -27,7 +27,7 @@ type ResultsProps = {
 };
 
 const ResultsListMobile = (props: ResultsProps) => {
-  const useStyles = makeStyles(theme => ({
+  const useStyles = makeStyles(() => ({
     scroller: {
       "max-height": "90vh",
       "overflow-y": "auto"

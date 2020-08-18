@@ -46,7 +46,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 import CloseIcon from '@material-ui/icons/Close';
 import SearchIcon from '@material-ui/icons/Search';
-import { customTheme, debounceDefaultValue } from '../../../configurations/theme.configuration';
+import { customColors, customTheme, debounceDefaultValue } from '../../../configurations/theme.configuration';
 import debounce from '../../../utils/debounce.utils';
 import Mobile from '../../media/mobile';
 
@@ -66,9 +66,9 @@ enum FilterType {
 const getDialogIdForChallengeResultInformation = (resultInformation: ChallengeResultResponse) => `${resultInformation.categoryId}.${resultInformation.disciplineId}`;
 
 const ResultsChallenge = (props: ResultsChallengeProps) => {
-  const useStyles = makeStyles(theme => ({
+  const useStyles = makeStyles(() => ({
     alternateColor: {
-      "background": "white"
+      "background": customColors.white
     },
     main: {
       background: customTheme.mainBackground,

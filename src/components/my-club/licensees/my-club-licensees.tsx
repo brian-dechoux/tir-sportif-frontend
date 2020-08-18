@@ -3,7 +3,6 @@ import { ToastVariant } from '../../toast/toast';
 import {
   Box,
   Button,
-  Grid,
   Paper,
   Table,
   TableBody,
@@ -12,7 +11,6 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
 } from '@material-ui/core';
 import LicenseeService from 'services/licensee.service';
 import { makeStyles } from '@material-ui/core/styles';
@@ -23,6 +21,7 @@ import AddIcon from '@material-ui/icons/Add';
 import TableContainer from '@material-ui/core/TableContainer';
 import { formatString } from 'utils/date.utils';
 import { paginationTheme } from 'configurations/theme.configuration';
+import { tableHoveredRow } from '../../../configurations/styles.configuration';
 
 type MyClubResumeProps = {
   actions: {
@@ -34,12 +33,8 @@ type MyClubResumeProps = {
 
 
 const MyClubLicensees = (props: MyClubResumeProps) => {
-  const useStyles = makeStyles(theme => ({
-    tableRow: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
+  const useStyles = makeStyles(() => ({
+    tableRow: tableHoveredRow,
   }));
   const classes = useStyles();
 

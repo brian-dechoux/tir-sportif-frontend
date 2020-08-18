@@ -30,6 +30,7 @@ import AddIcon from '@material-ui/icons/Add';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import { ToastVariant } from '../../toast/toast';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
+import { deleteButton, tableHoveredRow } from '../../../configurations/styles.configuration';
 
 type ChallengeDetailProps = {
   challengeId: number;
@@ -46,11 +47,8 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(2),
     },
-    tableRow: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
+    tableRow: tableHoveredRow,
+    deleteButton: deleteButton
   }));
   const classes = useStyles();
 
@@ -219,8 +217,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
             <Box>
               <Button
                 variant="contained"
-                color="secondary"
-                type="button"
+                className={classes.deleteButton}
                 onClick={() => setDialogOpen(true)}
                 startIcon={<DeleteIcon />}
               >

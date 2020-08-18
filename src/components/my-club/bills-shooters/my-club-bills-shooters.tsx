@@ -18,6 +18,7 @@ import { GetShooterWithBillsListElementResponse } from 'services/models/finance.
 import { ROUTES } from 'configurations/server.configuration';
 import TableContainer from '@material-ui/core/TableContainer';
 import { paginationTheme } from 'configurations/theme.configuration';
+import { tableHoveredRow } from '../../../configurations/styles.configuration';
 
 type MyClubResumeProps = {
   actions: {
@@ -29,12 +30,8 @@ type MyClubResumeProps = {
 
 
 const MyClubBillsShooters = (props: MyClubResumeProps) => {
-  const useStyles = makeStyles(theme => ({
-    tableRow: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
+  const useStyles = makeStyles(() => ({
+    tableRow: tableHoveredRow,
   }));
   const classes = useStyles();
 

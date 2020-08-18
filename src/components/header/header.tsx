@@ -22,10 +22,6 @@ import Desktop from '../media/desktop';
 import { GetCountryResponse } from '../../services/models/country.model';
 import { GetCategoryResponse } from '../../services/models/category.model';
 import { GetDisciplineResponse } from '../../services/models/discipline.model';
-import CountryService from '../../services/country.service';
-import CategoryService from '../../services/category.service';
-import DisciplineService from '../../services/discipline.service';
-import { getCountries, getDisciplines } from '../../redux/actions/general.actions';
 
 type HeaderProps = {
   countries: GetCountryResponse[];
