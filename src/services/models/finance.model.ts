@@ -3,3 +3,21 @@ export interface GetShooterWithBillsListElementResponse {
   lastname: string;
   firstname: string;
 }
+
+export interface GetShooterFinanceResponse {
+  lastname: string;
+  firstname: string;
+  unpaidBills: GetShooterBillResponse[];
+  licenseBills: GetShooterBillResponse[];
+  participationBills: GetShooterBillResponse[];
+}
+
+export interface GetShooterBillResponse {
+  id: number;
+  value: number;
+  paid: boolean;
+  priceType: string;
+  challengeName?: string;
+  startDate?: string;
+  subscriptionDate?: string;
+}
