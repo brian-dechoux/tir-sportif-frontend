@@ -16,6 +16,7 @@ import { formatDate } from 'utils/date.utils';
 import { dateTheme } from 'configurations/theme.configuration';
 
 class ChallengeService {
+
   getChallenges(
     rowsPerPage: number,
     page: number

@@ -103,6 +103,11 @@ const Header = (props: HeaderProps) => {
             RÉSULTATS
           </Typography>
         </Button>
+        <Button component={Link} to={ROUTES.CLUBS.LIST}>
+          <Typography variant="button" color={headerMenuSelected('clubs')}>
+            CLUBS
+          </Typography>
+        </Button>
         <Button component={Link} to={ROUTES.MYCLUB.RESUME}>
           <Typography variant="button" color={headerMenuSelected('myclub')}>
             MYCLUB
