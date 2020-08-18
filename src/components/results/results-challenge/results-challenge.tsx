@@ -357,7 +357,6 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
       : null;
 
   if (!challengeInformation) {
-    // TODO spinner (with message?)
     return null;
   } else {
     return (

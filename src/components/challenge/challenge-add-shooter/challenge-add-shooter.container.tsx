@@ -24,7 +24,6 @@ class ChallengeAddShooterContainer extends React.PureComponent<
 > {
   render() {
     if (this.props.countries.length === 0) {
-      // TODO BDX put it in local storage
       this.props.actions.getCountries();
     }
     if (this.props.match && this.props.match.params && this.props.match.params.challengeId) {

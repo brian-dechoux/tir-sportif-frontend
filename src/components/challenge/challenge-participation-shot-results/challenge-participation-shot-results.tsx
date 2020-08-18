@@ -127,7 +127,6 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     }
   }, [shotResultAdded]);
 
-  // TODO use effect for async action
   let debounceFn: any;
   const addShotResult = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number | null) => {
     event.persist();

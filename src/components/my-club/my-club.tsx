@@ -10,7 +10,6 @@ type MyClubProps = {
   menuSelectedPart: string;
 }
 
-// fixme specify types
 const MyClub = (props: PropsWithChildren<MyClubProps>) => {
   const menuSelected = (selection: string) => props.menuSelectedPart === selection ? 'secondary' : 'primary';
   const menuSelectedMultipleOptions = (selections: string[]) => selections.some(selection => props.menuSelectedPart === selection) ? 'secondary' : 'primary';

@@ -68,7 +68,7 @@ const initialState = {
   general: initialGeneralState
 }
 
-// TODO fix typescript issues (createStore returns any type...)
+// FIXME typescript issues (createStore returns any type...)
 export const store = createStore<any, Actions, any, any>(
   createRootReducer(history),
   initialState,

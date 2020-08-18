@@ -63,8 +63,6 @@ const MyClubLicenseeCreationSpecificInfos = (props: MyClubLicenseeCreationProps)
           throw new Error();
         }
       }).catch(() => {
-        // TODO Reset full form in case of error
-        // FIXME one route for participation + create ?
         props.actions.error("Impossible de créer la licence");
         setFormSent(false);
       });

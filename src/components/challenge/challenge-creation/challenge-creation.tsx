@@ -181,7 +181,6 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   };
 
   if (clubs.length === 0) {
-    // TODO spinner (with message ?)
     return null;
   } else {
     return (

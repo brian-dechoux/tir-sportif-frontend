@@ -183,11 +183,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
       </Box>
     );
 
-  // TODO
-  // Use multiple sub components
-  // InformationsGenerales fixed, InformationsGenerales edit => 2 composants
   if (!challengeInformation) {
-    // TODO spinner (with message?)
     return null;
   } else {
     return (

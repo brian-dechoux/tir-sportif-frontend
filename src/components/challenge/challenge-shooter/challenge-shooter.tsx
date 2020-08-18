@@ -166,7 +166,6 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
         createParticipationsPayload
       ).then(response => {
         if (response.status === 201) {
-          // TODO refresh here ! backend should return created data in order to have the generated ID
           props.actions.openToast('La participation a été ajoutée pour le tireur', 'success');
           setShooterParticipations(response.data);
           setDisciplineParticipations(disciplines.map(discipline => disciplineToDisciplineParticipation(discipline, response.data.participations)))
@@ -212,7 +211,6 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
     /> : null;
 
   if (!shooterParticipations) {
-    // TODO spinner (with message?)
     return null;
   } else {
     return (
