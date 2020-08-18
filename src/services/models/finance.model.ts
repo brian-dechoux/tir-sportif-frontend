@@ -16,6 +16,7 @@ export interface GetShooterBillResponse {
   id: number;
   value: number;
   paid: boolean;
+  paidDate?: string;
   priceType: string;
   challengeName?: string;
   startDate?: string;

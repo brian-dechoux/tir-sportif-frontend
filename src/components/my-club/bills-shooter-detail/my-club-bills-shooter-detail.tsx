@@ -143,8 +143,9 @@ const MyClubBillsShooterDetail = (props: MyClubLicenseeDetailProps) => {
   const participationsTable = (shooterFinance: GetShooterFinanceResponse) => <TableContainer>
     <Table stickyHeader>
       <colgroup>
-        <col width={0.4} />
-        <col width={0.4} />
+        <col width={0.3} />
+        <col width={0.3} />
+        <col width={0.2} />
         <col width={0.2} />
       </colgroup>
       <TableHead>
@@ -152,6 +153,7 @@ const MyClubBillsShooterDetail = (props: MyClubLicenseeDetailProps) => {
           <TableCell align="center">CHALLENGE</TableCell>
           <TableCell align="center">DATE</TableCell>
           <TableCell align="center">PRIX</TableCell>
+          <TableCell align="center">PAYÉ LE</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -160,6 +162,7 @@ const MyClubBillsShooterDetail = (props: MyClubLicenseeDetailProps) => {
             <TableCell align="center">{participationBill.challengeName}</TableCell>
             <TableCell align="center">{participationBill.startDate ? formatString(participationBill.startDate, "dd MMMM yyyy") : ''}</TableCell>
             <TableCell align="center">{participationBill.value}</TableCell>
+            <TableCell align="center">{participationBill.paidDate ? formatString(participationBill.paidDate, "dd MMMM yyyy") : ''}</TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -169,13 +172,15 @@ const MyClubBillsShooterDetail = (props: MyClubLicenseeDetailProps) => {
   const licencesTable = (shooterFinance: GetShooterFinanceResponse) => <TableContainer>
     <Table stickyHeader>
       <colgroup>
-        <col width={0.5} />
-        <col width={0.5} />
+        <col width={0.4} />
+        <col width={0.2} />
+        <col width={0.4} />
       </colgroup>
       <TableHead>
         <TableRow>
           <TableCell align="center">DATE DE SOUSCRIPTION</TableCell>
           <TableCell align="center">PRIX</TableCell>
+          <TableCell align="center">PAYÉ LE</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -183,6 +188,7 @@ const MyClubBillsShooterDetail = (props: MyClubLicenseeDetailProps) => {
           <TableRow key={licenceBill.id}>
             <TableCell align="center">{licenceBill.subscriptionDate ? formatString(licenceBill.subscriptionDate, "dd MMMM yyyy") : ''}</TableCell>
             <TableCell align="center">{licenceBill.value}</TableCell>
+            <TableCell align="center">{licenceBill.paidDate ? formatString(licenceBill.paidDate, "dd MMMM yyyy") : ''}</TableCell>
           </TableRow>
         ))}
       </TableBody>
