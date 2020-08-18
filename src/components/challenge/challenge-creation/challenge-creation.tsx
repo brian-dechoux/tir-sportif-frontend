@@ -187,7 +187,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
       <MuiPickersUtilsProvider utils={DateFnsUtils} locale={fr}>
         <form noValidate>
           <Box display="flex" justifyContent="center">
-            <Box display="flex" width={0.6}>
+            <Box display="flex" width={0.8}>
               <Grid container spacing={3} alignItems="center">
                 <Grid item xs={12}>
                   <Typography variant="h6">CRÉER UN CHALLENGE</Typography>
