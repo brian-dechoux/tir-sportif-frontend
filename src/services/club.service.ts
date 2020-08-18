@@ -29,11 +29,13 @@ class ClubService {
 
   createClub(
     name: string,
+    email: string,
     address: CreateAddressRequest
   ): Promise<AxiosResponse<GetClubResponse>> {
     const payload = {
       name: name,
-      address: address
+      address: address,
+      email: email
     };
     return cli.post('/clubs', payload, {});
   }

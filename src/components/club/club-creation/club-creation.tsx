@@ -15,6 +15,7 @@ import ClubService from 'services/club.service';
 import { GetCountryResponse } from 'services/models/country.model';
 import { ToastVariant } from '../../toast/toast';
 import { ROUTES } from 'configurations/server.configuration';
+import { REGEXES } from '../../../App.constants';
 
 type AddShooterProps = {
   countries: GetCountryResponse[];
@@ -29,6 +30,7 @@ const ClubCreation = (props: AddShooterProps) => {
 
   const [formSent, setFormSent] = useState(false);
   const [inputName, setInputName] = useState('');
+  const [inputEmail, setEmail] = useState('');
   const [inputAddressNumber, setAddressNumber] = useState('');
   const [inputAddressStreet, setAddressStreet] = useState('');
   const [inputAddressZip, setAddressZip] = useState('');
@@ -36,10 +38,11 @@ const ClubCreation = (props: AddShooterProps) => {
   const [selectedCountry, setSelectedCountry] = useState('');
 
   const [nameValid, setNameValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
   const [streetValid, setStreetValid] = useState(true);
   const [cityValid, setCityValid] = useState(true);
   const [countryValid, setCountrValid] = useState(true);
-  const informationFormValid = ![!!inputName, !!inputAddressStreet, !!inputAddressCity, !!selectedCountry].some(
+  const informationFormValid = ![emailValid, !!inputName, !!inputAddressStreet, !!inputAddressCity, !!selectedCountry].some(
     validation => !validation
   );
 
@@ -54,6 +57,7 @@ const ClubCreation = (props: AddShooterProps) => {
       };
       ClubService.createClub(
         inputName,
+        inputEmail,
         addressPayload
       ).then((response) => {
         if (response.status === 201) {
@@ -74,6 +78,12 @@ const ClubCreation = (props: AddShooterProps) => {
     const newValue = event.target.value;
     setNameValid(!!newValue);
     setInputName(newValue);
+  };
+
+  const handleEmailChange = (event: any) => {
+    const newValue = event.target.value;
+    setEmailValid(RegExp(REGEXES.EMAIL).test(newValue));
+    setEmail(newValue);
   };
 
   const handleStreetChange = (event: any) => {
@@ -105,13 +115,20 @@ const ClubCreation = (props: AddShooterProps) => {
             <Grid item xs={12}>
               <Typography variant="subtitle2">Informations générales</Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={6}>
               <TextField
                 error={!nameValid}
                 fullWidth
                 required
                 label="Nom"
                 onChange={handleNameChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Email"
+                onChange={handleEmailChange}
               />
             </Grid>
           <Grid item xs={12}>

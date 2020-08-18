@@ -4,6 +4,7 @@ export interface GetClubResponse {
   id: number;
   name: string;
   address: GetAddressResponse;
+  email: string;
 }
 
 export interface GetClubListElementResponse {
@@ -16,4 +17,5 @@ export interface GetClubListElementResponse {
 export interface CreateClubRequest {
   name: string;
   address: CreateAddressRequest;
+  email: string;
 }

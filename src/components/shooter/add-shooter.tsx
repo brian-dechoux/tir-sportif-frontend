@@ -55,6 +55,14 @@ const AddShooter = (props: AddShooterProps) => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [birthdate, setBirthdate] = useState<Date | null>(null);
 
+  const [lastnameValid, setLastnameValid] = useState(true);
+  const [firsnameValid, setFirsnameValid] = useState(true);
+  const [emailValid, setEmailValid] = useState(true);
+  const [categoryValid, setCategoryValid] = useState(true);
+  const informationFormValid = ![!!inputLastname, !!inputFirstname, emailValid, !!selectedCategory].some(
+    validation => !validation
+  );
+
   useEffect(() => {
     if (searchName) {
       setSearchLoading(true);
@@ -79,14 +87,6 @@ const AddShooter = (props: AddShooterProps) => {
       setCategories(props.categories);
     }
   }, []);
-
-  const [lastnameValid, setLastnameValid] = useState(true);
-  const [firsnameValid, setFirsnameValid] = useState(true);
-  const [emailValid, setEmailValid] = useState(true);
-  const [categoryValid, setCategoryValid] = useState(true);
-  const informationFormValid = ![!!inputLastname, !!inputFirstname, emailValid, !!selectedCategory].some(
-    validation => !validation
-  );
 
   let debounceFn: any;
   const handleSearchNameChange = (event: any) => {
