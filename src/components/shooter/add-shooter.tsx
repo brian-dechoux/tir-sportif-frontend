@@ -33,6 +33,7 @@ type AddShooterProps = {
   categories: GetCategoryResponse[];
   filteredCategories?: GetCategoryResponse[];
   backRoute: string;
+  validateButtonLabel: string;
   actions: {
     error: (message: string) => any;
     openToast: (message: string, variant: ToastVariant) => any;
@@ -143,7 +144,7 @@ const AddShooter = (props: AddShooterProps) => {
     const shooterCreationPayload: CreateShooterRequest = {
       lastname: inputLastname,
       firstname: inputFirstname,
-      clubId: clubIdPayload,
+      clubId: props.clubs.length > 1 ? clubIdPayload : undefined,
       categoryId: categoryIdPayload,
       birthdate: datePayload,
       email: inputEmail ? inputEmail : undefined
@@ -224,18 +225,22 @@ const AddShooter = (props: AddShooterProps) => {
                   onChange={handleFirstnameChange}
                 />
               </Grid>
-              <Grid item xs={6}>
-                <FormControl fullWidth>
-                  <InputLabel>Club de rattachement</InputLabel>
-                  <Select value={selectedClub} onChange={handleClubChange}>
-                    {props.clubs.map(club => (
-                      <MenuItem key={club.id} value={club.name}>
-                        {club.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+              {
+                props.clubs.length > 1 ?
+                  <Grid item xs={6}>
+                    <FormControl fullWidth>
+                      <InputLabel>Club de rattachement</InputLabel>
+                      <Select value={selectedClub} onChange={handleClubChange}>
+                        {props.clubs.map(club => (
+                          <MenuItem key={club.id} value={club.name}>
+                            {club.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
+                  : null
+              }
               <Grid item xs={6}>
                 <FormControl required fullWidth error={!categoryValid}>
                   <InputLabel>Catégorie</InputLabel>
@@ -302,7 +307,7 @@ const AddShooter = (props: AddShooterProps) => {
                     type="button"
                     onClick={handleNext}
                   >
-                    SUIVANT
+                    {props.validateButtonLabel}
                   </Button>
                 </Grid>
               </Grid>

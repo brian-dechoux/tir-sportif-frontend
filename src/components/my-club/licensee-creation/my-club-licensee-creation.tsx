@@ -55,6 +55,7 @@ const MyClubLicenseeCreation = (props: MyClubLicenseeCreationProps) => {
           clubs={[myclub]}
           filteredCategories={props.categories}
           backRoute={ROUTES.MYCLUB.LICENSEES.LIST}
+          validateButtonLabel="SUIVANT"
         />
       );
     } else {

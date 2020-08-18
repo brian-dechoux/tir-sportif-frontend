@@ -18,7 +18,8 @@ export const ROUTES = {
     LIST: '/clubs',
     CREATION: '/club/create',
     SHOOTERS: {
-      LIST: '/shooters'
+      LIST: '/shooters',
+      CREATION: '/shooters/create'
     }
   },
   MYCLUB: {

@@ -16,6 +16,7 @@ type AddShooterContainerProps = {
   clubs: GetClubResponse[];
   filteredCategories?: GetCategoryResponse[];
   backRoute: string;
+  validateButtonLabel: string;
 }
 
 class AddShooterContainer extends React.PureComponent<

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators, Dispatch } from 'redux';
-import ChallengeAddShooter from './challenge-add-shooter';
+import ClubAddShooter from './club-add-shooter';
 import { error } from 'redux/actions/error.actions';
 import { push } from 'connected-react-router';
 import { openToast } from 'redux/actions/toast.actions';
@@ -12,12 +12,12 @@ import { ROUTES } from 'configurations/server.configuration';
 import { RouteChildrenProps, withRouter } from 'react-router';
 import { resetShooter } from 'redux/actions/add-shooter.actions';
 
-interface ChallengeAddShooterRouterProps {
-  challengeId: string;
+interface ClubAddShooterRouterProps {
+  clubId: string;
 }
 
-class ChallengeAddShooterContainer extends React.PureComponent<
-  RouteChildrenProps<ChallengeAddShooterRouterProps> &
+class ClubAddShooterContainer extends React.PureComponent<
+  RouteChildrenProps<ClubAddShooterRouterProps> &
     ReturnType<typeof mapStateToProps> &
     ReturnType<typeof mapDispatchToProps>,
   {}
@@ -26,16 +26,16 @@ class ChallengeAddShooterContainer extends React.PureComponent<
     if (this.props.countries.length === 0) {
       this.props.actions.getCountries();
     }
-    if (this.props.match && this.props.match.params && this.props.match.params.challengeId) {
-      const paramChallengeId = this.props.match.params.challengeId;
-      const parsedChallengeId = parseInt(paramChallengeId, 10);
+    if (this.props.match && this.props.match.params && this.props.match.params.clubId) {
+      const paramClubId = this.props.match.params.clubId;
+      const parsedClubId = parseInt(paramClubId, 10);
       const props = {
         ...this.props,
-        challengeId: parsedChallengeId,
+        clubId: parsedClubId,
       };
-      return <ChallengeAddShooter {...props} />;
+      return <ClubAddShooter {...props} />;
     } else {
-      return this.props.actions.push(ROUTES.CHALLENGE.LIST);
+      return this.props.actions.push(ROUTES.CLUBS.LIST);
     }
   }
 }
@@ -43,6 +43,8 @@ class ChallengeAddShooterContainer extends React.PureComponent<
 const mapStateToProps = (state: AppState) => {
   return {
     countries: state.general.countries,
+    categories: state.general.categories,
+    callbackShooterFn: state.addShooter.callback,
     shooterResolved: state.addShooter.resolved,
   };
 };
@@ -61,5 +63,5 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
 });
 
 export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(ChallengeAddShooterContainer)
+  connect(mapStateToProps, mapDispatchToProps)(ClubAddShooterContainer)
 );

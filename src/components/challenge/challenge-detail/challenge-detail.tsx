@@ -223,20 +223,12 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
             </Box>
           </Box>
         </Box>
-        <Box display="flex" justifyContent="center" pb={1}>
-          <Box width={0.6}>
-            <Grid container direction="column" alignItems="center">
-              <Grid item xs={12}>
-                <Typography variant="h6">{challengeInformation.name}</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body1">
-                  Se déroulera à {challengeInformation.address.city}, le{' '}
-                  {formatString(challengeInformation.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
+        <Box display="flex" flexDirection="column" width={1} alignItems="center">
+          <Typography variant="h6">{challengeInformation.name}</Typography>
+          <Typography variant="body1">
+            Se déroulera à {challengeInformation.address.city}, le{' '}
+            {formatString(challengeInformation.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
+          </Typography>
         </Box>
         <Divider />
         <Box pt={2}>

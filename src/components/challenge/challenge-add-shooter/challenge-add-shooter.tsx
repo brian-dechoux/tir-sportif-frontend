@@ -16,9 +16,6 @@ import ChallengeDisciplineParticipationContainer
 type ChallengeAddShooterProps = {
   challengeId: number;
   countries: GetCountryResponse[];
-  callbackShooterFn: () => Promise<number>;
-  shooterFirstname: string;
-  shooterLastname: string;
   shooterResolved: boolean;
   actions: {
     error: (message: string) => any;
@@ -69,6 +66,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
           clubs={clubs}
           filteredCategories={categories}
           backRoute={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}
+          validateButtonLabel="SUIVANT"
         />
       );
     } else {
