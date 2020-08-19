@@ -200,8 +200,10 @@ const MyClubBillsShooterDetail = (props: MyClubLicenseeDetailProps) => {
       return (
         <Box pt={4}>
           <Paper elevation={1}>
-            <Box display="flex" justifyContent="center" pb={1}>
-              <ErrorIcon color="secondary" />
+            <Box display="flex" alignItems="center" justifyContent="center" pb={1} pt={1}>
+              <Box pr={1}>
+                <ErrorIcon color="secondary" />
+              </Box>
               <Typography variant="subtitle1">Factures non réglées en attente</Typography>
             </Box>
             {unpaidTable(shooterFinance)}
@@ -239,7 +241,7 @@ const MyClubBillsShooterDetail = (props: MyClubLicenseeDetailProps) => {
     return (
       <Box pt={4}>
         <Paper elevation={1}>
-          <Box display="flex" justifyContent="center" pb={1}>
+          <Box display="flex" justifyContent="center" pb={1} pt={1}>
             <Typography variant="subtitle1">Factures réglées</Typography>
           </Box>
           {tables}
