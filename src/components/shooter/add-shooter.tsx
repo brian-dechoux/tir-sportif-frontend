@@ -3,7 +3,7 @@ import { fr } from 'date-fns/locale';
 import {
   Box,
   Button,
-  CircularProgress,
+  CircularProgress, Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -24,8 +24,10 @@ import ShooterService from 'services/shooter.service';
 import { REGEXES } from 'App.constants';
 import { GetCountryResponse } from 'services/models/country.model';
 import { ToastVariant } from '../toast/toast';
-import { formatDate } from 'utils/date.utils';
+import { formatDate, formatString } from 'utils/date.utils';
 import debounce from '../../utils/debounce.utils';
+import { ROUTES } from '../../configurations/server.configuration';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 type AddShooterProps = {
   clubs: GetClubResponse[];
@@ -162,7 +164,20 @@ const AddShooter = (props: AddShooterProps) => {
         <Box display="flex" justifyContent="center">
           <Box display="flex" flexDirection="column" width={0.8}>
             <Box pb={2}>
-              <Typography variant="h6">RECHERCHER UN TIREUR EXISTANT</Typography>
+              <Button
+                variant="outlined"
+                component={Link} to={props.backRoute}
+                startIcon={<KeyboardBackspaceIcon />}
+              >
+                RETOUR
+              </Button>
+            </Box>
+            <Box display="flex" justifyContent="center">
+              <Typography variant="h6">Rechercher ou ajouter un tireur</Typography>
+            </Box>
+            <Divider />
+            <Box pt={4} pb={2}>
+              <Typography variant="h6">Rechercher un tireur existant</Typography>
             </Box>
             <Box pb={4}>
               <Autocomplete
@@ -202,7 +217,7 @@ const AddShooter = (props: AddShooterProps) => {
             </Box>
             <Grid container spacing={3} alignItems="center">
               <Grid item xs={12}>
-                <Typography variant="h6">OU INSCRIRE UN NOUVEAU TIREUR</Typography>
+                <Typography variant="h6">Ou inscrire un nouveau tireur</Typography>
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="subtitle2">Informations générales</Typography>
