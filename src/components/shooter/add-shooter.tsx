@@ -3,7 +3,8 @@ import { fr } from 'date-fns/locale';
 import {
   Box,
   Button,
-  CircularProgress, Divider,
+  CircularProgress,
+  Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -24,9 +25,8 @@ import ShooterService from 'services/shooter.service';
 import { REGEXES } from 'App.constants';
 import { GetCountryResponse } from 'services/models/country.model';
 import { ToastVariant } from '../toast/toast';
-import { formatDate, formatString } from 'utils/date.utils';
+import { formatDate } from 'utils/date.utils';
 import debounce from '../../utils/debounce.utils';
-import { ROUTES } from '../../configurations/server.configuration';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 type AddShooterProps = {

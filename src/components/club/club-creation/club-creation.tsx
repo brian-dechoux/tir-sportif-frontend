@@ -1,6 +1,6 @@
 import {
   Box,
-  Button,
+  Button, Divider,
   FormControl,
   Grid,
   InputLabel,
@@ -15,7 +15,8 @@ import ClubService from 'services/club.service';
 import { GetCountryResponse } from 'services/models/country.model';
 import { ToastVariant } from '../../toast/toast';
 import { ROUTES } from 'configurations/server.configuration';
-import { REGEXES } from '../../../App.constants';
+import { REGEXES } from 'App.constants';
+import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 
 type AddShooterProps = {
   countries: GetCountryResponse[];
@@ -107,11 +108,22 @@ const ClubCreation = (props: AddShooterProps) => {
   return (
     <form noValidate>
       <Box display="flex" justifyContent="center">
-        <Box display="flex" width={0.8}>
-          <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12}>
-              <Typography variant="h6">CRÉER UN CLUB</Typography>
-            </Grid>
+        <Box display="flex" flexDirection="column" width={0.8}>
+          <Box pb={2}>
+            <Button
+              variant="outlined"
+              component={Link} to={ROUTES.CLUBS.LIST}
+              startIcon={<KeyboardBackspaceIcon />}
+            >
+              RETOUR
+            </Button>
+          </Box>
+          <Box display="flex" justifyContent="center">
+            <Typography variant="h6">Créer un club</Typography>
+          </Box>
+          <Divider />
+          <Box pt={2}>
+            <Grid container spacing={2} alignItems="center">
             <Grid item xs={12}>
               <Typography variant="subtitle2">Informations générales</Typography>
             </Grid>
@@ -202,6 +214,7 @@ const ClubCreation = (props: AddShooterProps) => {
               </Grid>
             </Grid>
       </Grid>
+          </Box>
         </Box>
       </Box>
     </form>
