@@ -24,6 +24,7 @@ import {
 import ChallengeService from 'services/challenge.service';
 import ChallengeDisciplineParticipationDialog from './challenge-discipline-participation-dialog';
 import AddIcon from '@material-ui/icons/Add';
+import InfoIcon from '@material-ui/icons/Info';
 
 type ChallengeDisciplineParticipationProps = {
   challengeId: number;
@@ -39,16 +40,21 @@ type ChallengeDisciplineParticipationProps = {
   };
 };
 
-const disciplineToDisciplineParticipation = (discipline: GetDisciplineResponse, participations: Participation[]) => ({
+type DisciplineParticipation = {
+  definition: GetDisciplineResponse;
+  alreadyRanked: boolean;
+}
+
+const disciplineToDisciplineParticipation = (discipline: GetDisciplineResponse, participations: Participation[]): DisciplineParticipation => ({
   definition: discipline,
   alreadyRanked: participations.some(participation => participation.discipline === discipline.label && !participation.outrank)
-})
+});
 
 const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipationProps) => {
   const [formSent, setFormSent] = useState(false);
 
   const [participations, setParticipations] = useState<Participation[]>([]);
-  const [disciplineParticipations, setDisciplineParticipations] = useState(
+  const [disciplineParticipations, setDisciplineParticipations] = useState<DisciplineParticipation[]>(
     props.disciplines.map(discipline => disciplineToDisciplineParticipation(discipline, participations))
   );
 
@@ -119,34 +125,41 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
     return (<>
       {dialog}
       <Box display="flex" justifyContent="center" pt={2}>
-        <Box display="flex" width={0.6}>
-          <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12}>
-              <Typography variant="h6">
-                {`${props.shooterFirstname} ${props.shooterLastname}`.toUpperCase()}: INSCRIPTION AUX DISCIPLINES
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Button
-                disabled={props.disciplines.length === 0}
-                variant="contained"
-                color="secondary"
-                onClick={() => setDialogOpen(true)}
-                startIcon={<AddIcon />}
+        <Box display="flex" flexDirection="column" width={0.8}>
+          <Box display="flex" justifyContent="center">
+            <Typography variant="h6">
+              {`${props.shooterFirstname} ${props.shooterLastname}`.toUpperCase()}: INSCRIPTION AUX DISCIPLINES
+            </Typography>
+          </Box>
+          <Box pb={2} pt={4}>
+            <Button
+              disabled={props.disciplines.length === 0}
+              variant="contained"
+              color="secondary"
+              onClick={() => setDialogOpen(true)}
+              startIcon={<AddIcon />}
+            >
+              AJOUTER
+            </Button>
+          </Box>
+          {
+            props.disciplines.length === disciplineParticipations.filter(disciplineParticipation => disciplineParticipation.alreadyRanked).length ?
+              <Box
+                display="flex"
+                fontStyle="italic"
+                alignItems="center"
+                pb={2}
               >
-                AJOUTER
-              </Button>
-
-            </Grid>
-            <Grid item xs={10}>
-              <Box fontStyle="italic">
-                <Typography variant="body2" hidden={props.disciplines.length > 0}>
-                  * Le tireur est inscrit et classé à toutes les disciplines proposées par le challenge
+                <InfoIcon color="secondary" />
+                <Typography variant="body2">
+                  Le tireur est inscrit et classé à toutes les disciplines proposées par le challenge
                 </Typography>
               </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <TableContainer component={Paper}>
+              : null
+          }
+
+          <Box pb={2}>
+            <TableContainer component={Paper}>
                 <Table stickyHeader>
                   <colgroup>
                     <col width={0.3} />
@@ -182,29 +195,27 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
                   </TableBody>
                 </Table>
               </TableContainer>
-            </Grid>
-            <Grid item container spacing={2} justify="flex-end" alignItems="center">
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  onClick={handleCancel}
-                >
-                  ANNULER
-                </Button>
-              </Grid>
-              <Grid>
-                <Button
-                  disabled={!disciplinesFormValid}
-                  variant="contained"
-                  color="secondary"
-                  type="button"
-                  onClick={() => setFormSent(true)}
-                >
-                  VALIDER L'INSCRIPTION
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
+          </Box>
+
+          <Box display="flex" justifyContent="flex-end">
+            <Box pr={1}>
+              <Button
+                variant="outlined"
+                onClick={handleCancel}
+              >
+                ANNULER
+              </Button>
+            </Box>
+            <Button
+              disabled={!disciplinesFormValid}
+              variant="contained"
+              color="secondary"
+              type="button"
+              onClick={() => setFormSent(true)}
+            >
+              VALIDER L'INSCRIPTION
+            </Button>
+          </Box>
         </Box>
       </Box>
     </>);
