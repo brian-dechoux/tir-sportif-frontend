@@ -34,6 +34,9 @@ import ActionValidationDialog, { DialogType } from '../../dialog/action-validati
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import InfoIcon from '@material-ui/icons/Info';
 import { debounceDefaultValue } from 'configurations/theme.configuration';
+import { makeStyles } from '@material-ui/core/styles';
+import { deleteButton } from 'configurations/styles.configuration';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
 
 type ShotResultAdded = {
   eventTarget: any;
@@ -55,6 +58,10 @@ type ChallengeParticipationShotResultsProps = {
 };
 
 const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResultsProps) => {
+  const useStyles = makeStyles(theme => ({
+    deleteButton: deleteButton
+  }));
+  const classes = useStyles();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [participationDeleted, setParticipationDeleted] = useState(false);
@@ -152,8 +159,11 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     return (
       <>
         <Box display="flex" width={1}>
-          <Box flexGrow={1}>
-            <Typography variant="h6">{participationResults.participationReference.outrank ? 'Hors classement' : 'Classé'}</Typography>
+          <Box display="flex" alignItems="center" flexGrow={1}>
+            <EmojiEventsIcon color="secondary" />
+            <Typography variant="h6">
+              {participationResults.participationReference.outrank ? 'Hors classement' : 'Classé'}
+            </Typography>
           </Box>
         </Box>
         <Box pt={2} display="flex" width={1}>
@@ -266,8 +276,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
             <Box>
               <Button
                 variant="contained"
-                color="secondary"
-                type="button"
+                className={classes.deleteButton}
                 onClick={() => setDialogOpen(true)}
                 startIcon={<DeleteIcon />}
               >

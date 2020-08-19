@@ -32,7 +32,7 @@ import { booleanToIcons } from 'configurations/theme.configuration';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 import EmailIcon from '@material-ui/icons/Email';
-import { tableHoveredRow } from '../../../configurations/styles.configuration';
+import { deleteButton, tableHoveredRow } from '../../../configurations/styles.configuration';
 
 type ChallengeShooterProps = {
   challengeId: number;
@@ -59,6 +59,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
       margin: theme.spacing(1),
     },
     tableRow: tableHoveredRow,
+    deleteButton: deleteButton
   }));
   const classes = useStyles();
 
@@ -243,8 +244,7 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
             <Box>
               <Button
                 variant="contained"
-                color="secondary"
-                type="button"
+                className={classes.deleteButton}
                 startIcon={<RemoveCircleIcon />}
                 onClick={() => setConfirmationDialogOpen(true)}
               >
