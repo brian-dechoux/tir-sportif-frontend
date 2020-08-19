@@ -14,6 +14,7 @@ import { GetCategoryResponse } from 'services/models/category.model';
 
 type AddShooterContainerProps = {
   clubs: GetClubResponse[];
+  searchFilterFreeClubOnly: boolean;
   filteredCategories?: GetCategoryResponse[];
   backRoute: string;
   validateButtonLabel: string;

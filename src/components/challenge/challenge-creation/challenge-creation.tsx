@@ -57,7 +57,7 @@ const ChallengeCreation = (props: ChallengeCreationProps) => {
   useEffect(() => {
     let unmounted = false;
     if (clubs.length === 0) {
-      ClubService.getClubs()
+      ClubService.getClubs(true)
         .then((clubsResponse) => {
           if (!unmounted) {
             setClubs(clubsResponse.data);

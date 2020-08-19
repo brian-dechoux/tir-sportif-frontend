@@ -64,6 +64,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
       return (
         <AddShooterContainer
           clubs={clubs}
+          searchFilterFreeClubOnly={false}
           filteredCategories={categories}
           backRoute={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}
           validateButtonLabel="SUIVANT"

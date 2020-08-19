@@ -33,6 +33,7 @@ type AddShooterProps = {
   clubs: GetClubResponse[];
   countries: GetCountryResponse[];
   categories: GetCategoryResponse[];
+  searchFilterFreeClubOnly: boolean;
   filteredCategories?: GetCategoryResponse[];
   backRoute: string;
   validateButtonLabel: string;
@@ -69,8 +70,11 @@ const AddShooter = (props: AddShooterProps) => {
   useEffect(() => {
     if (searchName) {
       setSearchLoading(true);
-      ShooterService.searchShooter(searchName)
-        .then((searchResponse) => {
+      ShooterService.searchShooter(
+        searchName,
+        props.searchFilterFreeClubOnly,
+        props.filteredCategories?.map(category => category.id)
+      ).then((searchResponse) => {
           setSearchLoading(false);
           setSearchOptions(searchResponse.data);
         })

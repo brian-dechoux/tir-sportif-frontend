@@ -53,7 +53,7 @@ const MyClubLicenseeCreation = (props: MyClubLicenseeCreationProps) => {
       return (
         <AddShooterContainer
           clubs={[myclub]}
-          filteredCategories={props.categories}
+          searchFilterFreeClubOnly={true}
           backRoute={ROUTES.MYCLUB.LICENSEES.LIST}
           validateButtonLabel="SUIVANT"
         />

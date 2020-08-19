@@ -11,8 +11,12 @@ class ShooterService {
     return cli.get(`/shooters/${id}`);
   }
 
-  searchShooter(searchName: string): Promise<AxiosResponse<GetSearchShooterResponse[]>> {
-    return cli.get(`/shooters/search?searchName=${searchName}`);
+  searchShooter(
+    searchName: string,
+    freeClubOnly: boolean,
+    categoryIds?: number[]
+  ): Promise<AxiosResponse<GetSearchShooterResponse[]>> {
+    return cli.get(`/shooters/search?searchName=${searchName}&freeClubOnly=${freeClubOnly}${categoryIds ? '&categoryIds'+categoryIds : ''}`);
   }
 
   createShooter(shooter: CreateShooterRequest): Promise<AxiosResponse<CreateShooterResponse>> {

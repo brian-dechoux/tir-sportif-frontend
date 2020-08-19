@@ -69,7 +69,7 @@ const ClubAddShooter = (props: ClubAddShooterProps) => {
     return (
       <AddShooterContainer
         clubs={clubs}
-        filteredCategories={props.categories}
+        searchFilterFreeClubOnly={true}
         backRoute={`${ROUTES.CLUBS.LIST}/${props.clubId}`}
         validateButtonLabel="VALIDER"
       />
