@@ -3,7 +3,7 @@ import {
   CreateParticipationsRequest,
   GetChallengeListElementResponse,
   GetChallengeResponse,
-  GetChallengeResultsResponse,
+  GetChallengeResultsResponse, GetChallengeSeriesResultsResponse,
   GetParticipantResponse,
   GetParticipationResultsResponse,
   GetShooterParticipationsResponse,
@@ -125,6 +125,14 @@ class ChallengeService {
 
   getChallengeResults(challengeId: number): Promise<AxiosResponse<GetChallengeResultsResponse>> {
     return cli.get(`/challenges/${challengeId}/results`);
+  }
+
+  getChallengeSeriesResults(
+    challengeId: number,
+    categoryId: number,
+    disciplineId: number
+  ): Promise<AxiosResponse<GetChallengeSeriesResultsResponse[]>> {
+    return cli.get(`/challenges/${challengeId}/results/${categoryId}/${disciplineId}/series`);
   }
 }
 

@@ -110,3 +110,10 @@ export interface ChallengeSingleResultResponse {
   participationId: number;
   participationTotalPoints: number;
 }
+
+export interface GetChallengeSeriesResultsResponse {
+  lastname: string;
+  firstname: string;
+  participationSeriesPoints: number[],
+  participationTotalPoints: number;
+}

@@ -32,7 +32,11 @@ import {
 } from '@material-ui/core';
 import { formatString } from 'utils/date.utils';
 import { ROUTES } from 'configurations/server.configuration';
-import { ChallengeResultResponse, GetChallengeResponse } from 'services/models/challenge.model';
+import {
+  ChallengeResultResponse,
+  GetChallengeResponse,
+  GetChallengeSeriesResultsResponse,
+} from 'services/models/challenge.model';
 import ChallengeService from 'services/challenge.service';
 import { Link } from 'react-router-dom';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
@@ -63,7 +67,19 @@ enum FilterType {
   DISCIPLINES = "Disciplines"
 }
 
-const getDialogIdForChallengeResultInformation = (resultInformation: ChallengeResultResponse) => `${resultInformation.categoryId}.${resultInformation.disciplineId}`;
+type DetailedResultsDialogCompositeId = {
+  categoryId: number;
+  categoryLabel: string;
+  disciplineId: number;
+  disciplineLabel: string;
+};
+
+const detailedResultsDialogCompositeIdFromChallengeResults = (result: ChallengeResultResponse): DetailedResultsDialogCompositeId => { return {
+  categoryId: result.categoryId,
+  categoryLabel: result.categoryLabel,
+  disciplineId: result.disciplineId,
+  disciplineLabel: result.disciplineLabel,
+}}
 
 const ResultsChallenge = (props: ResultsChallengeProps) => {
   const useStyles = makeStyles(() => ({
@@ -115,13 +131,14 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
 
   const [challengeInformation, setChallengeInformation] = useState<GetChallengeResponse>();
   const [resultsInformation, setResultsInformation] = useState<ChallengeResultResponse[]>([]);
+  const [resultsSeriesInformation, setResultsSeriesInformation] = useState<GetChallengeSeriesResultsResponse[]>([]);
   const [optionCategories, setOptionCategories] = useState<OptionsList>(OptionsList.fromLabels([], true));
   const [optionDisciplines, setOptionDisciplines] = useState<OptionsList>(OptionsList.fromLabels([], true));
   const [searchShooter, setSearchShooter] = useState<string>('');
   const [selectDeselectToggle, setSelectDeselectToggle] = useState(true);
   const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [disciplinesOpen, setDisciplinesOpen] = useState(false);
-  const [fullResultsDialogOpen, setFullResultsDialogOpen] = useState<string>();
+  const [detailedResultsDialogOpen, setDetailedResultsDialogOpen] = useState<DetailedResultsDialogCompositeId>();
   const [filterDialogOpen, setFilterDialogOpen] = useState<FilterType>();
 
   const handleCategoriesListFilterClick = () => {
@@ -132,12 +149,12 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
     setDisciplinesOpen(!disciplinesOpen)
   }
 
-  const handleResultsDialogOpen = (id: string) => {
-    setFullResultsDialogOpen(id)
+  const handleResultsDialogOpen = (id: DetailedResultsDialogCompositeId) => {
+    setDetailedResultsDialogOpen(id)
   }
 
   const handleResultsDialogClose = () => {
-    setFullResultsDialogOpen(undefined)
+    setDetailedResultsDialogOpen(undefined)
   }
 
   const handleFilterDialogOpen = (filterType: FilterType) => {
@@ -196,73 +213,92 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
     };
   }, []);
 
-  const fullResultsDialog = (resultInformation: ChallengeResultResponse, mobileDisplay: boolean) => {
-    const dialogContent =
-      <>
-        <List component="div" dense>
+  useEffect(() => {
+    if (detailedResultsDialogOpen) {
+      ChallengeService.getChallengeSeriesResults(props.challengeId, detailedResultsDialogOpen.categoryId, detailedResultsDialogOpen.disciplineId)
+        .then(response => {
+          setResultsSeriesInformation(response.data);
+        })
+        .catch(() => {
+          props.actions.error('Impossible de récupérer le détail des résultats');
+        });
+    }
+  }, [detailedResultsDialogOpen]);
+
+  const detailedResultsDialog = (detailedDialogKey: DetailedResultsDialogCompositeId, mobileDisplay: boolean) => {
+    if (detailedResultsDialogOpen?.categoryId === detailedDialogKey.categoryId && detailedResultsDialogOpen?.disciplineId === detailedDialogKey.disciplineId) {
+      const dialogContent =
+        <>
+          <List component="div">
+            {
+              resultsSeriesInformation.map((singleResult, index) =>
+                <ListItem key={`dialog.${singleResult.firstname}.${singleResult.lastname}`}>
+                  <ListItemText disableTypography
+                    primary={
+                      <Typography variant="body1" noWrap>
+                        {index + 1}. {singleResult.firstname} {singleResult.lastname}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography variant="body2" noWrap>
+                        {singleResult.participationSeriesPoints.join(' - ')}
+                      </Typography>
+                    }
+                  />
+                  <ListItemSecondaryAction>
+                    {singleResult.participationTotalPoints}
+                  </ListItemSecondaryAction>
+                </ListItem>
+              )
+            }
+          </List>
           {
-            resultInformation.results.map((singleResult, index) =>
-              <ListItem key={`dialog.${singleResult.firstname}.${singleResult.lastname}`}>
-                <ListItemAvatar>
-                    <Typography variant="body1">
-                      {index + 1}.
-                    </Typography>
-                  </ListItemAvatar>
-                <ListItemText
-                  primary={`${singleResult.firstname} ${singleResult.lastname}`}
-                />
-                <ListItemSecondaryAction>
-                  {singleResult.participationTotalPoints}
-                </ListItemSecondaryAction>
-              </ListItem>
-            )
-          }
-        </List>
-        {
-          !mobileDisplay ?
-            <DialogActions>
-              <Button onClick={handleResultsDialogClose} color="primary">
-                FERMER
-              </Button>
-            </DialogActions>
-            : null
-        }
-      </>
-    return fullResultsDialogOpen === getDialogIdForChallengeResultInformation(resultInformation) ?
-      <Dialog
-        fullScreen={mobileDisplay}
-        scroll={mobileDisplay ? "paper" : "body"}
-        maxWidth="sm"
-        fullWidth
-        open={true}
-        onClose={handleResultsDialogClose}
-      >
-        {
-          mobileDisplay ?
-            <Box display="flex" justifyContent="space-around">
-              <Box display="flex" flexDirection="column">
-                <Typography variant="h6">
-                  Classement complet
-                </Typography>
-                <Typography variant="subtitle1">
-                  {resultInformation.categoryLabel} {resultInformation.disciplineLabel}
-                </Typography>
-              </Box>
-              <Box display="flex" alignItems="center">
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={handleResultsDialogClose}
-                >
-                  <CloseIcon />
+            !mobileDisplay ?
+              <DialogActions>
+                <Button onClick={handleResultsDialogClose} color="primary">
+                  FERMER
                 </Button>
+              </DialogActions>
+              : null
+          }
+        </>
+      return (
+        <Dialog
+          fullScreen={mobileDisplay}
+          scroll={mobileDisplay ? "paper" : "body"}
+          maxWidth="sm"
+          fullWidth
+          open={true}
+          onClose={handleResultsDialogClose}
+        >
+          {
+            mobileDisplay ?
+              <Box display="flex" justifyContent="space-around">
+                <Box display="flex" flexDirection="column">
+                  <Typography variant="h6">
+                    Classement complet
+                  </Typography>
+                  <Typography variant="subtitle1">
+                    {detailedDialogKey.categoryLabel} {detailedDialogKey.disciplineLabel}
+                  </Typography>
+                </Box>
+                <Box display="flex" alignItems="center">
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={handleResultsDialogClose}
+                  >
+                    <CloseIcon />
+                  </Button>
+                </Box>
               </Box>
-            </Box>
-            : <DialogTitle>Classement complet</DialogTitle>
-        }
-        <DialogContent className={mobileDisplay ? classes.main : ""}>{dialogContent}</DialogContent>
-      </Dialog>
-      : null
+              : <DialogTitle>Classement complet</DialogTitle>
+          }
+          <DialogContent className={mobileDisplay ? classes.main : ""}>{dialogContent}</DialogContent>
+        </Dialog>
+      );
+    }
+    return null;
   }
 
   const categoriesFilterList = <List component="div" dense>
@@ -325,7 +361,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
   const filterDialog = filterDialogOpen ?
       <Dialog
         fullScreen
-        scroll={"paper"}
+        scroll="paper"
         maxWidth="sm"
         fullWidth
         open={true}
@@ -387,7 +423,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
           </Box>
           <Divider/>
           <Box pt={3}>
-            <Grid container spacing={3}>
+            <Grid container spacing={2}>
               <Grid item xs={3}>
                 <Box height="100%">
                   <Paper elevation={1} style={{height: '100%'}}>
@@ -458,20 +494,16 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                               }
                             </List>
                           </CardContent>
-                          {
-                            resultInformation.results.length > 3 ?
-                              <CardActions>
-                                <Button
-                                  size="small"
-                                  startIcon={<FormatListNumberedIcon/>}
-                                  onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
-                                >
-                                  CLASSEMENT COMPLET
-                                </Button>
-                              </CardActions>
-                              : null
-                          }
-                          {fullResultsDialog(resultInformation, false)}
+                          <CardActions>
+                            <Button
+                              size="small"
+                              startIcon={<FormatListNumberedIcon/>}
+                              onClick={() => handleResultsDialogOpen(detailedResultsDialogCompositeIdFromChallengeResults(resultInformation))}
+                            >
+                              DÉTAIL
+                            </Button>
+                          </CardActions>
+                          {detailedResultsDialog(detailedResultsDialogCompositeIdFromChallengeResults(resultInformation), false)}
                         </Card>
                       </Grid>
                     )
@@ -526,21 +558,15 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                             </Box>
                           }
                         />
-                        {
-                          resultInformation.results.length > 3 ?
-                            <>
-                              {fullResultsDialog(resultInformation, true)}
-                              <ListItemSecondaryAction>
-                                <IconButton
-                                  edge="end"
-                                  onClick={() => handleResultsDialogOpen(getDialogIdForChallengeResultInformation(resultInformation))}
-                                >
-                                  <FormatListNumberedIcon fontSize="large"/>
-                                </IconButton>
-                              </ListItemSecondaryAction>
-                            </>
-                            : null
-                        }
+                        {detailedResultsDialog( detailedResultsDialogCompositeIdFromChallengeResults(resultInformation), true)}
+                        <ListItemSecondaryAction>
+                          <IconButton
+                            edge="end"
+                            onClick={() => handleResultsDialogOpen(detailedResultsDialogCompositeIdFromChallengeResults(resultInformation))}
+                          >
+                            <FormatListNumberedIcon fontSize="large"/>
+                          </IconButton>
+                        </ListItemSecondaryAction>
                       </ListItem>
                     )
                 }
