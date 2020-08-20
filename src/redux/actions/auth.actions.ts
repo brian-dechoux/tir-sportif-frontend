@@ -43,7 +43,7 @@ export function login(
       .catch(errorResponse => {
         if (errorResponse.response.status === 401) {
           if (errorResponse.response.data.code === ERRORS.EXPIRED_TOKEN) {
-            dispatch(expireToken());
+            dispatch(expireToken(errorResponse.response.data.message));
           }
         } else {
           dispatch(error(errorResponse.response.data.message));
@@ -70,9 +70,9 @@ export function logout(): ThunkAction<void, AppState, undefined, Actions> {
   };
 }
 
-export function expireToken(): ThunkAction<void, AppState, undefined, Actions> {
+export function expireToken(errorMessage: string): ThunkAction<void, AppState, undefined, Actions> {
   return (dispatch: ThunkDispatch<AppState, undefined, Actions>) => {
-    dispatch(error('Session expirée, veuillez vous connecter à nouveau'));
+    dispatch(error(errorMessage));
     dispatch(push(ROUTES.RESULTS.LIST));
     localStorage.removeItem('token');
     dispatch({
