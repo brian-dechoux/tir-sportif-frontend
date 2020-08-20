@@ -64,6 +64,7 @@ const MyClubLicenseeCreationSpecificInfos = (props: MyClubLicenseeCreationProps)
         }
       }).catch(() => {
         props.actions.error("Impossible de créer la licence");
+        props.actions.push(ROUTES.MYCLUB.LICENSEES.LIST);
         setFormSent(false);
       });
     }

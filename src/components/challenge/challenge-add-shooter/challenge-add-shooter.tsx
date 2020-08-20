@@ -57,7 +57,7 @@ const ChallengeAddShooter = (props: ChallengeAddShooterProps) => {
     };
   }, [clubs, categories, disciplines]);
 
-  if (clubs.length === 0 || categories.length === 0 || disciplines.length === 0) {
+  if (categories.length === 0 || disciplines.length === 0) {
     return null;
   } else {
     if (!props.shooterResolved) {
