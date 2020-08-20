@@ -8,7 +8,7 @@ import { GetShooterListElementResponse, GetShooterResponse } from './models/shoo
 class ClubService {
 
   getClubs(withMyClub?: boolean): Promise<AxiosResponse<GetClubResponse[]>> {
-    return cli.get(`/clubs/${withMyClub ? '?withMyClub='+withMyClub : ''}`);
+    return cli.get(`/clubs${withMyClub ? '?withMyClub='+withMyClub : ''}`);
   }
 
   getClub(clubId: number): Promise<AxiosResponse<GetClubResponse>> {
