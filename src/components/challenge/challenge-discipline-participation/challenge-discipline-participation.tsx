@@ -1,18 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Button,
-  Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@material-ui/core';
+import { Box, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
 import { ROUTES } from 'configurations/server.configuration';
-import { booleanToText } from 'configurations/theme.configuration';
+import { booleanToIcons } from 'configurations/theme.configuration';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { ToastVariant } from 'components/toast/toast';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -86,6 +75,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
         }
       }).catch(() => {
         props.actions.error("Impossible d'inscrire le tireur");
+        props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`);
         setFormSent(false);
       });
     }
@@ -172,7 +162,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
                     <TableRow>
                       <TableCell align="center">DISCIPLINE</TableCell>
                       <TableCell align="center">CIBLE ÉLECTRONIQUE</TableCell>
-                      <TableCell align="center">HORS CLASSEMENT</TableCell>
+                      <TableCell align="center">CLASSÉ</TableCell>
                       <TableCell align="center">A PAYÉ</TableCell>
                       <TableCell />
                     </TableRow>
@@ -182,13 +172,13 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
                       <TableRow key={participation.discipline}>
                         <TableCell align="center">{participation.discipline}</TableCell>
                         <TableCell align="center">
-                          {booleanToText(participation.useElectronicTarget)}
+                          {booleanToIcons(participation.useElectronicTarget)}
                         </TableCell>
                         <TableCell align="center">
-                          {booleanToText(participation.outrank)}
+                          {booleanToIcons(!participation.outrank)}
                         </TableCell>
                         <TableCell align="center">
-                          {booleanToText(participation.paid)}
+                          {booleanToIcons(participation.paid)}
                         </TableCell>
                       </TableRow>
                     ))}
