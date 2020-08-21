@@ -241,7 +241,7 @@ const ResultsChallenge = (props: ResultsChallengeProps) => {
                     }
                     secondary={
                       <Typography variant="body2" noWrap>
-                        {singleResult.participationSeriesPoints.join(' - ')}
+                        Séries: {singleResult.participationSeriesPoints.join(' - ')}
                       </Typography>
                     }
                   />
