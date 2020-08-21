@@ -168,8 +168,8 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {participations.map(participation => (
-                      <TableRow key={participation.discipline}>
+                    {participations.map((participation, index) => (
+                      <TableRow key={`${participation.discipline}.${index}`}>
                         <TableCell align="center">{participation.discipline}</TableCell>
                         <TableCell align="center">
                           {booleanToIcons(participation.useElectronicTarget)}

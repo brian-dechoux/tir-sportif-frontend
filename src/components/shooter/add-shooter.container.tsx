@@ -7,7 +7,6 @@ import { push } from 'connected-react-router';
 import { openToast } from 'redux/actions/toast.actions';
 import { Actions } from 'store';
 import AppState from 'redux/states/app.state.type';
-import { getCountries } from 'redux/actions/general.actions';
 import { addShooter } from 'redux/actions/add-shooter.actions';
 import { GetClubResponse } from 'services/models/club.model';
 import { GetCategoryResponse } from 'services/models/category.model';
@@ -25,9 +24,6 @@ class AddShooterContainer extends React.PureComponent<
   {}
 > {
   render() {
-    if (this.props.countries.length === 0) {
-      this.props.actions.getCountries();
-    }
     return <AddShooter {...this.props} />;
   }
 }
@@ -45,7 +41,6 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
       error: error,
       openToast: openToast,
       push: push,
-      getCountries: getCountries,
       addShooter: addShooter
     },
     dispatch

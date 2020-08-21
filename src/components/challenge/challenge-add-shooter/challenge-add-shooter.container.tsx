@@ -7,7 +7,6 @@ import { push } from 'connected-react-router';
 import { openToast } from 'redux/actions/toast.actions';
 import { Actions } from 'store';
 import AppState from 'redux/states/app.state.type';
-import { getCountries } from 'redux/actions/general.actions';
 import { ROUTES } from 'configurations/server.configuration';
 import { RouteChildrenProps, withRouter } from 'react-router';
 import { resetShooter } from 'redux/actions/add-shooter.actions';
@@ -23,9 +22,6 @@ class ChallengeAddShooterContainer extends React.PureComponent<
   {}
 > {
   render() {
-    if (this.props.countries.length === 0) {
-      this.props.actions.getCountries();
-    }
     if (this.props.match && this.props.match.params && this.props.match.params.challengeId) {
       const paramChallengeId = this.props.match.params.challengeId;
       const parsedChallengeId = parseInt(paramChallengeId, 10);
@@ -53,7 +49,6 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
       error: error,
       openToast: openToast,
       push: push,
-      getCountries: getCountries,
       resetShooter: resetShooter,
     },
     dispatch

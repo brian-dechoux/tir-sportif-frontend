@@ -227,7 +227,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
           <Typography variant="h6">{challengeInformation.name}</Typography>
           <Typography variant="body1">
             Se déroulera à {challengeInformation.address.city}, le{' '}
-            {formatString(challengeInformation.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
+            {formatString(challengeInformation.startDate, "dd MMMM yyyy 'à' HH'h'mm")}
           </Typography>
         </Box>
         <Divider />

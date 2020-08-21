@@ -59,12 +59,12 @@ const Header = (props: HeaderProps) => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (props.countries.length === 0 && props.categories.length === 0 && props.disciplines.length === 0) {
+    if (props.isAuthenticated && props.countries.length === 0 && props.categories.length === 0 && props.disciplines.length === 0) {
       props.actions.getCountries();
       props.actions.getCategories();
       props.actions.getDisciplines();
     }
-  }, []);
+  }, [props.isAuthenticated]);
 
   const handleDialogOpen = () => {
     setOpen(true);
