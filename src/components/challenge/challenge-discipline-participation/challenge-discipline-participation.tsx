@@ -1,19 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Button,
-  Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Typography,
-} from '@material-ui/core';
-import { Link } from 'react-router-dom';
+import { Box, Button, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from '@material-ui/core';
 import { ROUTES } from 'configurations/server.configuration';
-import { booleanToText } from 'configurations/theme.configuration';
+import { booleanToIcons } from 'configurations/theme.configuration';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { ToastVariant } from 'components/toast/toast';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -25,30 +13,37 @@ import {
 import ChallengeService from 'services/challenge.service';
 import ChallengeDisciplineParticipationDialog from './challenge-discipline-participation-dialog';
 import AddIcon from '@material-ui/icons/Add';
+import InfoIcon from '@material-ui/icons/Info';
 
 type ChallengeDisciplineParticipationProps = {
   challengeId: number;
   disciplines: GetDisciplineResponse[];
+  callbackShooterFn: () => Promise<number>,
   shooterFirstname: string,
   shooterLastname: string,
-  callbackShooterFn: () => Promise<number>
   actions: {
     error: (message: string) => any;
     openToast: (message: string, variant: ToastVariant) => any;
     push: (path: string, state?: any | undefined) => any;
+    resetShooter: () => any
   };
 };
 
-const disciplineToDisciplineParticipation = (discipline: GetDisciplineResponse, participations: Participation[]) => ({
+type DisciplineParticipation = {
+  definition: GetDisciplineResponse;
+  alreadyRanked: boolean;
+}
+
+const disciplineToDisciplineParticipation = (discipline: GetDisciplineResponse, participations: Participation[]): DisciplineParticipation => ({
   definition: discipline,
   alreadyRanked: participations.some(participation => participation.discipline === discipline.label && !participation.outrank)
-})
+});
 
 const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipationProps) => {
   const [formSent, setFormSent] = useState(false);
 
   const [participations, setParticipations] = useState<Participation[]>([]);
-  const [disciplineParticipations, setDisciplineParticipations] = useState(
+  const [disciplineParticipations, setDisciplineParticipations] = useState<DisciplineParticipation[]>(
     props.disciplines.map(discipline => disciplineToDisciplineParticipation(discipline, participations))
   );
 
@@ -74,13 +69,13 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
         if (response.status === 201) {
           props.actions.openToast('Le tireur a été inscrit au challenge', 'success');
           props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`);
+          props.actions.resetShooter();
         } else {
           throw new Error();
         }
       }).catch(() => {
-        // TODO Reset full form in case of error
-        // FIXME one route for participation + create ?
         props.actions.error("Impossible d'inscrire le tireur");
+        props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`);
         setFormSent(false);
       });
     }
@@ -101,6 +96,11 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
     setDialogOpen(false);
   }
 
+  const handleCancel = () => {
+    props.actions.push(`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`);
+    props.actions.resetShooter();
+  }
+
   const dialog = dialogOpen ?
     <ChallengeDisciplineParticipationDialog
       disciplines={disciplineParticipations}
@@ -115,34 +115,41 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
     return (<>
       {dialog}
       <Box display="flex" justifyContent="center" pt={2}>
-        <Box display="flex" width={0.6}>
-          <Grid container spacing={3} alignItems="center">
-            <Grid item xs={12}>
-              <Typography variant="h6">
-                {`${props.shooterFirstname} ${props.shooterLastname}`.toUpperCase()}: INSCRIPTION AUX DISCIPLINES
-              </Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Button
-                disabled={props.disciplines.length === 0}
-                variant="contained"
-                color="secondary"
-                onClick={() => setDialogOpen(true)}
-                startIcon={<AddIcon />}
+        <Box display="flex" flexDirection="column" width={0.8}>
+          <Box display="flex" justifyContent="center">
+            <Typography variant="h6">
+              {`${props.shooterFirstname} ${props.shooterLastname}`.toUpperCase()}: INSCRIPTION AUX DISCIPLINES
+            </Typography>
+          </Box>
+          <Box pb={2} pt={4}>
+            <Button
+              disabled={props.disciplines.length === 0}
+              variant="contained"
+              color="secondary"
+              onClick={() => setDialogOpen(true)}
+              startIcon={<AddIcon />}
+            >
+              AJOUTER
+            </Button>
+          </Box>
+          {
+            props.disciplines.length === disciplineParticipations.filter(disciplineParticipation => disciplineParticipation.alreadyRanked).length ?
+              <Box
+                display="flex"
+                fontStyle="italic"
+                alignItems="center"
+                pb={2}
               >
-                AJOUTER
-              </Button>
-
-            </Grid>
-            <Grid item xs={10}>
-              <Box fontStyle="italic">
-                <Typography variant="body2" hidden={props.disciplines.length > 0}>
-                  * Le tireur est inscrit et classé à toutes les disciplines proposées par le challenge
+                <InfoIcon color="secondary" />
+                <Typography variant="body2">
+                  Le tireur est inscrit et classé à toutes les disciplines proposées par le challenge
                 </Typography>
               </Box>
-            </Grid>
-            <Grid item xs={12}>
-              <TableContainer component={Paper}>
+              : null
+          }
+
+          <Box pb={2}>
+            <TableContainer component={Paper}>
                 <Table stickyHeader>
                   <colgroup>
                     <col width={0.3} />
@@ -155,7 +162,7 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
                     <TableRow>
                       <TableCell align="center">DISCIPLINE</TableCell>
                       <TableCell align="center">CIBLE ÉLECTRONIQUE</TableCell>
-                      <TableCell align="center">HORS CLASSEMENT</TableCell>
+                      <TableCell align="center">CLASSÉ</TableCell>
                       <TableCell align="center">A PAYÉ</TableCell>
                       <TableCell />
                     </TableRow>
@@ -165,43 +172,40 @@ const ChallengeDisciplineParticipation = (props: ChallengeDisciplineParticipatio
                       <TableRow key={participation.discipline}>
                         <TableCell align="center">{participation.discipline}</TableCell>
                         <TableCell align="center">
-                          {booleanToText(participation.useElectronicTarget)}
+                          {booleanToIcons(participation.useElectronicTarget)}
                         </TableCell>
                         <TableCell align="center">
-                          {booleanToText(participation.outrank)}
+                          {booleanToIcons(!participation.outrank)}
                         </TableCell>
                         <TableCell align="center">
-                          {booleanToText(participation.paid)}
+                          {booleanToIcons(participation.paid)}
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
-            </Grid>
-            <Grid item container spacing={2} justify="flex-end" alignItems="center">
-              <Grid item>
-                <Button
-                  variant="outlined"
-                  component={Link}
-                  to={`${ROUTES.CHALLENGE.LIST}/${props.challengeId}`}
-                >
-                  ANNULER
-                </Button>
-              </Grid>
-              <Grid>
-                <Button
-                  disabled={!disciplinesFormValid}
-                  variant="contained"
-                  color="secondary"
-                  type="button"
-                  onClick={() => setFormSent(true)}
-                >
-                  VALIDER L'INSCRIPTION
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
+          </Box>
+
+          <Box display="flex" justifyContent="flex-end">
+            <Box pr={1}>
+              <Button
+                variant="outlined"
+                onClick={handleCancel}
+              >
+                ANNULER
+              </Button>
+            </Box>
+            <Button
+              disabled={!disciplinesFormValid}
+              variant="contained"
+              color="secondary"
+              type="button"
+              onClick={() => setFormSent(true)}
+            >
+              VALIDER L'INSCRIPTION
+            </Button>
+          </Box>
         </Box>
       </Box>
     </>);

@@ -6,45 +6,29 @@ import { GetShooterResponse } from './shooter.model';
 
 export interface GetChallengeListElementResponse {
   id: number;
-
   name: string;
-
   startDate: string;
-
   city: string;
-
   nbShooters: number;
 }
 
 export interface CreateChallengeResponse {
   id: number;
-
   name: string;
-
   address: CreateAddressRequest;
-
   startDate: string;
-
   club: GetClubResponse;
-
   categories: GetCategoryResponse[];
-
   disciplines: GetDisciplineResponse[];
 }
 
 export interface GetChallengeResponse {
   id: number;
-
   name: string;
-
   startDate: string;
-
   address: GetAddressResponse;
-
   club: GetClubResponse;
-
   categories: GetCategoryResponse[];
-
   disciplines: GetDisciplineResponse[];
 }
 
@@ -124,5 +108,12 @@ export interface ChallengeSingleResultResponse {
   lastname: string;
   firstname: string;
   participationId: number;
+  participationTotalPoints: number;
+}
+
+export interface GetChallengeSeriesResultsResponse {
+  lastname: string;
+  firstname: string;
+  participationSeriesPoints: number[],
   participationTotalPoints: number;
 }

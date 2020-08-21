@@ -11,6 +11,7 @@ export const customColors = {
   black: '#000000',
   orange: '#EA6F30',
   red: '#bf1c2e',
+  darkRed: '#650d17',
   lightRed: '#ff6376',
 };
 
@@ -65,3 +66,5 @@ export const paginationTheme = {
   displayedRowsArgs: (paginationInfo: LabelDisplayedRowsArgs) =>
     `Element ${paginationInfo.from} à ${paginationInfo.to}, sur un total de: ${paginationInfo.count}`,
 };
+
+export const debounceDefaultValue = 300;

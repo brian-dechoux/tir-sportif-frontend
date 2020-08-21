@@ -12,7 +12,7 @@ cli.interceptors.response.use(
   onFulfilled => onFulfilled,
   onRejected => {
     if (onRejected.response.status === 401) {
-      store.dispatch(expireToken());
+      store.dispatch(expireToken(onRejected.response.data.message));
     }
     return Promise.reject(onRejected);
   }

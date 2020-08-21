@@ -19,6 +19,13 @@ export interface GetSearchShooterResponse {
   categoryLabel: string;
 }
 
+export interface GetShooterListElementResponse {
+  id: number;
+  lastname: string;
+  firstname: string;
+  categoryLabel: string;
+}
+
 export const getFullName = (shooter: GetSearchShooterResponse | GetShooterResponse) =>
   `${shooter.firstname} ${shooter.lastname}`
 

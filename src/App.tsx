@@ -1,9 +1,8 @@
 import React from 'react';
-import { Provider } from 'react-redux';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import './App.css';
 import clsx from 'clsx';
-import { history, store } from './store';
+import { history } from './store';
 import 'typeface-roboto';
 import ResultsContainer from './components/results/results-list/results-list.container';
 import { ConnectedRouter } from 'connected-react-router';
@@ -25,6 +24,19 @@ import ResultsChallengeContainer from './components/results/results-challenge/re
 import Desktop from './components/media/desktop';
 import Mobile from './components/media/mobile';
 import { useMediaQuery } from 'react-responsive';
+import MyClubContainer from './components/my-club/my-club.container';
+import MyClubResumeContainer from './components/my-club/resume/my-club-resume.container';
+import MyClubLicenseesContainer from './components/my-club/licensees/my-club-licensees.container';
+import MyClubLicenseeDetailContainer from './components/my-club/licensee-detail/my-club-licensee-detail.container';
+import MyClubLicenseeCreationContainer
+  from './components/my-club/licensee-creation/my-club-licensee-creation.container';
+import MyClubBillsShootersContainer from './components/my-club/bills-shooters/my-club-bills-shooters.container';
+import MyClubBillsShooterDetailContainer
+  from './components/my-club/bills-shooter-detail/my-club-bills-shooter-detail.container';
+import ClubListContainer from './components/club/club-list/club-list.container';
+import ClubCreationContainer from './components/club/club-creation/club-creation.container';
+import ClubDetailContainer from './components/club/club-detail/club-detail.container';
+import ClubAddShooterContainer from './components/club/club-add-shooter/club-add-shooter.container';
 
 // TODO https://react-redux.js.org/api/hooks ? to use react redux with functional component only and remove the container HOCs
 const App = () => {
@@ -83,12 +95,76 @@ const App = () => {
             <ChallengeShotResultsContainer />
           </Route>
 
-          <Route exact path={ROUTES.CLUBS}>
-            <AuthenticatedRedirectContainer>clubs</AuthenticatedRedirectContainer>
+          <Route exact path={ROUTES.CLUBS.LIST}>
+            <AuthenticatedRedirectContainer>
+              <ClubListContainer />
+            </AuthenticatedRedirectContainer>
           </Route>
 
-          <Route exact path={ROUTES.MYCLUB}>
-            <AuthenticatedRedirectContainer>myclub</AuthenticatedRedirectContainer>
+          <Route exact path={ROUTES.CLUBS.CREATION}>
+            <AuthenticatedRedirectContainer>
+              <ClubCreationContainer />
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={`${ROUTES.CLUBS.LIST}/:clubId`}>
+            <AuthenticatedRedirectContainer>
+              <ClubDetailContainer />
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={`${ROUTES.CLUBS.LIST}/:clubId/${ROUTES.CLUBS.SHOOTERS.CREATION}`}>
+            <AuthenticatedRedirectContainer>
+              <ClubAddShooterContainer />
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={ROUTES.MYCLUB.RESUME}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+                <MyClubResumeContainer />
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={ROUTES.MYCLUB.LICENSEES.LIST}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+                <MyClubLicenseesContainer />
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={`${ROUTES.MYCLUB.LICENSEES.LIST}/:licenseeId`}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+                <MyClubLicenseeDetailContainer />
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={ROUTES.MYCLUB.LICENSEES.CREATION}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+                <MyClubLicenseeCreationContainer />
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={ROUTES.MYCLUB.BILLS.LIST}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+                <MyClubBillsShootersContainer />
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
+          </Route>
+
+          <Route exact path={`${ROUTES.MYCLUB.BILLS.LIST}/:shooterId`}>
+            <AuthenticatedRedirectContainer>
+              <MyClubContainer>
+                <MyClubBillsShooterDetailContainer />
+              </MyClubContainer>
+            </AuthenticatedRedirectContainer>
           </Route>
 
           <Redirect to={ROUTES.RESULTS.LIST} />
@@ -116,32 +192,30 @@ const App = () => {
   const isMobile = useMediaQuery({maxWidth: customTheme.mediaBreakpoint - 1})
 
   return (
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        <Box height="100%" display="flex" flexDirection="column">
-          <MuiThemeProvider theme={customTheme.mui}>
-            <Box height="100%" display="flex" flexDirection="column">
-              <Box>
-                <Desktop>
-                  <HeaderContainer />
-                </Desktop>
-                <ToastContainer />
-              </Box>
-              <Box pt={isMobile ? 0 : 2} pb={isMobile ? 0 : 2} height="100%" className={clsx(classes.main, classes.overflow)}>
-                <Desktop>
-                  <Container component={Paper} className={clsx(classes.container, classes.overflow)}>
-                    {desktopContent}
-                  </Container>
-                </Desktop>
-                <Mobile>
-                  {mobileContent}
-                </Mobile>
-              </Box>
+    <ConnectedRouter history={history}>
+      <Box height="100%" display="flex" flexDirection="column">
+        <MuiThemeProvider theme={customTheme.mui}>
+          <Box height="100%" display="flex" flexDirection="column">
+            <Box>
+              <Desktop>
+                <HeaderContainer />
+              </Desktop>
+              <ToastContainer />
             </Box>
-          </MuiThemeProvider>
-        </Box>
-      </ConnectedRouter>
-    </Provider>
+            <Box pt={isMobile ? 0 : 2} pb={isMobile ? 0 : 2} height="100%" className={clsx(classes.main, classes.overflow)}>
+              <Desktop>
+                <Container component={Paper} className={clsx(classes.container, classes.overflow)}>
+                  {desktopContent}
+                </Container>
+              </Desktop>
+              <Mobile>
+                {mobileContent}
+              </Mobile>
+            </Box>
+          </Box>
+        </MuiThemeProvider>
+      </Box>
+    </ConnectedRouter>
   );
 };
 

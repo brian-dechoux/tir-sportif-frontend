@@ -1,16 +1,16 @@
 import {
-  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle, Paper,
+  DialogTitle,
+  Paper,
   TextField,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from 'configurations/server.configuration';
 import PersonIcon from '@material-ui/icons/Person';
@@ -19,14 +19,22 @@ import LogoText from 'components/svg/logo-text';
 import { makeStyles } from '@material-ui/core/styles';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Desktop from '../media/desktop';
-import { url } from 'inspector';
+import { GetCountryResponse } from '../../services/models/country.model';
+import { GetCategoryResponse } from '../../services/models/category.model';
+import { GetDisciplineResponse } from '../../services/models/discipline.model';
 
 type HeaderProps = {
+  countries: GetCountryResponse[];
+  categories: GetCategoryResponse[];
+  disciplines: GetDisciplineResponse[];
   isAuthenticated: boolean;
   urlFirstPart: string;
   actions: {
     login: (username: string, password: string) => any;
     logout: () => any;
+    getCountries: () => any;
+    getCategories: () => any;
+    getDisciplines: () => any;
   };
 };
 
@@ -49,6 +57,14 @@ const Header = (props: HeaderProps) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (props.countries.length === 0 && props.categories.length === 0 && props.disciplines.length === 0) {
+      props.actions.getCountries();
+      props.actions.getCategories();
+      props.actions.getDisciplines();
+    }
+  }, []);
 
   const handleDialogOpen = () => {
     setOpen(true);
@@ -85,6 +101,16 @@ const Header = (props: HeaderProps) => {
         <Button component={Link} to={ROUTES.RESULTS.LIST}>
           <Typography variant="button" color={headerMenuSelected('results')}>
             RÉSULTATS
+          </Typography>
+        </Button>
+        <Button component={Link} to={ROUTES.CLUBS.LIST}>
+          <Typography variant="button" color={headerMenuSelected('clubs')}>
+            CLUBS
+          </Typography>
+        </Button>
+        <Button component={Link} to={ROUTES.MYCLUB.RESUME}>
+          <Typography variant="button" color={headerMenuSelected('myclub')}>
+            MYCLUB
           </Typography>
         </Button>
       </Desktop>

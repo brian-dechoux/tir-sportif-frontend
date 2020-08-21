@@ -20,6 +20,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import { GetChallengeListElementResponse } from 'services/models/challenge.model';
 import ChallengeService from 'services/challenge.service';
+import { tableHoveredRow } from '../../../configurations/styles.configuration';
 
 type ResultsProps = {
   actions: {
@@ -30,11 +31,7 @@ type ResultsProps = {
 
 const ResultsList = (props: ResultsProps) => {
   const useStyles = makeStyles(theme => ({
-    tableRow: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
+    tableRow: tableHoveredRow,
   }));
   const classes = useStyles();
 

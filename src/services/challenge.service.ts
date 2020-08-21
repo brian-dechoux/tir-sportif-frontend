@@ -2,9 +2,10 @@ import {
   CreateChallengeResponse,
   CreateParticipationsRequest,
   GetChallengeListElementResponse,
-  GetChallengeResponse, GetChallengeResultsResponse,
+  GetChallengeResponse,
+  GetChallengeResultsResponse, GetChallengeSeriesResultsResponse,
   GetParticipantResponse,
-  GetParticipationResultsResponse, GetParticipationSerieResultsResponse,
+  GetParticipationResultsResponse,
   GetShooterParticipationsResponse,
 } from './models/challenge.model';
 import { Page } from './models/page.model';
@@ -14,7 +15,8 @@ import { CreateAddressRequest } from './models/address.model';
 import { formatDate } from 'utils/date.utils';
 import { dateTheme } from 'configurations/theme.configuration';
 
-export class ChallengeService {
+class ChallengeService {
+
   getChallenges(
     rowsPerPage: number,
     page: number
@@ -123,6 +125,14 @@ export class ChallengeService {
 
   getChallengeResults(challengeId: number): Promise<AxiosResponse<GetChallengeResultsResponse>> {
     return cli.get(`/challenges/${challengeId}/results`);
+  }
+
+  getChallengeSeriesResults(
+    challengeId: number,
+    categoryId: number,
+    disciplineId: number
+  ): Promise<AxiosResponse<GetChallengeSeriesResultsResponse[]>> {
+    return cli.get(`/challenges/${challengeId}/results/${categoryId}/${disciplineId}/series`);
   }
 }
 

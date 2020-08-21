@@ -5,7 +5,7 @@ import ChallengeCreation from './challenge-creation';
 import { error } from 'redux/actions/error.actions';
 import { push } from 'connected-react-router';
 import { openToast } from 'redux/actions/toast.actions';
-import { Actions } from '../../../store';
+import { Actions } from 'store';
 import AppState from 'redux/states/app.state.type';
 import { getCountries } from 'redux/actions/general.actions';
 
@@ -14,10 +14,6 @@ class ChallengeCreationContainer extends React.PureComponent<
   {}
 > {
   render() {
-    if (this.props.countries.length === 0) {
-      // TODO BDX put it in local storage
-      this.props.actions.getCountries();
-    }
     return <ChallengeCreation {...this.props} />;
   }
 }
@@ -25,6 +21,8 @@ class ChallengeCreationContainer extends React.PureComponent<
 const mapStateToProps = (state: AppState) => {
   return {
     countries: state.general.countries,
+    categories: state.general.categories,
+    disciplines: state.general.disciplines,
   };
 };
 

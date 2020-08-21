@@ -26,13 +26,13 @@ import TableContainer from '@material-ui/core/TableContainer';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
 import { ToastVariant } from '../../toast/toast';
 import ChallengeDisciplineParticipationDialog, { DisciplineParticipation } from '../challenge-discipline-participation/challenge-discipline-participation-dialog';
-import EditIcon from '@material-ui/icons/Edit';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import AddIcon from '@material-ui/icons/Add';
 import { booleanToIcons } from 'configurations/theme.configuration';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 import EmailIcon from '@material-ui/icons/Email';
+import { deleteButton, tableHoveredRow } from '../../../configurations/styles.configuration';
 
 type ChallengeShooterProps = {
   challengeId: number;
@@ -58,11 +58,8 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
     button: {
       margin: theme.spacing(1),
     },
-    tableRow: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
+    tableRow: tableHoveredRow,
+    deleteButton: deleteButton
   }));
   const classes = useStyles();
 
@@ -170,7 +167,6 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
         createParticipationsPayload
       ).then(response => {
         if (response.status === 201) {
-          // TODO refresh here ! backend should return created data in order to have the generated ID
           props.actions.openToast('La participation a été ajoutée pour le tireur', 'success');
           setShooterParticipations(response.data);
           setDisciplineParticipations(disciplines.map(discipline => disciplineToDisciplineParticipation(discipline, response.data.participations)))
@@ -216,7 +212,6 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
     /> : null;
 
   if (!shooterParticipations) {
-    // TODO spinner (with message?)
     return null;
   } else {
     return (
@@ -246,22 +241,10 @@ const ChallengeShooter = (props: ChallengeShooterProps) => {
                 </Button>
               </Box> : null
             }
-            <Box pr={1}>
-              <Button
-                variant="contained"
-                color="secondary"
-                type="button"
-                startIcon={<EditIcon />}
-                disabled
-              >
-                ÉDITER
-              </Button>
-            </Box>
             <Box>
               <Button
                 variant="contained"
-                color="secondary"
-                type="button"
+                className={classes.deleteButton}
                 startIcon={<RemoveCircleIcon />}
                 onClick={() => setConfirmationDialogOpen(true)}
               >

@@ -20,27 +20,36 @@ import { ERRORS, ROUTES } from 'configurations/server.configuration';
 import TableContainer from '@material-ui/core/TableContainer';
 import { GetShooterResponse } from 'services/models/shooter.model';
 import { GetDisciplineResponse } from 'services/models/discipline.model';
-import DisciplineService from 'services/discipline.service';
 import ChallengeService from 'services/challenge.service';
 import {
   GetParticipationResultsResponse,
   GetParticipationSerieResultsResponse,
 } from 'services/models/challenge.model';
 import ShooterService from 'services/shooter.service';
-import debounce from '../../../utils/debounce.utils';
-import EditIcon from '@material-ui/icons/Edit';
+import debounce from 'utils/debounce.utils';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ToastVariant } from '../../toast/toast';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
 import PriorityHighIcon from '@material-ui/icons/PriorityHigh';
 import InfoIcon from '@material-ui/icons/Info';
+import { debounceDefaultValue } from 'configurations/theme.configuration';
+import { makeStyles } from '@material-ui/core/styles';
+import { deleteButton } from 'configurations/styles.configuration';
+import EmojiEventsIcon from '@material-ui/icons/EmojiEvents';
+
+type ShotResultAdded = {
+  eventTarget: any;
+  serieNb: number;
+  shotNb: number | null;
+  points: number;
+}
 
 type ChallengeParticipationShotResultsProps = {
   challengeId: number;
   shooterId: number;
-  disciplineId: number;
   participationId: number;
+  discipline: GetDisciplineResponse;
   actions: {
     error: (message: string) => any;
     openToast: (message: string, variant: ToastVariant) => any;
@@ -49,11 +58,15 @@ type ChallengeParticipationShotResultsProps = {
 };
 
 const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResultsProps) => {
+  const useStyles = makeStyles(theme => ({
+    deleteButton: deleteButton
+  }));
+  const classes = useStyles();
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [participationDeleted, setParticipationDeleted] = useState(false);
+  const [shotResultAdded, setShotResultAdded] = useState<ShotResultAdded>();
   const [shooter, setShooter] = useState<GetShooterResponse>();
-  const [discipline, setDiscipline] = useState<GetDisciplineResponse>();
   const [participationResults, setParticipationResults] = useState<GetParticipationResultsResponse>();
   const [lastPointValue, setLastPointValue] = useState<number>();
 
@@ -86,12 +99,10 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     let unmounted = false;
     Promise.all([
       ShooterService.getShooter(props.shooterId),
-      DisciplineService.getDiscipline(props.disciplineId),
       ChallengeService.getParticipationShotResults(props.challengeId, props.participationId)
-    ]).then(([shooterResponse, disciplineResponse, shotResultsResponse]) => {
+    ]).then(([shooterResponse, shotResultsResponse]) => {
         if (!unmounted) {
           setShooter(shooterResponse.data);
-          setDiscipline(disciplineResponse.data);
           setParticipationResults(shotResultsResponse.data);
         }
       })
@@ -105,6 +116,24 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     };
   }, []);
 
+  useEffect(() => {
+    if (shotResultAdded) {
+      ChallengeService.addShotResult(
+        props.challengeId,
+        props.participationId,
+        shotResultAdded.serieNb,
+        shotResultAdded.shotNb,
+        shotResultAdded.points
+      ).then((shotResultsResponse) => {
+          setParticipationResults(shotResultsResponse.data);
+        })
+        .catch(errorResponse => {
+          props.actions.error(errorResponse.response.data.message);
+          shotResultAdded.eventTarget.value = lastPointValue ? lastPointValue.toString(10) : '';
+        });
+    }
+  }, [shotResultAdded]);
+
   let debounceFn: any;
   const addShotResult = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>, serieNb: number, shotNb: number | null) => {
     event.persist();
@@ -113,16 +142,11 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
         let target = event.target;
         if (target.value) {
           const points: number = parseFloat(target.value);
-          ChallengeService.addShotResult(props.challengeId, props.participationId, serieNb, shotNb, points)
-            .then((shotResultsResponse) => {
-              setParticipationResults(shotResultsResponse.data);
-            })
-            .catch(errorResponse => {
-              props.actions.error(errorResponse.response.data.message);
-              target.value = lastPointValue ? lastPointValue.toString(10) : '';
-            });
+          setShotResultAdded({
+            eventTarget: target, serieNb: serieNb, shotNb: shotNb, points: points
+          })
         }
-      }, 300);
+      }, debounceDefaultValue);
     }
     debounceFn(event, serieNb, shotNb);
   }
@@ -135,8 +159,11 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
     return (
       <>
         <Box display="flex" width={1}>
-          <Box flexGrow={1}>
-            <Typography variant="h6">{participationResults.participationReference.outrank ? 'Hors classement' : 'Classé'}</Typography>
+          <Box display="flex" alignItems="center" flexGrow={1}>
+            <EmojiEventsIcon color="secondary" />
+            <Typography variant="h6">
+              {participationResults.participationReference.outrank ? 'Hors classement' : 'Classé'}
+            </Typography>
           </Box>
         </Box>
         <Box pt={2} display="flex" width={1}>
@@ -228,10 +255,10 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
       callbackCloseFn={() => setDialogOpen(false)}
     /> : null;
 
-  if (!(shooter && discipline && participationResults)) {
+  if (!(shooter && participationResults)) {
     return null;
   } else {
-    const resultsBlock = displayTable(participationResults, discipline)
+    const resultsBlock = displayTable(participationResults, props.discipline)
     return (
       <>
         <Box display="flex" width={1}>
@@ -246,26 +273,14 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
             </Button>
           </Box>
           <Box display="flex">
-            <Box pr={1}>
-              <Button
-                variant="contained"
-                color="secondary"
-                type="button"
-                startIcon={<EditIcon />}
-                disabled
-              >
-                ÉDITER
-              </Button>
-            </Box>
             <Box>
               <Button
                 variant="contained"
-                color="secondary"
-                type="button"
+                className={classes.deleteButton}
                 onClick={() => setDialogOpen(true)}
                 startIcon={<DeleteIcon />}
               >
-                SUPPRIMER
+                SUPPRIMER LA PARTICIPATION
               </Button>
               {dialog}
             </Box>
@@ -279,7 +294,7 @@ const ChallengeParticipationShotResults = (props: ChallengeParticipationShotResu
               </Grid>
               <Grid item xs={12}>
                 <Typography variant="body2">
-                  {discipline.label}, {participationResults.participationReference.useElectronicTarget ? 'sur cible électronique' : 'sur cible traditionnelle'}
+                  {props.discipline.label}, {participationResults.participationReference.useElectronicTarget ? 'sur cible électronique' : 'sur cible traditionnelle'}
                 </Typography>
               </Grid>
             </Grid>
