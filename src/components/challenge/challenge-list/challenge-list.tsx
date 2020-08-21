@@ -128,7 +128,7 @@ const ChallengeList = (props: ChallengeListProps) => {
                   >
                     <TableCell align="center">{challenge.name}</TableCell>
                     <TableCell align="center">
-                      {formatString(challenge.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
+                      {formatString(challenge.startDate, "dd MMMM yyyy 'à' HH'h'mm")}
                     </TableCell>
                     <TableCell align="center">{challenge.nbShooters}</TableCell>
                     <TableCell align="center">{challenge.city}</TableCell>

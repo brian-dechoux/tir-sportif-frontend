@@ -58,7 +58,6 @@ export const dateTheme = {
   },
 };
 
-export const booleanToText = (bool: boolean) => (bool ? 'Oui' : 'Non');
 export const booleanToIcons = (bool: boolean) => (bool ? <DoneIcon color="secondary" fontSize="large" /> : <ClearIcon />);
 
 export const paginationTheme = {
