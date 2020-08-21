@@ -14,8 +14,24 @@ export const ROUTES = {
       }
     },
   },
-  CLUBS: '/clubs',
-  MYCLUB: '/myclub',
+  CLUBS: {
+    LIST: '/clubs',
+    CREATION: '/club/create',
+    SHOOTERS: {
+      LIST: '/shooters',
+      CREATION: '/shooters/create'
+    }
+  },
+  MYCLUB: {
+    RESUME: '/myclub/resume',
+    LICENSEES: {
+      LIST: '/myclub/licensees',
+      CREATION: '/myclub/licensee/create',
+    },
+    BILLS: {
+      LIST: '/myclub/bills'
+    }
+  }
 };
 
 export const ERRORS = {

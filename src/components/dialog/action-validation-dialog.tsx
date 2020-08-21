@@ -67,7 +67,7 @@ const ActionValidationDialog = (props: ActionValidationDialogProps) => {
       open={dialogOpen}
       onClose={handleClose}
     >
-      <DialogTitle>
+      <DialogTitle disableTypography>
         <Typography variant="h6">{getDialogTypeSpec(props.dialogType).icon} {props.dialogTitle}</Typography>
       </DialogTitle>
       <DialogContent>

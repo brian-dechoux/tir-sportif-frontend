@@ -76,7 +76,6 @@ const ChallengeDisciplineParticipationDialog = (props: ChallengeDisciplinePartic
     </Box> : null;
 
   if (props.disciplines.length === 0) {
-    // TODO spinner (with message ?)
     return null;
   } else {
     return (

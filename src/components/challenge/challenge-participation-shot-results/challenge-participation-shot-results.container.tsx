@@ -8,6 +8,7 @@ import { RouteChildrenProps, withRouter } from 'react-router';
 import { ROUTES } from 'configurations/server.configuration';
 import ChallengeParticipationShotResults from './challenge-participation-shot-results';
 import { openToast } from 'redux/actions/toast.actions';
+import AppState from '../../../redux/states/app.state.type';
 
 interface ChallengeShotResultsRouterProps {
   challengeId: string;
@@ -17,11 +18,14 @@ interface ChallengeShotResultsRouterProps {
 }
 
 class ChallengeParticipationShotResultsContainer extends React.PureComponent<
-  RouteChildrenProps<ChallengeShotResultsRouterProps> & ReturnType<typeof mapDispatchToProps>,
+  RouteChildrenProps<ChallengeShotResultsRouterProps> &
+  ReturnType<typeof mapStateToProps> &
+  ReturnType<typeof mapDispatchToProps>,
   {}
 > {
   render() {
-    if (this.props.match && this.props.match.params && this.props.match.params.challengeId && this.props.match.params.shooterId && this.props.match.params.disciplineId && this.props.match.params.participationId) {
+    if (this.props.match && this.props.match.params && this.props.match.params.challengeId && this.props.match.params.shooterId &&
+      this.props.match.params.disciplineId && this.props.match.params.participationId) {
       const paramChallengeId = this.props.match.params.challengeId;
       const parsedChallengeId = parseInt(paramChallengeId, 10);
       const paramShooterId = this.props.match.params.shooterId;
@@ -30,18 +34,31 @@ class ChallengeParticipationShotResultsContainer extends React.PureComponent<
       const parsedDisciplineId = parseInt(paramDisciplineId, 10);
       const paramParticipationId = this.props.match.params.participationId;
       const parsedParticipationId = parseInt(paramParticipationId, 10);
-      return <ChallengeParticipationShotResults
-        challengeId={parsedChallengeId}
-        shooterId={parsedShooterId}
-        disciplineId={parsedDisciplineId}
-        participationId={parsedParticipationId}
-        actions={this.props.actions}
-      />;
+      const discipline = this.props.disciplines.find(discipline => discipline.id === parsedDisciplineId);
+      if (!discipline) {
+        this.props.actions.error('Discipline inconnue');
+        this.props.actions.push(ROUTES.CHALLENGE.LIST)
+      } else {
+        return <ChallengeParticipationShotResults
+          challengeId={parsedChallengeId}
+          shooterId={parsedShooterId}
+          discipline={discipline}
+          participationId={parsedParticipationId}
+          actions={this.props.actions}
+        />;
+      }
     } else {
       return this.props.actions.push(ROUTES.CHALLENGE.LIST);
     }
   }
 }
+
+const mapStateToProps = (state: AppState) => {
+  return {
+    countries: state.general.countries,
+    disciplines: state.general.disciplines,
+  };
+};
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
   actions: bindActionCreators(
@@ -54,4 +71,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
   ),
 });
 
-export default withRouter(connect(null, mapDispatchToProps)(ChallengeParticipationShotResultsContainer));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ChallengeParticipationShotResultsContainer));

@@ -30,6 +30,7 @@ import AddIcon from '@material-ui/icons/Add';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
 import { ToastVariant } from '../../toast/toast';
 import ActionValidationDialog, { DialogType } from '../../dialog/action-validation-dialog';
+import { deleteButton, tableHoveredRow } from '../../../configurations/styles.configuration';
 
 type ChallengeDetailProps = {
   challengeId: number;
@@ -46,11 +47,8 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
       paddingTop: theme.spacing(1),
       paddingBottom: theme.spacing(2),
     },
-    tableRow: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
+    tableRow: tableHoveredRow,
+    deleteButton: deleteButton
   }));
   const classes = useStyles();
 
@@ -185,11 +183,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
       </Box>
     );
 
-  // TODO
-  // Use multiple sub components
-  // InformationsGenerales fixed, InformationsGenerales edit => 2 composants
   if (!challengeInformation) {
-    // TODO spinner (with message?)
     return null;
   } else {
     return (
@@ -219,8 +213,7 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
             <Box>
               <Button
                 variant="contained"
-                color="secondary"
-                type="button"
+                className={classes.deleteButton}
                 onClick={() => setDialogOpen(true)}
                 startIcon={<DeleteIcon />}
               >
@@ -230,20 +223,12 @@ const ChallengeDetail = (props: ChallengeDetailProps) => {
             </Box>
           </Box>
         </Box>
-        <Box display="flex" justifyContent="center" pb={1}>
-          <Box width={0.6}>
-            <Grid container direction="column" alignItems="center">
-              <Grid item xs={12}>
-                <Typography variant="h6">{challengeInformation.name}</Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <Typography variant="body1">
-                  Se déroulera à {challengeInformation.address.city}, le{' '}
-                  {formatString(challengeInformation.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Box>
+        <Box display="flex" flexDirection="column" width={1} alignItems="center">
+          <Typography variant="h6">{challengeInformation.name}</Typography>
+          <Typography variant="body1">
+            Se déroulera à {challengeInformation.address.city}, le{' '}
+            {formatString(challengeInformation.startDate, "dd MMMM yyyy 'à' hh'h'mm")}
+          </Typography>
         </Box>
         <Divider />
         <Box pt={2}>

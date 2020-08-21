@@ -22,6 +22,7 @@ import { EMPTY_PAGE, Page } from 'services/models/page.model';
 import ChallengeService from 'services/challenge.service';
 import { makeStyles } from '@material-ui/core/styles';
 import { paginationTheme } from 'configurations/theme.configuration';
+import { tableHoveredRow } from '../../../configurations/styles.configuration';
 
 type ChallengeListProps = {
   actions: {
@@ -30,17 +31,9 @@ type ChallengeListProps = {
   };
 };
 
-// FIXME Why in this particular table, the footer is not full width ???
-
-// TODO Add CSS for table:
-//  - cells align=center
 const ChallengeList = (props: ChallengeListProps) => {
-  const useStyles = makeStyles(theme => ({
-    tableRow: {
-      '&:hover': {
-        cursor: 'pointer',
-      },
-    },
+  const useStyles = makeStyles(() => ({
+    tableRow: tableHoveredRow,
   }));
   const classes = useStyles();
 

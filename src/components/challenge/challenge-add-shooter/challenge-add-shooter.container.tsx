@@ -5,11 +5,12 @@ import ChallengeAddShooter from './challenge-add-shooter';
 import { error } from 'redux/actions/error.actions';
 import { push } from 'connected-react-router';
 import { openToast } from 'redux/actions/toast.actions';
-import { Actions } from '../../../store';
+import { Actions } from 'store';
 import AppState from 'redux/states/app.state.type';
 import { getCountries } from 'redux/actions/general.actions';
 import { ROUTES } from 'configurations/server.configuration';
 import { RouteChildrenProps, withRouter } from 'react-router';
+import { resetShooter } from 'redux/actions/add-shooter.actions';
 
 interface ChallengeAddShooterRouterProps {
   challengeId: string;
@@ -23,7 +24,6 @@ class ChallengeAddShooterContainer extends React.PureComponent<
 > {
   render() {
     if (this.props.countries.length === 0) {
-      // TODO BDX put it in local storage
       this.props.actions.getCountries();
     }
     if (this.props.match && this.props.match.params && this.props.match.params.challengeId) {
@@ -43,6 +43,7 @@ class ChallengeAddShooterContainer extends React.PureComponent<
 const mapStateToProps = (state: AppState) => {
   return {
     countries: state.general.countries,
+    shooterResolved: state.addShooter.resolved,
   };
 };
 
@@ -53,6 +54,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
       openToast: openToast,
       push: push,
       getCountries: getCountries,
+      resetShooter: resetShooter,
     },
     dispatch
   ),
